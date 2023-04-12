@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>okay-common</artifactId>
+    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <dependencies>
