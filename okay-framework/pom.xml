@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>okay-framework</artifactId>
-    <version>${revision}</version>
     <packaging>pom</packaging>
     <modules>
         <module>okay-common</module>

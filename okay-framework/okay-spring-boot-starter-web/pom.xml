@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>okay-spring-boot-starter-web</artifactId>
-    <version>${revision}</version>
     <packaging>jar</packaging>
 
     <dependencies>
