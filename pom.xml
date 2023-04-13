@@ -6,7 +6,7 @@
 
     <groupId>cn.wnhyang.cloud</groupId>
     <artifactId>okay</artifactId>
-    <version>${revision}</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>okay-dependencies</module>
@@ -14,7 +14,7 @@
     </modules>
 
     <properties>
-        <revision>1.0-SNAPSHOT</revision>
+        <okay-dependencies.verson>1.0-SNAPSHOT</okay-dependencies.verson>
         <!-- Maven 相关 -->
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -33,7 +33,7 @@
             <dependency>
                 <groupId>cn.wnhyang.cloud</groupId>
                 <artifactId>okay-dependencies</artifactId>
-                <version>${revision}</version>
+                <version>${okay-dependencies.verson}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

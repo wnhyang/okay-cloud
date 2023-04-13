@@ -6,11 +6,13 @@
     <parent>
         <groupId>cn.wnhyang.cloud</groupId>
         <artifactId>okay</artifactId>
-        <version>${revision}</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>okay-framework</artifactId>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+
     <modules>
         <module>okay-common</module>
         <module>okay-spring-boot-starter-mybatis</module>
@@ -18,6 +20,5 @@
         <module>okay-spring-boot-starter-web</module>
         <module>okay-spring-boot-starter-redis</module>
     </modules>
-
 
 </project>

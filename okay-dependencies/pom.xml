@@ -6,11 +6,10 @@
 
     <groupId>cn.wnhyang.cloud</groupId>
     <artifactId>okay-dependencies</artifactId>
-    <version>${revision}</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
-        <revision>1.0-SNAPSHOT</revision>
         <!-- 统一依赖管理 -->
         <spring.boot.version>2.7.8</spring.boot.version>
         <spring.cloud.version>2021.0.4</spring.cloud.version>
@@ -94,20 +93,20 @@
             <dependency>
                 <groupId>cn.wnhyang.cloud</groupId>
                 <artifactId>okay-spring-boot-starter-web</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>cn.wnhyang.cloud</groupId>
                 <artifactId>okay-spring-boot-starter-security</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <!-- DB 相关 -->
             <dependency>
                 <groupId>cn.wnhyang.cloud</groupId>
                 <artifactId>okay-spring-boot-starter-mybatis</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
@@ -126,11 +125,11 @@
                 <version>${dynamic-datasource.version}</version>
             </dependency>
 
-<!--            <dependency>-->
-<!--                <groupId>cn.wnhyang.cloud</groupId>-->
-<!--                <artifactId>okay-spring-boot-starter-redis</artifactId>-->
-<!--                <version>${revision}</version>-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>cn.wnhyang.cloud</groupId>-->
+            <!--                <artifactId>okay-spring-boot-starter-redis</artifactId>-->
+            <!--                <version>${project.version}</version>-->
+            <!--            </dependency>-->
 
             <dependency>
                 <groupId>org.redisson</groupId>
@@ -151,25 +150,25 @@
                 <version>${xxl-job.version}</version>
             </dependency>
 
-<!--            <dependency>-->
-<!--                <groupId>cn.wnhyang.cloud</groupId>-->
-<!--                <artifactId>okay-spring-boot-starter-job</artifactId>-->
-<!--                <version>${revision}</version>-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>cn.wnhyang.cloud</groupId>-->
+            <!--                <artifactId>okay-spring-boot-starter-job</artifactId>-->
+            <!--                <version>${project.version}</version>-->
+            <!--            </dependency>-->
 
             <!-- 消息队列相关 -->
-<!--            <dependency>-->
-<!--                <groupId>cn.iocoder.cloud</groupId>-->
-<!--                <artifactId>yudao-spring-boot-starter-mq</artifactId>-->
-<!--                <version>${revision}</version>-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>cn.iocoder.cloud</groupId>-->
+            <!--                <artifactId>yudao-spring-boot-starter-mq</artifactId>-->
+            <!--                <version>${project.version}</version>-->
+            <!--            </dependency>-->
 
             <!-- 服务保障相关 -->
-<!--            <dependency>-->
-<!--                <groupId>cn.wnhyang.cloud</groupId>-->
-<!--                <artifactId>okay-spring-boot-starter-protection</artifactId>-->
-<!--                <version>${revision}</version>-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>cn.wnhyang.cloud</groupId>-->
+            <!--                <artifactId>okay-spring-boot-starter-protection</artifactId>-->
+            <!--                <version>${project.version}</version>-->
+            <!--            </dependency>-->
 
             <dependency>
                 <groupId>com.baomidou</groupId>
@@ -195,11 +194,11 @@
             </dependency>
 
             <!-- 监控相关 -->
-<!--            <dependency>-->
-<!--                <groupId>cn.wnhyang.cloud</groupId>-->
-<!--                <artifactId>okay-spring-boot-starter-monitor</artifactId>-->
-<!--                <version>${revision}</version>-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>cn.wnhyang.cloud</groupId>-->
+            <!--                <artifactId>okay-spring-boot-starter-monitor</artifactId>-->
+            <!--                <version>${project.version}</version>-->
+            <!--            </dependency>-->
 
             <dependency>
                 <groupId>org.apache.skywalking</groupId>
@@ -254,18 +253,18 @@
             </dependency>
 
             <!-- Test 测试相关 -->
-<!--            <dependency>-->
-<!--                <groupId>cn.wnhyang.cloud</groupId>-->
-<!--                <artifactId>okay-spring-boot-starter-test</artifactId>-->
-<!--                <version>${revision}</version>-->
-<!--                <scope>test</scope>-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>cn.wnhyang.cloud</groupId>-->
+            <!--                <artifactId>okay-spring-boot-starter-test</artifactId>-->
+            <!--                <version>${project.version}</version>-->
+            <!--                <scope>test</scope>-->
+            <!--            </dependency>-->
 
-<!--            <dependency>-->
-<!--                <groupId>org.mockito</groupId>-->
-<!--                <artifactId>mockito-inline</artifactId>-->
-<!--                <version>${mockito-inline.version}</version> &lt;!&ndash; 支持 Mockito 的 final 类与 static 方法的 mock &ndash;&gt;-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>org.mockito</groupId>-->
+            <!--                <artifactId>mockito-inline</artifactId>-->
+            <!--                <version>${mockito-inline.version}</version> &lt;!&ndash; 支持 Mockito 的 final 类与 static 方法的 mock &ndash;&gt;-->
+            <!--            </dependency>-->
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -283,24 +282,24 @@
                 </exclusions>
             </dependency>
 
-<!--            <dependency>-->
-<!--                <groupId>com.github.fppt</groupId> &lt;!&ndash; 单元测试，我们采用内嵌的 Redis 数据库 &ndash;&gt;-->
-<!--                <artifactId>jedis-mock</artifactId>-->
-<!--                <version>${jedis-mock.version}</version>-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>com.github.fppt</groupId> &lt;!&ndash; 单元测试，我们采用内嵌的 Redis 数据库 &ndash;&gt;-->
+            <!--                <artifactId>jedis-mock</artifactId>-->
+            <!--                <version>${jedis-mock.version}</version>-->
+            <!--            </dependency>-->
 
-<!--            <dependency>-->
-<!--                <groupId>uk.co.jemos.podam</groupId> &lt;!&ndash; 单元测试，随机生成 POJO 类 &ndash;&gt;-->
-<!--                <artifactId>podam</artifactId>-->
-<!--                <version>${podam.version}</version>-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>uk.co.jemos.podam</groupId> &lt;!&ndash; 单元测试，随机生成 POJO 类 &ndash;&gt;-->
+            <!--                <artifactId>podam</artifactId>-->
+            <!--                <version>${podam.version}</version>-->
+            <!--            </dependency>-->
 
             <!-- 工作流相关 -->
-<!--            <dependency>-->
-<!--                <groupId>cn.wnhyang.cloud</groupId>-->
-<!--                <artifactId>okay-spring-boot-starter-flowable</artifactId>-->
-<!--                <version>${revision}</version>-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>cn.wnhyang.cloud</groupId>-->
+            <!--                <artifactId>okay-spring-boot-starter-flowable</artifactId>-->
+            <!--                <version>${project.version}</version>-->
+            <!--            </dependency>-->
             <dependency>
                 <groupId>org.flowable</groupId>
                 <artifactId>flowable-spring-boot-starter-process</artifactId>
@@ -317,14 +316,14 @@
             <dependency>
                 <groupId>cn.wnhyang.cloud</groupId>
                 <artifactId>okay-common</artifactId>
-                <version>${revision}</version>
+                <version>${project.version}</version>
             </dependency>
 
-<!--            <dependency>-->
-<!--                <groupId>cn.wnhyang.cloud</groupId>-->
-<!--                <artifactId>okay-spring-boot-starter-excel</artifactId>-->
-<!--                <version>${revision}</version>-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>cn.wnhyang.cloud</groupId>-->
+            <!--                <artifactId>okay-spring-boot-starter-excel</artifactId>-->
+            <!--                <version>${project.version}</version>-->
+            <!--            </dependency>-->
 
             <dependency>
                 <groupId>org.projectlombok</groupId>
