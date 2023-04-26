@@ -51,6 +51,7 @@
         <netty-all.version>4.1.86.Final</netty-all.version>
         <ip2region.version>2.6.6</ip2region.version>
         <reflections.version>0.10.2</reflections.version>
+        <disruptor.version>3.4.4</disruptor.version>
     </properties>
 
     <dependencyManagement>
@@ -444,6 +445,12 @@
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
                 <version>${reflections.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <version>${disruptor.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
