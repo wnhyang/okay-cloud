@@ -24,7 +24,7 @@ public class JacksonAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public Jackson2ObjectMapperBuilderCustomizer customizer() {
-        log.info("JacksonAutoConfiguration.customizer");
+        log.info("[Jackson2ObjectMapperBuilderCustomizer][初始化customizer配置]");
         return builder -> {
             builder.locale(Locale.CHINA);
             builder.timeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));

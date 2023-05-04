@@ -19,6 +19,7 @@
         <module>okay-spring-boot-starter-security</module>
         <module>okay-spring-boot-starter-web</module>
         <module>okay-spring-boot-starter-redis</module>
+        <module>okay-spring-boot-starter-job</module>
     </modules>
 
 </project>
