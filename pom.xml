@@ -11,6 +11,7 @@
     <modules>
         <module>okay-dependencies</module>
         <module>okay-framework</module>
+        <module>okay-system</module>
     </modules>
 
     <properties>
