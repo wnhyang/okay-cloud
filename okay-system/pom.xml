@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>okay-system-api</module>
-        <module>okay-system-biz</module>
+        <module>okay-system-service</module>
     </modules>
 
 </project>
