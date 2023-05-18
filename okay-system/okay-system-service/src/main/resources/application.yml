@@ -1,0 +1,25 @@
+server:
+  port: 18080
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST:nacos}:${NACOS_PORT:8848}
+        namespace: @nacosNamespace@
+        group: @nacosGroup@
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: @nacosNamespace@
+        group: @nacosGroup@
+  config:
+    import:
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml
+      - optional:nacos:${spring.application.name}-xxl-job-${spring.profiles.active}.properties
+
+  profiles:
+    active: @profiles.active@
+
+logging:
+  config: classpath:log4j2-${spring.profiles.active}.xml

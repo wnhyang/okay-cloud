@@ -15,6 +15,7 @@
     </modules>
 
     <properties>
+        <nacosGroup>arch-group</nacosGroup>
         <okay-dependencies.verson>1.0-SNAPSHOT</okay-dependencies.verson>
         <!-- Maven 相关 -->
         <java.version>1.8</java.version>
@@ -86,5 +87,37 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <!--开发环境-->
+            <id>dev</id>
+            <properties>
+                <profiles.active>dev</profiles.active>
+                <nacosNamespace>07e8a85e-e8f4-4551-9fdb-d862b8a8b3f1</nacosNamespace>
+            </properties>
+            <!-- 加了这个，默认选中 -->
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <!--测试环境-->
+            <id>test</id>
+            <!-- 以下属性用于 bootstrap.yml 文件中 可通过 @activatedProperties@ 获取配置的变量-->
+            <properties>
+                <profiles.active>test</profiles.active>
+                <nacosNamespace>b1f81425-8a81-4cb8-804d-c00e4f9e94f3</nacosNamespace>
+            </properties>
+        </profile>
+        <!--生产环境-->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profiles.active>prod</profiles.active>
+                <nacosNamespace>c3e58f82-03a3-4cd5-8636-77760010d7ad</nacosNamespace>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>
