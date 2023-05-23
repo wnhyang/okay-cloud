@@ -1,7 +1,9 @@
 package cn.wnhyang.okay.framework.web.config;
 
 import cn.hutool.core.date.DatePattern;
+import cn.wnhyang.okay.framework.common.util.JsonUtils;
 import cn.wnhyang.okay.framework.web.jackson.OkayJavaTimeModule;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -32,6 +34,13 @@ public class JacksonAutoConfiguration {
             builder.serializerByType(Long.class, ToStringSerializer.instance);
             builder.modules(new OkayJavaTimeModule());
         };
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonUtils.init(objectMapper);
+        return objectMapper;
     }
 
 }
