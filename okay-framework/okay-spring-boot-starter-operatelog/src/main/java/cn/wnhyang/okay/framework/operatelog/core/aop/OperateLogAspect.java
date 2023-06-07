@@ -3,15 +3,15 @@ package cn.wnhyang.okay.framework.operatelog.core.aop;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.wnhyang.okay.framework.common.enums.UserTypeEnum;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.common.util.JsonUtils;
 import cn.wnhyang.okay.framework.common.util.ServletUtils;
 import cn.wnhyang.okay.framework.operatelog.core.enums.OperateTypeEnum;
-import cn.wnhyang.okay.framework.operatelog.core.service.OperateLog;
 import cn.wnhyang.okay.framework.web.util.WebFrameworkUtils;
+import cn.wnhyang.okay.system.api.OperateLogApi;
+import cn.wnhyang.okay.system.dto.OperateLogCreateReqDTO;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -28,12 +28,14 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
+
+import static cn.wnhyang.okay.framework.common.exception.enums.GlobalErrorCodeConstants.INTERNAL_SERVER_ERROR;
+import static cn.wnhyang.okay.framework.common.exception.enums.GlobalErrorCodeConstants.SUCCESS;
 
 
 /**
@@ -54,18 +56,18 @@ public class OperateLogAspect {
     /**
      * 用于记录操作内容的上下文
      *
-     * @see OperateLog#getContent()
+     * @see OperateLogCreateReqDTO#getContent()
      */
     private static final ThreadLocal<String> CONTENT = new ThreadLocal<>();
     /**
      * 用于记录拓展字段的上下文
      *
-     * @see OperateLog#getExts()
+     * @see OperateLogCreateReqDTO#getExts()
      */
     private static final ThreadLocal<Map<String, Object>> EXTS = new ThreadLocal<>();
 
     @Resource
-    private OperateLogFrameworkService operateLogFrameworkService;
+    private OperateLogApi operateLogApi;
 
     @Around(value = "@annotation(requestMapping) || @annotation(operateLog)", argNames = "joinPoint,requestMapping,operateLog")
     public Object around(ProceedingJoinPoint joinPoint, RequestMapping requestMapping,
@@ -83,10 +85,10 @@ public class OperateLogAspect {
             // 执行原有方法
             Object result = joinPoint.proceed();
             // 记录正常执行时的操作日志
-            this.log(joinPoint, operateLog, operation, startTime, result, null);
+            this.log(joinPoint, operateLog, startTime, result, null);
             return result;
         } catch (Throwable exception) {
-            this.log(joinPoint, operateLog, operation, startTime, null, exception);
+            this.log(joinPoint, operateLog, startTime, null, exception);
             throw exception;
         } finally {
             clearThreadLocal();
@@ -111,7 +113,6 @@ public class OperateLogAspect {
 
     private void log(ProceedingJoinPoint joinPoint,
                      cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog operateLog,
-                     Operation operation,
                      LocalDateTime startTime, Object result, Throwable exception) {
         try {
             // 判断不记录的情况
@@ -119,66 +120,47 @@ public class OperateLogAspect {
                 return;
             }
             // 真正记录操作日志
-            this.log0(joinPoint, operateLog, operation, startTime, result, exception);
+            this.log0(joinPoint, operateLog, startTime, result, exception);
         } catch (Throwable ex) {
             log.error("[log][记录操作日志时，发生异常，其中参数是 joinPoint({}) operateLog({}) apiOperation({}) result({}) exception({}) ]",
-                    joinPoint, operateLog, operation, result, exception, ex);
+                    joinPoint, operateLog, result, exception, ex);
         }
     }
 
     private void log0(ProceedingJoinPoint joinPoint,
                       cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog operateLog,
-                      Operation operation,
                       LocalDateTime startTime, Object result, Throwable exception) {
-        OperateLog operateLogObj = new OperateLog();
+        OperateLogCreateReqDTO operateLogObj = new OperateLogCreateReqDTO();
         // 补全通用字段
-        operateLogObj.setTraceId(TracerUtils.getTraceId());
         operateLogObj.setStartTime(startTime);
         // 补充用户信息
         fillUserFields(operateLogObj);
         // 补全模块信息
-        fillModuleFields(operateLogObj, joinPoint, operateLog, operation);
+        fillModuleFields(operateLogObj, joinPoint, operateLog);
         // 补全请求信息
         fillRequestFields(operateLogObj);
         // 补全方法信息
         fillMethodFields(operateLogObj, joinPoint, operateLog, startTime, result, exception);
 
         // 异步记录日志
-        operateLogFrameworkService.createOperateLog(operateLogObj);
+        operateLogApi.createOperateLog(operateLogObj);
     }
 
-    private static void fillUserFields(OperateLog operateLogObj) {
+    private static void fillUserFields(OperateLogCreateReqDTO operateLogObj) {
         operateLogObj.setUserId(WebFrameworkUtils.getLoginUserId());
         operateLogObj.setUserType(WebFrameworkUtils.getLoginUserType());
     }
 
-    private static void fillModuleFields(OperateLog operateLogObj,
+    private static void fillModuleFields(OperateLogCreateReqDTO operateLogObj,
                                          ProceedingJoinPoint joinPoint,
-                                         cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog operateLog,
-                                         Operation operation) {
+                                         cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog operateLog) {
         // module 属性
         if (operateLog != null) {
             operateLogObj.setModule(operateLog.module());
         }
-        if (StrUtil.isEmpty(operateLogObj.getModule())) {
-            Tag tag = getClassAnnotation(joinPoint, Tag.class);
-            if (tag != null) {
-                // 优先读取 @Tag 的 name 属性
-                if (StrUtil.isNotEmpty(tag.name())) {
-                    operateLogObj.setModule(tag.name());
-                }
-                // 没有的话，读取 @API 的 description 属性
-                if (StrUtil.isEmpty(operateLogObj.getModule()) && ArrayUtil.isNotEmpty(tag.description())) {
-                    operateLogObj.setModule(tag.description());
-                }
-            }
-        }
         // name 属性
         if (operateLog != null) {
             operateLogObj.setName(operateLog.name());
-        }
-        if (StrUtil.isEmpty(operateLogObj.getName()) && operation != null) {
-            operateLogObj.setName(operation.summary());
         }
         // type 属性
         if (operateLog != null && ArrayUtil.isNotEmpty(operateLog.type())) {
@@ -194,7 +176,7 @@ public class OperateLogAspect {
         operateLogObj.setExts(EXTS.get());
     }
 
-    private static void fillRequestFields(OperateLog operateLogObj) {
+    private static void fillRequestFields(OperateLogCreateReqDTO operateLogObj) {
         // 获得 Request 对象
         HttpServletRequest request = ServletUtils.getRequest();
         if (request == null) {
@@ -207,7 +189,7 @@ public class OperateLogAspect {
         operateLogObj.setUserAgent(ServletUtils.getUserAgent(request));
     }
 
-    private static void fillMethodFields(OperateLog operateLogObj,
+    private static void fillMethodFields(OperateLogCreateReqDTO operateLogObj,
                                          ProceedingJoinPoint joinPoint,
                                          cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog operateLog,
                                          LocalDateTime startTime, Object result, Throwable exception) {
@@ -294,19 +276,10 @@ public class OperateLogAspect {
     }
 
     private static RequestMethod[] obtainRequestMethod(ProceedingJoinPoint joinPoint) {
-        RequestMapping requestMapping = AnnotationUtils.getAnnotation( // 使用 Spring 的工具类，可以处理 @RequestMapping 别名注解
+        // 使用 Spring 的工具类，可以处理 @RequestMapping 别名注解
+        RequestMapping requestMapping = AnnotationUtils.getAnnotation(
                 ((MethodSignature) joinPoint.getSignature()).getMethod(), RequestMapping.class);
         return requestMapping != null ? requestMapping.method() : new RequestMethod[]{};
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    private static <T extends Annotation> T getMethodAnnotation(ProceedingJoinPoint joinPoint, Class<T> annotationClass) {
-        return ((MethodSignature) joinPoint.getSignature()).getMethod().getAnnotation(annotationClass);
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    private static <T extends Annotation> T getClassAnnotation(ProceedingJoinPoint joinPoint, Class<T> annotationClass) {
-        return ((MethodSignature) joinPoint.getSignature()).getMethod().getDeclaringClass().getAnnotation(annotationClass);
     }
 
     private static String obtainMethodArgs(ProceedingJoinPoint joinPoint) {

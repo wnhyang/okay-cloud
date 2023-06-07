@@ -51,13 +51,13 @@ public class RoleDO extends BaseDO {
      * 角色状态（0正常 1停用）
      */
     @TableField("status")
-    private Byte status;
+    private Integer status;
 
     /**
      * 角色类型
      */
     @TableField("type")
-    private Byte type;
+    private Integer type;
 
     /**
      * 备注

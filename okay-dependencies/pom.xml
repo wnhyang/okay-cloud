@@ -11,7 +11,7 @@
 
     <properties>
         <!-- 统一依赖管理 -->
-        <spring.boot.version>2.7.8</spring.boot.version>
+        <spring.boot.version>2.7.3</spring.boot.version>
         <spring.cloud.version>2021.0.4</spring.cloud.version>
         <spring.cloud.alibaba.version>2021.0.4.0</spring.cloud.alibaba.version>
         <!-- Web 相关 -->
@@ -28,7 +28,7 @@
         <resilience4j.version>1.7.1</resilience4j.version>
         <!-- 监控相关 -->
         <skywalking.version>8.12.0</skywalking.version>
-        <spring-boot-admin.version>2.7.10</spring-boot-admin.version>
+        <spring-boot-admin.version>2.7.3</spring-boot-admin.version>
         <opentracing.version>0.33.0</opentracing.version>
         <!-- Bpm 工作流相关 -->
         <flowable.version>6.8.0</flowable.version>
@@ -80,7 +80,11 @@
             </dependency>
 
             <!-- 业务组件 -->
-
+            <dependency>
+                <groupId>cn.wnhyang.cloud</groupId>
+                <artifactId>okay-spring-boot-starter-operatelog</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- Spring 核心 -->
             <dependency>

@@ -55,12 +55,6 @@
             <scope>provided</scope> <!-- 设置为 provided，只有工具类需要使用到 -->
         </dependency>
 
-        <!-- 监控相关 -->
-        <dependency>
-            <groupId>org.apache.skywalking</groupId>
-            <artifactId>apm-toolkit-trace</artifactId>
-        </dependency>
-
         <!-- 工具类相关 -->
         <dependency>
             <groupId>org.projectlombok</groupId>

@@ -45,7 +45,7 @@ public class ResourceDO extends BaseDO {
      * 资源类型
      */
     @TableField("type")
-    private Byte type;
+    private Integer type;
 
     /**
      * 显示顺序
@@ -87,7 +87,7 @@ public class ResourceDO extends BaseDO {
      * 资源状态
      */
     @TableField("status")
-    private Byte status;
+    private Integer status;
 
     /**
      * 是否可见

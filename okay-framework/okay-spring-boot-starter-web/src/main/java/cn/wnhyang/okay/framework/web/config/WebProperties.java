@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author wnhyang
  */
-@ConfigurationProperties(prefix = "yudao.web")
+@ConfigurationProperties(prefix = "okay.web")
 @Validated
 @Data
 public class WebProperties {
@@ -23,9 +23,6 @@ public class WebProperties {
     private Api appApi = new Api("/app-api", "**.controller.app.**");
     @NotNull(message = "Admin API 不能为空")
     private Api adminApi = new Api("/admin-api", "**.controller.admin.**");
-
-    @NotNull(message = "Admin UI 不能为空")
-    private Ui adminUi;
 
     @Data
     @AllArgsConstructor
@@ -52,17 +49,6 @@ public class WebProperties {
          */
         @NotEmpty(message = "Controller 所在包不能为空")
         private String controller;
-
-    }
-
-    @Data
-    @Valid
-    public static class Ui {
-
-        /**
-         * 访问地址
-         */
-        private String url;
 
     }
 

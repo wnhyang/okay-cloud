@@ -5,8 +5,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 
 /**
  * @author wnhyang
- * @date 2023/5/12
+ * @date 2023/6/5
  **/
 @FeignClient(name = ApiConstants.NAME)
-public interface RoleApi {
+public interface ResourceApi {
 }

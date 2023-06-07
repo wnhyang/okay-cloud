@@ -1,6 +1,6 @@
 package cn.wnhyang.okay.framework.operatelog.core.enums;
 
-import cn.iocoder.yudao.framework.operatelog.core.annotations.OperateLog;
+import cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -71,7 +71,7 @@ public class UserDO extends BaseDO {
      * 用户性别
      */
     @TableField("sex")
-    private Byte sex;
+    private Integer sex;
 
     /**
      * 头像地址
@@ -83,7 +83,7 @@ public class UserDO extends BaseDO {
      * 帐号状态（0正常 1停用）
      */
     @TableField("status")
-    private Byte status;
+    private Integer status;
 
     /**
      * 最后登录IP

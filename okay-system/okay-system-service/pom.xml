@@ -12,6 +12,13 @@
     <artifactId>okay-system-service</artifactId>
     <packaging>jar</packaging>
     <dependencies>
+        <!-- 依赖服务 -->
+        <dependency>
+            <groupId>cn.wnhyang.cloud</groupId>
+            <artifactId>okay-system-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
         <!-- Web 相关 -->
 
         <!-- 暂时使用web -->
@@ -100,6 +107,27 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <resources>
+
+            <resource>
+                <directory>src/main/resources</directory>
+                <!--filtering为true，可进行占位符替换，反之不行，使用includes/excludes包含和剔除-->
+                <excludes>
+                    <exclude>**/*.xml</exclude>
+                </excludes>
+                <filtering>true</filtering>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources</directory>
+                <!--filtering为true，可进行占位符替换，反之不行，使用includes/excludes包含和剔除-->
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
     </build>
 
 </project>
