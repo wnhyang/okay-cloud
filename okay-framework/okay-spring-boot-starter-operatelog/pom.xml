@@ -31,7 +31,6 @@
             <scope>provided</scope>
         </dependency>
 
-
         <!-- 业务组件 -->
         <dependency>
             <groupId>cn.wnhyang.cloud</groupId>

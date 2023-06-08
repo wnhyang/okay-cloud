@@ -17,10 +17,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class SystemServiceApplication {
     public static void main(String[] args) {
         try {
-            long begin = System.currentTimeMillis();
             log.info("开始启动。。。");
             SpringApplication.run(SystemServiceApplication.class, args);
-            long end = System.currentTimeMillis();
         } catch (Throwable e) {
             e.printStackTrace();
         }

@@ -13,6 +13,7 @@ import cn.wnhyang.okay.framework.web.util.WebFrameworkUtils;
 import cn.wnhyang.okay.system.api.OperateLogApi;
 import cn.wnhyang.okay.system.dto.OperateLogCreateReqDTO;
 import com.google.common.collect.Maps;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -25,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Array;
@@ -51,6 +51,7 @@ import static cn.wnhyang.okay.framework.common.exception.enums.GlobalErrorCodeCo
 @Aspect
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class OperateLogAspect {
 
     /**
@@ -66,11 +67,10 @@ public class OperateLogAspect {
      */
     private static final ThreadLocal<Map<String, Object>> EXTS = new ThreadLocal<>();
 
-    @Resource
-    private OperateLogApi operateLogApi;
+    private final OperateLogApi operateLogApi;
 
-    @Around(value = "@annotation(requestMapping) || @annotation(operateLog)", argNames = "joinPoint,requestMapping,operateLog")
-    public Object around(ProceedingJoinPoint joinPoint, RequestMapping requestMapping,
+    @Around(value = "@annotation(operateLog)", argNames = "joinPoint,operateLog")
+    public Object around(ProceedingJoinPoint joinPoint,
                          cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog operateLog) throws Throwable {
 
         // 目前，只有管理员，才记录操作日志！所以非管理员，直接调用，不进行记录
