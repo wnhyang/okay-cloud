@@ -8,6 +8,7 @@ import cn.wnhyang.okay.framework.common.enums.UserTypeEnum;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.common.util.JsonUtils;
 import cn.wnhyang.okay.framework.common.util.ServletUtils;
+import cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog;
 import cn.wnhyang.okay.framework.operatelog.core.enums.OperateTypeEnum;
 import cn.wnhyang.okay.framework.web.util.WebFrameworkUtils;
 import cn.wnhyang.okay.system.api.OperateLogApi;
@@ -70,25 +71,63 @@ public class OperateLogAspect {
     private final OperateLogApi operateLogApi;
 
     @Around(value = "@annotation(operateLog)", argNames = "joinPoint,operateLog")
-    public Object around(ProceedingJoinPoint joinPoint,
-                         cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog operateLog) throws Throwable {
-
-        // 目前，只有管理员，才记录操作日志！所以非管理员，直接调用，不进行记录
-        Integer userType = WebFrameworkUtils.getLoginUserType();
-        if (!Objects.equals(userType, UserTypeEnum.ADMIN.getValue())) {
-            return joinPoint.proceed();
-        }
+    public Object around(ProceedingJoinPoint joinPoint, OperateLog operateLog) throws Throwable {
 
         // 记录开始时间
         LocalDateTime startTime = LocalDateTime.now();
+        Object result = null;
         try {
+            OperateLogCreateReqDTO operateLogObj = new OperateLogCreateReqDTO();
+            // 日志组装1
+            StringBuilder sb = new StringBuilder();
+            sb.append("\n------------------------------------------");
+            // 补全通用字段
+            operateLogObj.setStartTime(startTime);
+            // 补充用户信息
+            operateLogObj.setUserId(WebFrameworkUtils.getLoginUserId());
+            operateLogObj.setUserType(WebFrameworkUtils.getLoginUserType());
+            // 日志组装2
+            sb.append("\nuserId : ").append(operateLogObj.getUserType()).append(" ")
+                    .append("userType : ").append(operateLogObj.getUserType()).append(" ");
+            // 补全模块信息
+            fillModuleFields(operateLogObj, joinPoint, operateLog);
+            // 日志组装3
+            sb.append("\nmodule : ").append(operateLogObj.getModule()).append(" ")
+                    .append("name : ").append(operateLogObj.getName()).append(" ")
+                    .append("type : ").append(operateLogObj.getType()).append(" ");
+            // 日志组装4
+            sb.append("\ncontent : ").append(operateLogObj.getContent()).append(" ")
+                    .append("exts : ").append(operateLogObj.getExts()).append(" ");
+            // 补全请求信息
+            fillRequestFields(operateLogObj, joinPoint, operateLog, sb);
+            sb.append("\n==========================================");
+            // 打印方法前信息
+            log.info(sb.toString());
             // 执行原有方法
-            Object result = joinPoint.proceed();
-            // 记录正常执行时的操作日志
-            this.log(joinPoint, operateLog, startTime, result, null);
+            result = joinPoint.proceed();
+
+            sb.setLength(0);
+            sb.append("\n------------------------------------------");
+            // 补全结果信息
+            fillResultFields(operateLogObj, operateLog, startTime, result, null, sb);
+
+            sb.append("\n==========================================");
+            // 打印方法后信息
+            log.info(sb.toString());
+            // 判断不记录的情况
+            if (!isLogEnable(joinPoint, operateLog)) {
+                return result;
+            }
+            // 目前，只有管理员，才记录操作日志！所以非管理员，直接调用，不进行记录
+            Integer userType = WebFrameworkUtils.getLoginUserType();
+            if (Objects.equals(userType, UserTypeEnum.ADMIN.getValue())) {
+                // 异步记录日志
+                operateLogApi.createOperateLog(operateLogObj);
+            }
             return result;
         } catch (Throwable exception) {
-            this.log(joinPoint, operateLog, startTime, null, exception);
+            log.error("[log][记录操作日志时，发生异常，其中参数是 joinPoint({}) operateLog({}) result({}) exception({}) ]",
+                    joinPoint, operateLog, result, exception, exception);
             throw exception;
         } finally {
             clearThreadLocal();
@@ -111,49 +150,8 @@ public class OperateLogAspect {
         EXTS.remove();
     }
 
-    private void log(ProceedingJoinPoint joinPoint,
-                     cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog operateLog,
-                     LocalDateTime startTime, Object result, Throwable exception) {
-        try {
-            // 判断不记录的情况
-            if (!isLogEnable(joinPoint, operateLog)) {
-                return;
-            }
-            // 真正记录操作日志
-            this.log0(joinPoint, operateLog, startTime, result, exception);
-        } catch (Throwable ex) {
-            log.error("[log][记录操作日志时，发生异常，其中参数是 joinPoint({}) operateLog({}) apiOperation({}) result({}) exception({}) ]",
-                    joinPoint, operateLog, result, exception, ex);
-        }
-    }
-
-    private void log0(ProceedingJoinPoint joinPoint,
-                      cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog operateLog,
-                      LocalDateTime startTime, Object result, Throwable exception) {
-        OperateLogCreateReqDTO operateLogObj = new OperateLogCreateReqDTO();
-        // 补全通用字段
-        operateLogObj.setStartTime(startTime);
-        // 补充用户信息
-        fillUserFields(operateLogObj);
-        // 补全模块信息
-        fillModuleFields(operateLogObj, joinPoint, operateLog);
-        // 补全请求信息
-        fillRequestFields(operateLogObj);
-        // 补全方法信息
-        fillMethodFields(operateLogObj, joinPoint, operateLog, startTime, result, exception);
-
-        // 异步记录日志
-        operateLogApi.createOperateLog(operateLogObj);
-    }
-
-    private static void fillUserFields(OperateLogCreateReqDTO operateLogObj) {
-        operateLogObj.setUserId(WebFrameworkUtils.getLoginUserId());
-        operateLogObj.setUserType(WebFrameworkUtils.getLoginUserType());
-    }
-
     private static void fillModuleFields(OperateLogCreateReqDTO operateLogObj,
-                                         ProceedingJoinPoint joinPoint,
-                                         cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog operateLog) {
+                                         ProceedingJoinPoint joinPoint, OperateLog operateLog) {
         // module 属性
         if (operateLog != null) {
             operateLogObj.setModule(operateLog.module());
@@ -176,7 +174,8 @@ public class OperateLogAspect {
         operateLogObj.setExts(EXTS.get());
     }
 
-    private static void fillRequestFields(OperateLogCreateReqDTO operateLogObj) {
+    private static void fillRequestFields(OperateLogCreateReqDTO operateLogObj, ProceedingJoinPoint joinPoint,
+                                          OperateLog operateLog, StringBuilder sb) {
         // 获得 Request 对象
         HttpServletRequest request = ServletUtils.getRequest();
         if (request == null) {
@@ -187,21 +186,28 @@ public class OperateLogAspect {
         operateLogObj.setRequestUrl(request.getRequestURI());
         operateLogObj.setUserIp(ServletUtil.getClientIP(request));
         operateLogObj.setUserAgent(ServletUtils.getUserAgent(request));
-    }
-
-    private static void fillMethodFields(OperateLogCreateReqDTO operateLogObj,
-                                         ProceedingJoinPoint joinPoint,
-                                         cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog operateLog,
-                                         LocalDateTime startTime, Object result, Throwable exception) {
+        // 日志组装5
+        sb.append("\nrequestMethod : ").append(operateLogObj.getRequestMethod()).append(" ")
+                .append("requestUrl : ").append(operateLogObj.getRequestUrl()).append(" ")
+                .append("userIp : ").append(operateLogObj.getUserIp()).append(" ")
+                .append("userAgent : ").append(operateLogObj.getUserAgent()).append(" ");
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         operateLogObj.setJavaMethod(methodSignature.toString());
+        // 日志组装6
+        sb.append("\njavaMethod : ").append(operateLogObj.getJavaMethod()).append(" ");
         if (operateLog == null || operateLog.logArgs()) {
-            operateLogObj.setJavaMethodArgs(obtainMethodArgs(joinPoint));
+            operateLogObj.setJavaMethodArgs(obtainMethodArgs(joinPoint, sb));
         }
-        if (operateLog == null || operateLog.logResultData()) {
-            operateLogObj.setResultData(obtainResultData(result));
-        }
+    }
+
+    private static void fillResultFields(OperateLogCreateReqDTO operateLogObj,
+                                         OperateLog operateLog,
+                                         LocalDateTime startTime, Object result, Throwable exception, StringBuilder sb) {
         operateLogObj.setDuration((int) (LocalDateTimeUtil.between(startTime, LocalDateTime.now()).toMillis()));
+        // 日志组装8
+        sb.append("\nstartTime : ").append(startTime).append(" ")
+                .append("\nduration : ").append(operateLogObj.getDuration()).append(" ");
+
         // （正常）处理 resultCode 和 resultMsg 字段
         if (result instanceof CommonResult) {
             CommonResult<?> commonResult = (CommonResult<?>) result;
@@ -215,10 +221,15 @@ public class OperateLogAspect {
             operateLogObj.setResultCode(INTERNAL_SERVER_ERROR.getCode());
             operateLogObj.setResultMsg(ExceptionUtil.getRootCauseMessage(exception));
         }
+        // 日志组装9
+        sb.append("\nresultCode : ").append(operateLogObj.getResultCode()).append(" ")
+                .append("\nresultMsg : ").append(operateLogObj.getResultMsg()).append(" ");
+        if (operateLog == null || operateLog.logResultData()) {
+            operateLogObj.setResultData(obtainResultData(result, sb));
+        }
     }
 
-    private static boolean isLogEnable(ProceedingJoinPoint joinPoint,
-                                       cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog operateLog) {
+    private static boolean isLogEnable(ProceedingJoinPoint joinPoint, OperateLog operateLog) {
         // 有 @OperateLog 注解的情况下
         if (operateLog != null) {
             return operateLog.enable();
@@ -282,7 +293,7 @@ public class OperateLogAspect {
         return requestMapping != null ? requestMapping.method() : new RequestMethod[]{};
     }
 
-    private static String obtainMethodArgs(ProceedingJoinPoint joinPoint) {
+    private static String obtainMethodArgs(ProceedingJoinPoint joinPoint, StringBuilder sb) {
         // TODO 提升：参数脱敏和忽略
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String[] argNames = methodSignature.getParameterNames();
@@ -295,14 +306,18 @@ public class OperateLogAspect {
             // 被忽略时，标记为 ignore 字符串，避免和 null 混在一起
             args.put(argName, !isIgnoreArgs(argValue) ? argValue : "[ignore]");
         }
+        // 日志组装7
+        sb.append("\njavaMethodArgs : \n").append(JsonUtils.toJsonPrettyString(args));
         return JsonUtils.toJsonString(args);
     }
 
-    private static String obtainResultData(Object result) {
+    private static String obtainResultData(Object result, StringBuilder sb) {
         // TODO 提升：结果脱敏和忽略
         if (result instanceof CommonResult) {
             result = ((CommonResult<?>) result).getData();
         }
+        // 日志组装10
+        sb.append("\njavaMethodArgs : \n").append(JsonUtils.toJsonPrettyString(result));
         return JsonUtils.toJsonString(result);
     }
 

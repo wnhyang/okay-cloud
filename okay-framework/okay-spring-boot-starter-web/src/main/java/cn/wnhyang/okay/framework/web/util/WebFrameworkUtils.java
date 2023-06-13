@@ -1,7 +1,5 @@
 package cn.wnhyang.okay.framework.web.util;
 
-import cn.wnhyang.okay.framework.common.enums.UserTypeEnum;
-import cn.wnhyang.okay.framework.web.config.WebProperties;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -16,9 +14,6 @@ public class WebFrameworkUtils {
     private static final String REQUEST_ATTRIBUTE_LOGIN_USER_ID = "login_user_id";
 
     private static final String REQUEST_ATTRIBUTE_LOGIN_USER_TYPE = "login_user_type";
-
-    private static WebProperties properties;
-
 
     public static Long getLoginUserId() {
         HttpServletRequest request = getRequest();
@@ -60,13 +55,6 @@ public class WebFrameworkUtils {
         Integer userType = (Integer) request.getAttribute(REQUEST_ATTRIBUTE_LOGIN_USER_TYPE);
         if (userType != null) {
             return userType;
-        }
-        // 2. 其次，基于 URL 前缀的约定
-        if (request.getRequestURI().startsWith(properties.getAdminApi().getPrefix())) {
-            return UserTypeEnum.ADMIN.getValue();
-        }
-        if (request.getRequestURI().startsWith(properties.getAppApi().getPrefix())) {
-            return UserTypeEnum.MEMBER.getValue();
         }
         return null;
     }
