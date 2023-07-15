@@ -12,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
  **/
 public class SecurityFrameworkUtils {
 
+    private SecurityFrameworkUtils() {}
+
     /**
      * 获得当前用户的编号，从上下文中
      *
