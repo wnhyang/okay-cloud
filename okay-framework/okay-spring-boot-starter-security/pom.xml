@@ -48,6 +48,28 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!-- Sa-Token 权限认证, 在线文档：https://sa-token.cc/ -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- Sa-Token 插件：整合SSO -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-sso</artifactId>
+        </dependency>
+
+        <!-- Sa-Token 插件：整合redis (使用jackson序列化方式) -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-redis-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+
         <!-- RPC 远程调用相关 -->
 
         <!-- 业务组件 -->
