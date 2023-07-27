@@ -50,6 +50,12 @@ public class UserDO extends BaseDO {
     private String nickname;
 
     /**
+     * 用户类型
+     */
+    @TableField("type")
+    private Integer type;
+
+    /**
      * 备注
      */
     @TableField("remark")

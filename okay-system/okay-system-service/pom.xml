@@ -20,7 +20,6 @@
         </dependency>
 
         <!-- Web 相关 -->
-
         <dependency>
             <groupId>cn.wnhyang.cloud</groupId>
             <artifactId>okay-spring-boot-starter-security</artifactId>

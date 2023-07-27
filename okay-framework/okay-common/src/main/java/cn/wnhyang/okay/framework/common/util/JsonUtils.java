@@ -2,11 +2,11 @@ package cn.wnhyang.okay.framework.common.util;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -24,22 +24,7 @@ import java.util.List;
 @Slf4j
 public class JsonUtils {
 
-    private static ObjectMapper objectMapper = new ObjectMapper();
-
-    static {
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-    }
-
-    /**
-     * 初始化 objectMapper 属性
-     * <p>
-     * 通过这样的方式，使用 Spring 创建的 ObjectMapper Bean
-     *
-     * @param objectMapper ObjectMapper 对象
-     */
-    public static void init(ObjectMapper objectMapper) {
-        JsonUtils.objectMapper = objectMapper;
-    }
+    private static ObjectMapper objectMapper = SpringUtil.getBean(ObjectMapper.class);
 
     @SneakyThrows
     public static String toJsonString(Object object) {

@@ -21,7 +21,7 @@
         <!-- Web 相关 -->
         <dependency>
             <groupId>cn.wnhyang.cloud</groupId>
-            <artifactId>okay-spring-boot-starter-web</artifactId>
+            <artifactId>okay-spring-boot-starter-satoken</artifactId>
             <scope>provided</scope> <!-- 设置为 provided，只有 OncePerRequestFilter 使用到 -->
         </dependency>
 

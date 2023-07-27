@@ -36,13 +36,6 @@
             <artifactId>xxl-job-core</artifactId>
         </dependency>
 
-        <!-- 工具类相关 -->
-        <dependency>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
     </dependencies>
 
 </project>

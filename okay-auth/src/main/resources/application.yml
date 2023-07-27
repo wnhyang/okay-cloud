@@ -1,0 +1,28 @@
+server:
+  port: 13201
+spring:
+  main:
+    allow-circular-references: true # 允许循环依赖，因为项目是三层架构，无法避免这个情况。
+    allow-bean-definition-overriding: true # 允许 Bean 覆盖，例如说 Dubbo 或者 Feign 等会存在重复定义的服务
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST:nacos}:${NACOS_PORT:8848}
+        namespace: @nacosNamespace@
+        group: @nacosGroup@
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: @nacosNamespace@
+        group: @nacosGroup@
+  config:
+    import:
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml
+      - optional:nacos:${spring.application.name}-xxl-job-${spring.profiles.active}.properties
+
+  profiles:
+    active: @profiles.active@
+
+logging:
+  config: classpath:log4j2-${spring.profiles.active}.xml

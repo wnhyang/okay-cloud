@@ -96,6 +96,12 @@
                 <version>${spring.boot.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cn.wnhyang.cloud</groupId>
+                <artifactId>okay-spring-boot-starter-satoken</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- Web 相关 -->
             <dependency>
                 <groupId>cn.wnhyang.cloud</groupId>

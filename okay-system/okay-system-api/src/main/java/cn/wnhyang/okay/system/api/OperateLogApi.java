@@ -1,7 +1,7 @@
 package cn.wnhyang.okay.system.api;
 
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
-import cn.wnhyang.okay.system.dto.OperateLogCreateReqDTO;
+import cn.wnhyang.okay.system.dto.operatelog.OperateLogCreateReqDTO;
 import cn.wnhyang.okay.system.enums.ApiConstants;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

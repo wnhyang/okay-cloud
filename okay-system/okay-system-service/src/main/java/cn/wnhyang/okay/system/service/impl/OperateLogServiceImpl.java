@@ -1,8 +1,8 @@
 package cn.wnhyang.okay.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import cn.wnhyang.okay.system.convert.OperateLogConvert;
-import cn.wnhyang.okay.system.dto.OperateLogCreateReqDTO;
+import cn.wnhyang.okay.system.convert.operatelog.OperateLogConvert;
+import cn.wnhyang.okay.system.dto.operatelog.OperateLogCreateReqDTO;
 import cn.wnhyang.okay.system.entity.OperateLogDO;
 import cn.wnhyang.okay.system.mapper.OperateLogMapper;
 import cn.wnhyang.okay.system.service.OperateLogService;

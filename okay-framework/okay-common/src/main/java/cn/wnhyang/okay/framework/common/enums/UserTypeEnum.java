@@ -15,27 +15,34 @@ import java.util.Arrays;
 public enum UserTypeEnum implements IntArrayValuable {
 
     /**
-     * 面向 c 端，普通用户
+     * pc用户
      */
-    MEMBER(1, "会员"),
-    /**
-     * 面向 b 端，管理后台
-     */
-    ADMIN(2, "管理员");
+    PC(0),
 
-    public static final int[] ARRAYS = Arrays.stream(values()).mapToInt(UserTypeEnum::getValue).toArray();
+    /**
+     * app用户
+     */
+    APP(1),
+
+    /**
+     * 小程序用户
+     */
+    XCX(2),
+
+    /**
+     * 服务内部
+     */
+    RPC(9);
+
+    public static final int[] ARRAYS = Arrays.stream(values()).mapToInt(UserTypeEnum::getType).toArray();
 
     /**
      * 类型
      */
-    private final Integer value;
-    /**
-     * 类型名
-     */
-    private final String name;
+    private final Integer type;
 
     public static UserTypeEnum valueOf(Integer value) {
-        return ArrayUtil.firstMatch(userType -> userType.getValue().equals(value), UserTypeEnum.values());
+        return ArrayUtil.firstMatch(userType -> userType.getType().equals(value), UserTypeEnum.values());
     }
 
     @Override

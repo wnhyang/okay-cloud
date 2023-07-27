@@ -12,6 +12,8 @@
         <module>okay-dependencies</module>
         <module>okay-framework</module>
         <module>okay-system</module>
+        <module>okay-gateway</module>
+        <module>okay-auth</module>
     </modules>
 
     <properties>

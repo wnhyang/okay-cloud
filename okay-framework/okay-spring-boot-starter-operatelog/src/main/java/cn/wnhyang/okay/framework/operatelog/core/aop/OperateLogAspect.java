@@ -3,16 +3,17 @@ package cn.wnhyang.okay.framework.operatelog.core.aop;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.servlet.ServletUtil;
-import cn.wnhyang.okay.framework.common.enums.UserTypeEnum;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.common.util.JsonUtils;
 import cn.wnhyang.okay.framework.common.util.ServletUtils;
 import cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog;
 import cn.wnhyang.okay.framework.operatelog.core.enums.OperateTypeEnum;
-import cn.wnhyang.okay.framework.web.util.WebFrameworkUtils;
+import cn.wnhyang.okay.framework.satoken.utils.LoginHelper;
 import cn.wnhyang.okay.system.api.OperateLogApi;
-import cn.wnhyang.okay.system.dto.OperateLogCreateReqDTO;
+import cn.wnhyang.okay.system.dto.LoginUser;
+import cn.wnhyang.okay.system.dto.operatelog.OperateLogCreateReqDTO;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
@@ -84,8 +88,11 @@ public class OperateLogAspect {
             // 补全通用字段
             operateLogObj.setStartTime(startTime);
             // 补充用户信息
-            operateLogObj.setUserId(WebFrameworkUtils.getLoginUserId());
-            operateLogObj.setUserType(WebFrameworkUtils.getLoginUserType());
+            LoginUser loginUser = LoginHelper.getLoginUser();
+            if (ObjectUtil.isNotNull(loginUser)) {
+                operateLogObj.setUserId(loginUser.getId());
+                operateLogObj.setUserType(loginUser.getType());
+            }
             // 日志组装2
             sb.append("\nuserId : ").append(operateLogObj.getUserType()).append(" ")
                     .append("userType : ").append(operateLogObj.getUserType()).append(" ");
@@ -119,11 +126,10 @@ public class OperateLogAspect {
                 return result;
             }
             // 目前，只有管理员，才记录操作日志！所以非管理员，直接调用，不进行记录
-            Integer userType = WebFrameworkUtils.getLoginUserType();
-            if (Objects.equals(userType, UserTypeEnum.ADMIN.getValue())) {
-                // 异步记录日志
-                operateLogApi.createOperateLog(operateLogObj);
-            }
+
+            // 异步记录日志
+            operateLogApi.createOperateLog(operateLogObj);
+
             return result;
         } catch (Throwable exception) {
             log.error("[log][记录操作日志时，发生异常，其中参数是 joinPoint({}) operateLog({}) result({}) exception({}) ]",

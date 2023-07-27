@@ -1,6 +1,6 @@
 package cn.wnhyang.okay.system.service;
 
-import cn.wnhyang.okay.system.dto.OperateLogCreateReqDTO;
+import cn.wnhyang.okay.system.dto.operatelog.OperateLogCreateReqDTO;
 
 /**
  * <p>
