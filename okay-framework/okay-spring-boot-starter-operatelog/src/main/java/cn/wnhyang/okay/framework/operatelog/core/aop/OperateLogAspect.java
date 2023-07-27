@@ -74,7 +74,7 @@ public class OperateLogAspect {
 
     private final OperateLogApi operateLogApi;
 
-    @Around(value = "@annotation(operateLog)", argNames = "joinPoint,operateLog")
+    @Around("@within(org.springframework.web.bind.annotation.RestController)||@annotation(operateLog)")
     public Object around(ProceedingJoinPoint joinPoint, OperateLog operateLog) throws Throwable {
 
         // 记录开始时间
@@ -127,9 +127,10 @@ public class OperateLogAspect {
             }
             // 目前，只有管理员，才记录操作日志！所以非管理员，直接调用，不进行记录
 
-            // 异步记录日志
-            operateLogApi.createOperateLog(operateLogObj);
-
+            if (operateLog != null) {
+                // 异步记录日志
+                operateLogApi.createOperateLog(operateLogObj);
+            }
             return result;
         } catch (Throwable exception) {
             log.error("[log][记录操作日志时，发生异常，其中参数是 joinPoint({}) operateLog({}) result({}) exception({}) ]",
