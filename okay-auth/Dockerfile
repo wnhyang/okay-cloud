@@ -5,7 +5,7 @@ RUN mkdir -p /home/app
 # 指定路径
 WORKDIR /home/app
 
-ARG JAR_FILE=./target/okay-shortLink-service.jar
+ARG JAR_FILE=./target/okay-auth.jar
 
 COPY ${JAR_FILE} app.jar
 
