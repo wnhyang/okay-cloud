@@ -163,6 +163,12 @@
                 <version>${sa-token.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-core</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
             <!-- Sa-Token 插件：整合SSO -->
             <dependency>
                 <groupId>cn.dev33</groupId>

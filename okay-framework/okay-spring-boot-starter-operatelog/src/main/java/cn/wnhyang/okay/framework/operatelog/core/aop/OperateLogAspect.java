@@ -74,8 +74,17 @@ public class OperateLogAspect {
 
     private final OperateLogApi operateLogApi;
 
-    @Around("@within(org.springframework.web.bind.annotation.RestController)||@annotation(operateLog)")
+    @Around("@annotation(operateLog) && @within(org.springframework.web.bind.annotation.RestController)")
     public Object around(ProceedingJoinPoint joinPoint, OperateLog operateLog) throws Throwable {
+        return around0(joinPoint, operateLog);
+    }
+
+    @Around("!@annotation(cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog) && @within(org.springframework.web.bind.annotation.RestController)")
+    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        return around0(joinPoint, null);
+    }
+
+    public Object around0(ProceedingJoinPoint joinPoint, OperateLog operateLog) throws Throwable {
 
         // 记录开始时间
         LocalDateTime startTime = LocalDateTime.now();
@@ -127,10 +136,9 @@ public class OperateLogAspect {
             }
             // 目前，只有管理员，才记录操作日志！所以非管理员，直接调用，不进行记录
 
-            if (operateLog != null) {
-                // 异步记录日志
-                operateLogApi.createOperateLog(operateLogObj);
-            }
+            // 异步记录日志
+            operateLogApi.createOperateLog(operateLogObj);
+
             return result;
         } catch (Throwable exception) {
             log.error("[log][记录操作日志时，发生异常，其中参数是 joinPoint({}) operateLog({}) result({}) exception({}) ]",

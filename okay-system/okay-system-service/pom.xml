@@ -19,6 +19,11 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>cn.wnhyang.cloud</groupId>
+            <artifactId>okay-spring-boot-starter-operatelog</artifactId>
+        </dependency>
+
         <!-- Web 相关 -->
         <dependency>
             <groupId>cn.wnhyang.cloud</groupId>

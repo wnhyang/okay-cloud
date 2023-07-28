@@ -21,6 +21,11 @@
         </dependency>
 
         <dependency>
+            <groupId>cn.wnhyang.cloud</groupId>
+            <artifactId>okay-spring-boot-starter-operatelog</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
             <exclusions>
