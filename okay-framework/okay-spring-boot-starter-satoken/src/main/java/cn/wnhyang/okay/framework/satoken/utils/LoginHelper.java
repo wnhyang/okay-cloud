@@ -49,6 +49,9 @@ public class LoginHelper {
         if (loginUser != null) {
             return loginUser;
         }
+        if (!StpUtil.isLogin()) {
+            return null;
+        }
         SaSession session = StpUtil.getTokenSession();
         if (ObjectUtil.isNull(session)) {
             return null;

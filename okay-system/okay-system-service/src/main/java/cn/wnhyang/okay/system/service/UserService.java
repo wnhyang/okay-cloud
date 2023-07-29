@@ -28,4 +28,5 @@ public interface UserService {
      */
     void updateUserLogin(Long userId, String loginIp);
 
+    String userJson(Long id);
 }

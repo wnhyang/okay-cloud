@@ -25,8 +25,8 @@
         </dependency>
 
         <dependency>
-            <groupId>cn.wnhyang.cloud</groupId>
-            <artifactId>okay-spring-boot-starter-redis</artifactId>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-redisson-jackson</artifactId>
         </dependency>
 
         <dependency>

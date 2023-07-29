@@ -1,5 +1,5 @@
 server:
-  port: 3302
+  port: 9001
 spring:
   main:
     allow-circular-references: true # 允许循环依赖，因为项目是三层架构，无法避免这个情况。
@@ -10,14 +10,15 @@ spring:
     nacos:
       discovery:
         server-addr: ${NACOS_HOST:nacos}:${NACOS_PORT:8848}
-        namespace: @nacosNamespace@
-        group: @nacosGroup@
+        namespace: @nacos.namespace@
+        group: @nacos.group@
       config:
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
-        namespace: @nacosNamespace@
-        group: @nacosGroup@
+        namespace: @nacos.namespace@
+        group: @nacos.group@
   config:
     import:
+      - optional:nacos:okay-common.yml
       - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml
       - optional:nacos:${spring.application.name}-xxl-job-${spring.profiles.active}.properties
 

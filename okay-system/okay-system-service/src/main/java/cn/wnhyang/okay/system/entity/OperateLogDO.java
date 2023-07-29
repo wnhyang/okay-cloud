@@ -51,12 +51,6 @@ public class OperateLogDO extends BaseDO {
     private Long userId;
 
     /**
-     * 用户类型
-     */
-    @TableField("user_type")
-    private Integer userType;
-
-    /**
      * 模块标题
      */
     @TableField("module")

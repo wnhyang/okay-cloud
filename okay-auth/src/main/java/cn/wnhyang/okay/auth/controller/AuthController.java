@@ -19,6 +19,7 @@ import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 @RestController
 @RequiredArgsConstructor
 @Validated
+@RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService authService;

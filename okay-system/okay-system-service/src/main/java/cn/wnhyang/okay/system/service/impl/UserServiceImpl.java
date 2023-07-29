@@ -32,4 +32,9 @@ public class UserServiceImpl implements UserService {
         userMapper.updateById(new UserDO().setId(userId).setLoginIp(loginIp).setLoginDate(LocalDateTime.now()));
     }
 
+    @Override
+    public String userJson(Long id) {
+        return userMapper.selectOne(UserDO::getId, id).toString();
+    }
+
 }

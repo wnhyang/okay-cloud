@@ -163,6 +163,13 @@
                 <version>${sa-token.version}</version>
             </dependency>
 
+            <!-- Sa-Token 权限认证（Reactor响应式集成）, 在线文档：https://sa-token.cc -->
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-reactor-spring-boot-starter</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>cn.dev33</groupId>
                 <artifactId>sa-token-core</artifactId>
@@ -176,10 +183,9 @@
                 <version>${sa-token.version}</version>
             </dependency>
 
-            <!-- Sa-Token 插件：整合redis (使用jackson序列化方式) -->
             <dependency>
                 <groupId>cn.dev33</groupId>
-                <artifactId>sa-token-redis-jackson</artifactId>
+                <artifactId>sa-token-redisson-jackson</artifactId>
                 <version>${sa-token.version}</version>
             </dependency>
 

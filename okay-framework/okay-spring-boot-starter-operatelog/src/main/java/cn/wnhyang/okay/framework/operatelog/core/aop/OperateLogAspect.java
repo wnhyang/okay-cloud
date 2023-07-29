@@ -100,11 +100,9 @@ public class OperateLogAspect {
             LoginUser loginUser = LoginHelper.getLoginUser();
             if (ObjectUtil.isNotNull(loginUser)) {
                 operateLogObj.setUserId(loginUser.getId());
-                operateLogObj.setUserType(loginUser.getType());
             }
             // 日志组装2
-            sb.append("\nuserId : ").append(operateLogObj.getUserType()).append(" ")
-                    .append("userType : ").append(operateLogObj.getUserType()).append(" ");
+            sb.append("\nuserId : ").append(operateLogObj.getUserId()).append(" ");
             // 补全模块信息
             fillModuleFields(operateLogObj, joinPoint, operateLog);
             // 日志组装3
@@ -245,12 +243,7 @@ public class OperateLogAspect {
     }
 
     private static boolean isLogEnable(ProceedingJoinPoint joinPoint, OperateLog operateLog) {
-        // 有 @OperateLog 注解的情况下
-        if (operateLog != null) {
-            return operateLog.enable();
-        }
-        // 没有 @ApiOperation 注解的情况下，只记录 POST、PUT、DELETE 的情况
-        return obtainFirstLogRequestMethod(obtainRequestMethod(joinPoint)) != null;
+        return operateLog != null && operateLog.enable();
     }
 
     private static RequestMethod obtainFirstLogRequestMethod(RequestMethod[] requestMethods) {

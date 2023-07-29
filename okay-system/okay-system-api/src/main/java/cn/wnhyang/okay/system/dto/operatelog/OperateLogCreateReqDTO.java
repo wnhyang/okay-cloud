@@ -18,9 +18,6 @@ public class OperateLogCreateReqDTO implements Serializable {
     @NotNull(message = "用户编号不能为空")
     private Long userId;
 
-    @NotNull(message = "用户类型不能为空")
-    private Integer userType;
-
     @NotEmpty(message = "操作模块不能为空")
     private String module;
 
