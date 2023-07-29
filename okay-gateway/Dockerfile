@@ -9,8 +9,8 @@ ARG JAR_FILE=./target/okay-gateway.jar
 
 COPY ${JAR_FILE} app.jar
 
-EXPOSE 3301
+EXPOSE 9001
 
-ENV TZ=Asia/Shanghai JAVA_OPTS="-Xms128m -Xmx256m -Djava.security.egd=file:/dev/./urandom"
+ENV TZ=Asia/Shanghai JAVA_OPTS="-Xms128m -Xmx128m -Djava.security.egd=file:/dev/./urandom"
 
 ENTRYPOINT ["java","-jar","app.jar","$JAVA_OPTS"]
