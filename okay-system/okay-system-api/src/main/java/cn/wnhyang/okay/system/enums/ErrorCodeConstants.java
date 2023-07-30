@@ -5,7 +5,7 @@ import cn.wnhyang.okay.framework.common.exception.ErrorCode;
 
 /**
  * System 错误码枚举类
- *
+ * <p>
  * system 系统，使用 1-002-000-000 段
  */
 public interface ErrorCodeConstants {
@@ -46,7 +46,7 @@ public interface ErrorCodeConstants {
 
     // ========== 部门模块 1002004000 ==========
     ErrorCode DEPT_NAME_DUPLICATE = new ErrorCode(1002004000, "已经存在该名字的部门");
-    ErrorCode DEPT_PARENT_NOT_EXITS = new ErrorCode(1002004001,"父级部门不存在");
+    ErrorCode DEPT_PARENT_NOT_EXITS = new ErrorCode(1002004001, "父级部门不存在");
     ErrorCode DEPT_NOT_FOUND = new ErrorCode(1002004002, "当前部门不存在");
     ErrorCode DEPT_EXITS_CHILDREN = new ErrorCode(1002004003, "存在子部门，无法删除");
     ErrorCode DEPT_PARENT_ERROR = new ErrorCode(1002004004, "不能设置自己为父部门");

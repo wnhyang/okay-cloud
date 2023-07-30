@@ -16,6 +16,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserMapper extends BaseMapperX<UserDO> {
 
     default UserDO selectByUsername(String username) {
-        return selectOne(UserDO::getUsername,username);
+        return selectOne(UserDO::getUsername, username);
     }
 }
