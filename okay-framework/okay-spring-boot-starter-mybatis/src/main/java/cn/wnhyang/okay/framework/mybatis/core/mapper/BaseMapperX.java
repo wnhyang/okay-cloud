@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author wnhyang
  * @date 2023/4/11
@@ -45,5 +47,17 @@ public interface BaseMapperX<T> extends BaseMapper<T> {
 
     default T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2) {
         return selectOne(new LambdaQueryWrapper<T>().eq(field1, value1).eq(field2, value2));
+    }
+
+    default List<T> selectList() {
+        return selectList(new QueryWrapper<>());
+    }
+
+    default List<T> selectList(String field, Object value) {
+        return selectList(new QueryWrapper<T>().eq(field, value));
+    }
+
+    default List<T> selectList(SFunction<T, ?> field, Object value) {
+        return selectList(new LambdaQueryWrapper<T>().eq(field, value));
     }
 }

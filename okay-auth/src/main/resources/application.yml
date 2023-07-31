@@ -20,7 +20,6 @@ spring:
     import:
       - optional:nacos:okay-common.yml
       - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml
-      - optional:nacos:${spring.application.name}-xxl-job-${spring.profiles.active}.properties
 
   profiles:
     active: @profiles.active@
