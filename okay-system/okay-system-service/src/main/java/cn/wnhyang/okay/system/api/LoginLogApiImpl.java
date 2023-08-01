@@ -7,6 +7,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 登录日志api
+ *
  * @author wnhyang
  * @date 2023/7/26
  **/
