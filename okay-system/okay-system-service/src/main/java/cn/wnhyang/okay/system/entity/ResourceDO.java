@@ -8,9 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
 /**
- * <p>
  * 资源权限表
- * </p>
  *
  * @author wnhyang
  * @since 2023/05/14

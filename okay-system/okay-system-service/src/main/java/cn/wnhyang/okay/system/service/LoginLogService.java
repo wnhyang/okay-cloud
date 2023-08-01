@@ -5,9 +5,7 @@ import cn.wnhyang.okay.system.dto.loginlog.LoginLogCreateReqDTO;
 import javax.validation.Valid;
 
 /**
- * <p>
- * 系统访问记录 服务类
- * </p>
+ * 系统访问记录
  *
  * @author wnhyang
  * @since 2023/07/25

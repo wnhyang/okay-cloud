@@ -9,9 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
- * 系统访问记录 服务实现类
- * </p>
+ * 系统访问记录
  *
  * @author wnhyang
  * @since 2023/07/25

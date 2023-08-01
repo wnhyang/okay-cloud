@@ -3,9 +3,7 @@ package cn.wnhyang.okay.system.service;
 import cn.wnhyang.okay.system.entity.UserDO;
 
 /**
- * <p>
- * 用户信息表 服务类
- * </p>
+ * 用户信息表
  *
  * @author wnhyang
  * @since 2023/05/14

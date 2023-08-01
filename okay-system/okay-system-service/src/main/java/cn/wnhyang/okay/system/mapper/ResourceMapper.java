@@ -5,9 +5,7 @@ import cn.wnhyang.okay.system.entity.ResourceDO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * <p>
- * 资源权限表 Mapper 接口
- * </p>
+ * 资源权限表
  *
  * @author wnhyang
  * @since 2023/05/14

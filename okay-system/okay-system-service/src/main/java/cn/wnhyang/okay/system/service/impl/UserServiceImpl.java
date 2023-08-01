@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 /**
- * <p>
- * 用户信息表 服务实现类
- * </p>
+ * 用户信息表
  *
  * @author wnhyang
  * @since 2023/05/14

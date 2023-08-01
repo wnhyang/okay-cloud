@@ -13,9 +13,7 @@ import static cn.wnhyang.okay.system.entity.OperateLogDO.JAVA_METHOD_ARGS_MAX_LE
 import static cn.wnhyang.okay.system.entity.OperateLogDO.RESULT_MAX_LENGTH;
 
 /**
- * <p>
- * 操作日志记录 服务实现类
- * </p>
+ * 操作日志记录
  *
  * @author wnhyang
  * @since 2023/06/05

@@ -5,9 +5,7 @@ import cn.wnhyang.okay.system.entity.RoleResourceDO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * <p>
- * 角色和资源关联表 Mapper 接口
- * </p>
+ * 角色和资源关联表
  *
  * @author wnhyang
  * @since 2023/05/14

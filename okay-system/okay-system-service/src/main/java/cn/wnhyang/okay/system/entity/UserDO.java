@@ -10,9 +10,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 /**
- * <p>
  * 用户信息表
- * </p>
  *
  * @author wnhyang
  * @since 2023/05/14

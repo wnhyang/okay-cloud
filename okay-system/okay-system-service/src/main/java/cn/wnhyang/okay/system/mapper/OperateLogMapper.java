@@ -5,9 +5,7 @@ import cn.wnhyang.okay.system.entity.OperateLogDO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * <p>
- * 操作日志记录 Mapper 接口
- * </p>
+ * 操作日志记录
  *
  * @author wnhyang
  * @since 2023/06/05

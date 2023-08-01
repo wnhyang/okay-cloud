@@ -3,9 +3,7 @@ package cn.wnhyang.okay.system.service;
 import cn.wnhyang.okay.system.entity.ResourceDO;
 
 /**
- * <p>
- * 资源权限表 服务类
- * </p>
+ * 资源权限表
  *
  * @author wnhyang
  * @since 2023/05/14

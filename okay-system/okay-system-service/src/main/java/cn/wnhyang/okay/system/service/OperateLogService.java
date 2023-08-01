@@ -3,9 +3,7 @@ package cn.wnhyang.okay.system.service;
 import cn.wnhyang.okay.system.dto.operatelog.OperateLogCreateReqDTO;
 
 /**
- * <p>
- * 操作日志记录 服务类
- * </p>
+ * 操作日志记录
  *
  * @author wnhyang
  * @since 2023/06/05

@@ -1,9 +1,7 @@
 package cn.wnhyang.okay.system.service;
 
 /**
- * <p>
- * 角色信息表 服务类
- * </p>
+ * 角色信息表
  *
  * @author wnhyang
  * @since 2023/05/14

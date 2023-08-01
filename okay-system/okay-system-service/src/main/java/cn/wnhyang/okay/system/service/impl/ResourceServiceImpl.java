@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
- * 资源权限表 服务实现类
- * </p>
+ * 资源权限表
  *
  * @author wnhyang
  * @since 2023/05/14
