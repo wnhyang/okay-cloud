@@ -95,7 +95,7 @@
             <id>dev</id>
             <properties>
                 <profiles.active>dev</profiles.active>
-                <nacos.namespace>07e8a85e-e8f4-4551-9fdb-d862b8a8b3f1</nacos.namespace>
+                <nacos.namespace>dev</nacos.namespace>
                 <nacos.group>DEFAULT_GROUP</nacos.group>
             </properties>
             <!-- 加了这个，默认选中 -->
@@ -109,7 +109,7 @@
             <!-- 以下属性用于 bootstrap.yml 文件中 可通过 @activatedProperties@ 获取配置的变量-->
             <properties>
                 <profiles.active>test</profiles.active>
-                <nacos.namespace>b1f81425-8a81-4cb8-804d-c00e4f9e94f3</nacos.namespace>
+                <nacos.namespace>test</nacos.namespace>
                 <nacos.group>DEFAULT_GROUP</nacos.group>
             </properties>
         </profile>
@@ -118,7 +118,7 @@
             <id>prod</id>
             <properties>
                 <profiles.active>prod</profiles.active>
-                <nacos.namespace>c3e58f82-03a3-4cd5-8636-77760010d7ad</nacos.namespace>
+                <nacos.namespace>prod</nacos.namespace>
                 <nacos.group>DEFAULT_GROUP</nacos.group>
             </properties>
         </profile>
