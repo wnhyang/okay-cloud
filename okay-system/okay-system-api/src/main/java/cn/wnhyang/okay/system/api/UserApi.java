@@ -3,6 +3,7 @@ package cn.wnhyang.okay.system.api;
 import cn.wnhyang.okay.framework.common.enums.ApiConstants;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.system.dto.LoginUser;
+import cn.wnhyang.okay.system.dto.user.UserCreateReqDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,4 +37,11 @@ public interface UserApi {
      */
     @PutMapping(PREFIX + "/updateUserLogin")
     void updateUserLogin(@Valid @RequestParam("userId") Long userId, @Valid @RequestParam("loginIp") String loginIp);
+
+    /**
+     * 创建用户
+     *
+     * @param reqDTO 用户信息
+     */
+    void registerUser(UserCreateReqDTO reqDTO);
 }

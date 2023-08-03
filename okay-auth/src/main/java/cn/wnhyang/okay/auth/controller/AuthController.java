@@ -1,8 +1,8 @@
 package cn.wnhyang.okay.auth.controller;
 
-import cn.dev33.satoken.secure.BCrypt;
 import cn.wnhyang.okay.auth.service.AuthService;
 import cn.wnhyang.okay.auth.vo.AuthLoginReqVO;
+import cn.wnhyang.okay.auth.vo.RegisterReqVO;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -37,14 +37,21 @@ public class AuthController {
         return success(authService.login(reqVO));
     }
 
+    @DeleteMapping("/logout")
+    public CommonResult<Boolean> logout() {
+        authService.logout();
+        return success(true);
+    }
+
     /**
      * 注册
      *
-     * @param username 用户名
+     * @param reqVO 注册信息
      * @return 加密数据
      */
     @GetMapping("/register")
-    public CommonResult<String> register(@RequestParam("username") String username) {
-        return success(BCrypt.hashpw("123456"));
+    public CommonResult<Boolean> register(@RequestBody RegisterReqVO reqVO) {
+        authService.register(reqVO);
+        return success(true);
     }
 }

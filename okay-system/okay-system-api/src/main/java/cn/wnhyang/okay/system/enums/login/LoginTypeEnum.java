@@ -13,8 +13,12 @@ public enum LoginTypeEnum {
     /**
      * 账号密码登录
      */
-    LOGIN_USERNAME(100);
+    LOGIN_USERNAME(100),
 
+    /**
+     *
+     */
+    LOGOUT_SELF(120);
 
     private final Integer type;
 }

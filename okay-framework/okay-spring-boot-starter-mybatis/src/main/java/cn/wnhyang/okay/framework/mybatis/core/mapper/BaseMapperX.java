@@ -9,8 +9,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.baomidou.mybatisplus.extension.toolkit.Db;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -59,5 +61,14 @@ public interface BaseMapperX<T> extends BaseMapper<T> {
 
     default List<T> selectList(SFunction<T, ?> field, Object value) {
         return selectList(new LambdaQueryWrapper<T>().eq(field, value));
+    }
+
+    /**
+     * 批量插入，适合大量数据插入
+     *
+     * @param entities 实体们
+     */
+    default void insertBatch(Collection<T> entities) {
+        Db.saveBatch(entities);
     }
 }
