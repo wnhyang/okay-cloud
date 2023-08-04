@@ -5,6 +5,8 @@ import cn.wnhyang.okay.system.entity.UserRoleDO;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 用户和角色关联表
  *
@@ -16,5 +18,9 @@ public interface UserRoleMapper extends BaseMapperX<UserRoleDO> {
 
     default void deleteByUserId(Long userId) {
         delete(Wrappers.lambdaUpdate(UserRoleDO.class).eq(UserRoleDO::getUserId, userId));
+    }
+
+    default List<UserRoleDO> selectListByUserId(Long userId) {
+        return selectList(UserRoleDO::getUserId, userId);
     }
 }

@@ -6,6 +6,7 @@ import cn.wnhyang.okay.system.dto.LoginUser;
 import cn.wnhyang.okay.system.dto.user.UserCreateReqDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -43,5 +44,17 @@ public interface UserApi {
      *
      * @param reqDTO 用户信息
      */
+    @PostMapping(PREFIX + "/register")
     void registerUser(UserCreateReqDTO reqDTO);
+
+    /**
+     * 根据用户名/手机号/邮箱获取用户信息
+     *
+     * @param username 用户名
+     * @param mobile   手机号
+     * @param email    邮箱
+     * @return loginUser
+     */
+    @GetMapping(PREFIX + "/getUserInfo")
+    CommonResult<LoginUser> getUserInfo(@RequestParam("username") String username, @RequestParam("mobile") String mobile, @RequestParam("email") String email);
 }

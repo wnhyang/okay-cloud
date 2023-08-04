@@ -3,6 +3,7 @@ package cn.wnhyang.okay.auth.service;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.wnhyang.okay.auth.vo.AuthLoginReqVO;
 import cn.wnhyang.okay.auth.vo.RegisterReqVO;
 import cn.wnhyang.okay.framework.common.enums.CommonStatusEnum;
@@ -38,14 +39,25 @@ public class AuthService {
 
     private final LoginLogApi loginLogApi;
 
-    private LoginUser authenticate(String username, String password) {
-        LoginTypeEnum loginTypeEnum = LoginTypeEnum.LOGIN_USERNAME;
-        LoginUser user = userApi.getUserByUsername(username).getCheckedData();
-        if (user == null) {
-            createLoginLog(null, username, loginTypeEnum, LoginResultEnum.BAD_CREDENTIALS);
+    public String login(AuthLoginReqVO reqVO) {
+        String username = reqVO.getUsername();
+        String mobile = reqVO.getMobile();
+        String email = reqVO.getEmail();
+        LoginUser user;
+        LoginTypeEnum loginTypeEnum;
+        if (StrUtil.isNotEmpty(username)) {
+            user = userApi.getUserInfo(username, null, null).getCheckedData();
+            loginTypeEnum = LoginTypeEnum.LOGIN_USERNAME;
+        } else if (StrUtil.isNotEmpty(mobile)) {
+            user = userApi.getUserInfo(null, mobile, null).getCheckedData();
+            loginTypeEnum = LoginTypeEnum.LOGIN_MOBILE;
+        } else if (StrUtil.isNotEmpty(email)) {
+            user = userApi.getUserInfo(null, null, email).getCheckedData();
+            loginTypeEnum = LoginTypeEnum.LOGIN_EMAIL;
+        } else {
             throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
         }
-        if (!BCrypt.checkpw(password, user.getPassword())) {
+        if (!BCrypt.checkpw(reqVO.getPassword(), user.getPassword())) {
             createLoginLog(user.getId(), username, loginTypeEnum, LoginResultEnum.BAD_CREDENTIALS);
             throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
         }
@@ -54,15 +66,10 @@ public class AuthService {
             createLoginLog(user.getId(), username, loginTypeEnum, LoginResultEnum.USER_DISABLED);
             throw exception(AUTH_LOGIN_USER_DISABLED);
         }
-        return user;
-    }
-
-    public String login(AuthLoginReqVO reqVO) {
-        LoginUser user = authenticate(reqVO.getUsername(), reqVO.getPassword());
 
         // 创建 Token 令牌，记录登录日志
         LoginHelper.login(user, DeviceTypeEnum.PC);
-        createLoginLog(user.getId(), reqVO.getUsername(), LoginTypeEnum.LOGIN_USERNAME, LoginResultEnum.SUCCESS);
+        createLoginLog(user.getId(), username, LoginTypeEnum.LOGIN_USERNAME, LoginResultEnum.SUCCESS);
         return StpUtil.getTokenValue();
     }
 
@@ -81,7 +88,7 @@ public class AuthService {
         UserCreateReqDTO reqDTO = new UserCreateReqDTO();
         reqDTO.setUsername(username);
         reqDTO.setNickname(username);
-        reqDTO.setPassword(BCrypt.hashpw(username));
+        reqDTO.setPassword(BCrypt.hashpw(password));
         reqDTO.setType(userType);
         userApi.registerUser(reqDTO);
     }

@@ -40,4 +40,10 @@ public class UserApiImpl implements UserApi {
     public void registerUser(UserCreateReqDTO reqDTO) {
         userService.registerUser(reqDTO);
     }
+
+    @Override
+    public CommonResult<LoginUser> getUserInfo(String username, String mobile, String email) {
+        return success(userService.getUserInfo(username, mobile, email));
+    }
+
 }

@@ -1,5 +1,6 @@
 package cn.wnhyang.okay.system.service;
 
+import cn.wnhyang.okay.system.dto.LoginUser;
 import cn.wnhyang.okay.system.dto.user.UserCreateReqDTO;
 import cn.wnhyang.okay.system.entity.UserDO;
 import cn.wnhyang.okay.system.vo.user.UserCreateReqVO;
@@ -74,4 +75,14 @@ public interface UserService {
      * @param reqVO id+状态
      */
     void updateUserStatus(UserUpdateStatusReqVO reqVO);
+
+    /**
+     * 根据用户名/手机号/邮箱获取用户信息
+     *
+     * @param username 用户名
+     * @param mobile   手机号
+     * @param email    邮箱
+     * @return loginUser
+     */
+    LoginUser getUserInfo(String username, String mobile, String email);
 }

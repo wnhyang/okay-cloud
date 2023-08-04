@@ -2,13 +2,19 @@ package cn.wnhyang.okay.system.service.impl;
 
 import cn.dev33.satoken.secure.BCrypt;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.wnhyang.okay.framework.common.util.CollectionUtils;
+import cn.wnhyang.okay.framework.mybatis.core.query.LambdaQueryWrapperX;
+import cn.wnhyang.okay.framework.satoken.utils.LoginHelper;
 import cn.wnhyang.okay.system.convert.user.UserConvert;
+import cn.wnhyang.okay.system.dto.LoginUser;
 import cn.wnhyang.okay.system.dto.user.UserCreateReqDTO;
 import cn.wnhyang.okay.system.entity.UserDO;
 import cn.wnhyang.okay.system.entity.UserRoleDO;
 import cn.wnhyang.okay.system.mapper.UserMapper;
 import cn.wnhyang.okay.system.mapper.UserRoleMapper;
+import cn.wnhyang.okay.system.service.PermissionService;
+import cn.wnhyang.okay.system.service.RoleService;
 import cn.wnhyang.okay.system.service.UserService;
 import cn.wnhyang.okay.system.vo.user.UserCreateReqVO;
 import cn.wnhyang.okay.system.vo.user.UserUpdatePasswordReqVO;
@@ -19,6 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
@@ -33,9 +41,13 @@ import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private final PermissionService permissionService;
+
     private final UserMapper userMapper;
 
     private final UserRoleMapper userRoleMapper;
+
+    private final RoleService roleService;
 
     @Override
     public UserDO getUserByUsername(String username) {
@@ -102,6 +114,41 @@ public class UserServiceImpl implements UserService {
         checkUserExists(reqVO.getId());
         UserDO user = new UserDO().setId(reqVO.getId()).setStatus(reqVO.getStatus());
         userMapper.updateById(user);
+    }
+
+    @Override
+    public LoginUser getUserInfo(String username, String mobile, String email) {
+        LambdaQueryWrapperX<UserDO> wrapperX = new LambdaQueryWrapperX<>();
+        if (StrUtil.isNotEmpty(username)) {
+            wrapperX.eq(UserDO::getUsername, username);
+        } else if (StrUtil.isNotEmpty(mobile)) {
+            wrapperX.eq(UserDO::getMobile, mobile);
+        } else if (StrUtil.isNotEmpty(email)) {
+            wrapperX.eq(UserDO::getEmail, email);
+        } else {
+            throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
+        }
+        UserDO user = userMapper.selectOne(wrapperX);
+        if (user == null) {
+            throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
+        }
+        return buildLoginUser(user);
+    }
+
+    private LoginUser buildLoginUser(UserDO user) {
+        LoginUser loginUser = UserConvert.INSTANCE.convert(user);
+        Set<Long> roleIds = permissionService.getUserRoleIdListByUserId(loginUser.getId());
+        loginUser.setRoleIds(roleIds);
+        Set<String> roleCodes = roleService.getRoleCodeList(roleIds);
+        loginUser.setRoleCode(roleCodes);
+        Set<String> resourcePerms = new HashSet<>();
+        if (LoginHelper.isAdministrator(loginUser.getId())) {
+            resourcePerms.add("*:*:*");
+        } else {
+            resourcePerms.addAll(permissionService.getRoleResourcePermsByRoleId(roleIds));
+        }
+        loginUser.setResourcePermission(resourcePerms);
+        return loginUser;
     }
 
     private void checkUserExists(Long id) {

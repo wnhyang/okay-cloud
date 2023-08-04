@@ -4,6 +4,9 @@ import cn.wnhyang.okay.framework.mybatis.core.mapper.BaseMapperX;
 import cn.wnhyang.okay.system.entity.RoleResourceDO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * 角色和资源关联表
  *
@@ -13,4 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface RoleResourceMapper extends BaseMapperX<RoleResourceDO> {
 
+    default List<RoleResourceDO> selectListByRoleId(Collection<Long> roleIds) {
+        return selectList(RoleResourceDO::getRoleId, roleIds);
+    }
 }

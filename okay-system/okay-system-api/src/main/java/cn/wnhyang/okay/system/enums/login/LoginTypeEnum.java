@@ -16,7 +16,17 @@ public enum LoginTypeEnum {
     LOGIN_USERNAME(100),
 
     /**
-     *
+     * 手机号密码登录
+     */
+    LOGIN_MOBILE(101),
+
+    /**
+     * 邮箱密码登录
+     */
+    LOGIN_EMAIL(102),
+
+    /**
+     * 自己退出
      */
     LOGOUT_SELF(120);
 

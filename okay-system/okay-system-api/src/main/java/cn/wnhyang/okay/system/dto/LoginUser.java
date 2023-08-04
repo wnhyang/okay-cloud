@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * @author wnhyang
@@ -76,5 +77,20 @@ public class LoginUser implements Serializable {
      * 最后登录时间
      */
     private LocalDateTime loginDate;
+
+    /**
+     * 角色集合
+     */
+    private Set<Long> roleIds;
+
+    /**
+     * 角色权限
+     */
+    private Set<String> roleCode;
+
+    /**
+     * 菜单权限
+     */
+    private Set<String> resourcePermission;
 
 }

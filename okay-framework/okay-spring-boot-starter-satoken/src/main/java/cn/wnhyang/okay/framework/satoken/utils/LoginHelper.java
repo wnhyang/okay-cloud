@@ -7,6 +7,7 @@ import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.wnhyang.okay.framework.common.enums.DeviceTypeEnum;
+import cn.wnhyang.okay.framework.common.enums.UserConstants;
 import cn.wnhyang.okay.system.dto.LoginUser;
 import lombok.experimental.UtilityClass;
 
@@ -59,5 +60,9 @@ public class LoginHelper {
         loginUser = (LoginUser) session.get(LOGIN_USER_KEY);
         SaHolder.getStorage().set(LOGIN_USER_KEY, loginUser);
         return loginUser;
+    }
+
+    public static boolean isAdministrator(Long userId) {
+        return UserConstants.ADMINISTRATOR_ID.equals(userId);
     }
 }
