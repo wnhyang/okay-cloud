@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 /**
  * 用户信息表
@@ -102,8 +101,4 @@ public class UserDO extends BaseDO {
     @TableField("login_date")
     private LocalDateTime loginDate;
 
-    /**
-     * 角色集合
-     */
-    private Set<Long> roleIds;
 }
