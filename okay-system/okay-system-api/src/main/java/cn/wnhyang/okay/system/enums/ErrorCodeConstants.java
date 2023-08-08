@@ -35,13 +35,15 @@ public interface ErrorCodeConstants {
     ErrorCode ROLE_ADMIN_CODE_ERROR = new ErrorCode(1002002005, "编码【{}】不能使用");
 
     // ========== 用户模块 1002003000 ==========
-    ErrorCode USER_USERNAME_EXISTS = new ErrorCode(1002003000, "用户账号已经存在");
-    ErrorCode USER_MOBILE_EXISTS = new ErrorCode(1002003001, "手机号已经存在");
-    ErrorCode USER_EMAIL_EXISTS = new ErrorCode(1002003002, "邮箱已经存在");
-    ErrorCode USER_NOT_EXISTS = new ErrorCode(1002003003, "用户不存在");
-    ErrorCode USER_IMPORT_LIST_IS_EMPTY = new ErrorCode(1002003004, "导入用户数据不能为空！");
-    ErrorCode USER_PASSWORD_FAILED = new ErrorCode(1002003005, "用户密码校验失败");
-    ErrorCode USER_IS_DISABLE = new ErrorCode(1002003006, "名字为【{}】的用户已被禁用");
+
+    ErrorCode USER_BAD_CREDENTIALS = new ErrorCode(1002003000, "登录失败，账号密码不正确");
+    ErrorCode USER_USERNAME_EXISTS = new ErrorCode(1002003001, "用户账号已经存在");
+    ErrorCode USER_MOBILE_EXISTS = new ErrorCode(1002003002, "手机号已经存在");
+    ErrorCode USER_EMAIL_EXISTS = new ErrorCode(1002003003, "邮箱已经存在");
+    ErrorCode USER_NOT_EXISTS = new ErrorCode(1002003004, "用户不存在");
+    ErrorCode USER_IMPORT_LIST_IS_EMPTY = new ErrorCode(1002003005, "导入用户数据不能为空！");
+    ErrorCode USER_PASSWORD_FAILED = new ErrorCode(1002003006, "用户密码校验失败");
+    ErrorCode USER_IS_DISABLE = new ErrorCode(1002003007, "名字为【{}】的用户已被禁用");
     ErrorCode USER_COUNT_MAX = new ErrorCode(1002003008, "创建用户失败，原因：超过租户最大租户配额({})！");
 
     // ========== 部门模块 1002004000 ==========

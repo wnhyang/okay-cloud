@@ -74,8 +74,8 @@ public class UserServiceImpl implements UserService {
         UserDO user = UserConvert.INSTANCE.convert(reqVO);
         user.setPassword(BCrypt.hashpw(reqVO.getPassword()));
         userMapper.insert(user);
-        if (CollectionUtil.isNotEmpty(user.getRoleIds())) {
-            userRoleMapper.insertBatch(CollectionUtils.convertList(user.getRoleIds(),
+        if (CollectionUtil.isNotEmpty(reqVO.getRoleIds())) {
+            userRoleMapper.insertBatch(CollectionUtils.convertList(reqVO.getRoleIds(),
                     roleId -> new UserRoleDO().setUserId(user.getId()).setRoleId(roleId)));
         }
         return user.getId();
@@ -87,8 +87,8 @@ public class UserServiceImpl implements UserService {
         checkUserForCreateOrUpdate(reqVO.getUsername(), reqVO.getMobile(), reqVO.getEmail());
         UserDO user = UserConvert.INSTANCE.convert(reqVO);
         userRoleMapper.deleteByUserId(user.getId());
-        if (CollectionUtil.isNotEmpty(user.getRoleIds())) {
-            userRoleMapper.insertBatch(CollectionUtils.convertList(user.getRoleIds(),
+        if (CollectionUtil.isNotEmpty(reqVO.getRoleIds())) {
+            userRoleMapper.insertBatch(CollectionUtils.convertList(reqVO.getRoleIds(),
                     roleId -> new UserRoleDO().setUserId(user.getId()).setRoleId(roleId)));
         }
         userMapper.updateById(user);
@@ -126,11 +126,11 @@ public class UserServiceImpl implements UserService {
         } else if (StrUtil.isNotEmpty(email)) {
             wrapperX.eq(UserDO::getEmail, email);
         } else {
-            throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
+            throw exception(USER_BAD_CREDENTIALS);
         }
         UserDO user = userMapper.selectOne(wrapperX);
         if (user == null) {
-            throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
+            throw exception(USER_BAD_CREDENTIALS);
         }
         return buildLoginUser(user);
     }
