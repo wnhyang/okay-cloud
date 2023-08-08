@@ -1,7 +1,7 @@
 package cn.wnhyang.okay.auth.controller;
 
 import cn.wnhyang.okay.auth.service.AuthService;
-import cn.wnhyang.okay.auth.vo.AuthLoginReqVO;
+import cn.wnhyang.okay.auth.vo.LoginReqVO;
 import cn.wnhyang.okay.auth.vo.RegisterReqVO;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class AuthController {
      * @return token
      */
     @PostMapping("/login")
-    public CommonResult<String> login(@RequestBody @Valid AuthLoginReqVO reqVO) {
+    public CommonResult<String> login(@RequestBody @Valid LoginReqVO reqVO) {
         return success(authService.login(reqVO));
     }
 

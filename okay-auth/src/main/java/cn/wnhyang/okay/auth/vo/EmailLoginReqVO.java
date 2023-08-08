@@ -5,23 +5,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import javax.validation.constraints.Email;
 
 /**
  * @author wnhyang
- * @date 2023/7/24
+ * @date 2023/8/8
  **/
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthLoginRespVO {
+public class EmailLoginReqVO {
 
-    private Long userId;
-
-    private String accessToken;
-
-    private String refreshToken;
-
-    private LocalDateTime expiresTime;
+    /**
+     * 用户邮箱
+     */
+    @Email(message = "邮箱格式不正确")
+    private String email;
 }

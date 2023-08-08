@@ -119,14 +119,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public LoginUser getUserInfo(String username, String mobile, String email) {
         LambdaQueryWrapperX<UserDO> wrapperX = new LambdaQueryWrapperX<>();
-        if (StrUtil.isNotEmpty(username)) {
-            wrapperX.eq(UserDO::getUsername, username);
-        } else if (StrUtil.isNotEmpty(mobile)) {
-            wrapperX.eq(UserDO::getMobile, mobile);
-        } else if (StrUtil.isNotEmpty(email)) {
-            wrapperX.eq(UserDO::getEmail, email);
-        } else {
-            throw exception(USER_BAD_CREDENTIALS);
+        wrapperX.eqIfPresent(UserDO::getUsername, username);
+        if (StrUtil.isNotEmpty(mobile)) {
+            wrapperX.or().eq(UserDO::getMobile, mobile);
+        }
+        if (StrUtil.isNotEmpty(email)) {
+            wrapperX.or().eq(UserDO::getEmail, email);
         }
         UserDO user = userMapper.selectOne(wrapperX);
         if (user == null) {

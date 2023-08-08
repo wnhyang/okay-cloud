@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class LoginLogServiceImpl implements LoginLogService {
 
-    final LoginLogMapper loginLogMapper;
+    private final LoginLogMapper loginLogMapper;
 
     @Override
     public void createLoginLog(LoginLogCreateReqDTO reqDTO) {

@@ -25,7 +25,7 @@ public class LoginLogCreateReqDTO implements Serializable {
 
     @NotBlank(message = "用户账号不能为空")
     @Size(max = 30, message = "用户账号长度不能超过30个字符")
-    private String username;
+    private String account;
 
     @NotNull(message = "登录结果不能为空")
     private Integer result;

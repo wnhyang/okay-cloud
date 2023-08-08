@@ -48,8 +48,8 @@ public class LoginLogDO extends BaseDO {
     /**
      * 用户账号
      */
-    @TableField("username")
-    private String username;
+    @TableField("account")
+    private String account;
 
     /**
      * 登录结果

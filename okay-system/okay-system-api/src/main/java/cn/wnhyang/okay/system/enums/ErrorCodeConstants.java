@@ -36,7 +36,7 @@ public interface ErrorCodeConstants {
 
     // ========== 用户模块 1002003000 ==========
 
-    ErrorCode USER_BAD_CREDENTIALS = new ErrorCode(1002003000, "登录失败，账号密码不正确");
+    ErrorCode USER_BAD_CREDENTIALS = new ErrorCode(1002003000, "账号不正确");
     ErrorCode USER_USERNAME_EXISTS = new ErrorCode(1002003001, "用户账号已经存在");
     ErrorCode USER_MOBILE_EXISTS = new ErrorCode(1002003002, "手机号已经存在");
     ErrorCode USER_EMAIL_EXISTS = new ErrorCode(1002003003, "邮箱已经存在");

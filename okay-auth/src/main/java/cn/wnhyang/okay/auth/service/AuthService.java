@@ -3,12 +3,14 @@ package cn.wnhyang.okay.auth.service;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.wnhyang.okay.auth.vo.AuthLoginReqVO;
+import cn.wnhyang.okay.auth.vo.LoginReqVO;
 import cn.wnhyang.okay.auth.vo.RegisterReqVO;
 import cn.wnhyang.okay.framework.common.enums.CommonStatusEnum;
 import cn.wnhyang.okay.framework.common.enums.DeviceTypeEnum;
 import cn.wnhyang.okay.framework.common.enums.UserTypeEnum;
+import cn.wnhyang.okay.framework.common.util.RegexUtils;
 import cn.wnhyang.okay.framework.common.util.ServletUtils;
 import cn.wnhyang.okay.framework.satoken.utils.LoginHelper;
 import cn.wnhyang.okay.system.api.LoginLogApi;
@@ -39,37 +41,37 @@ public class AuthService {
 
     private final LoginLogApi loginLogApi;
 
-    public String login(AuthLoginReqVO reqVO) {
-        String username = reqVO.getUsername();
-        String mobile = reqVO.getMobile();
-        String email = reqVO.getEmail();
+    public String login(LoginReqVO reqVO) {
+        String account = reqVO.getAccount();
         LoginUser user;
         LoginTypeEnum loginTypeEnum;
-        if (StrUtil.isNotEmpty(username)) {
-            user = userApi.getUserInfo(username, null, null).getCheckedData();
-            loginTypeEnum = LoginTypeEnum.LOGIN_USERNAME;
-        } else if (StrUtil.isNotEmpty(mobile)) {
-            user = userApi.getUserInfo(null, mobile, null).getCheckedData();
-            loginTypeEnum = LoginTypeEnum.LOGIN_MOBILE;
-        } else if (StrUtil.isNotEmpty(email)) {
-            user = userApi.getUserInfo(null, null, email).getCheckedData();
-            loginTypeEnum = LoginTypeEnum.LOGIN_EMAIL;
+        if (StrUtil.isNotEmpty(account)) {
+            if (ReUtil.isMatch(RegexUtils.MOBILE, account)) {
+                user = userApi.getUserInfo(account, account, "").getCheckedData();
+                loginTypeEnum = LoginTypeEnum.LOGIN_MOBILE;
+            } else if (ReUtil.isMatch(RegexUtils.EMAIL, account)) {
+                user = userApi.getUserInfo(account, "", account).getCheckedData();
+                loginTypeEnum = LoginTypeEnum.LOGIN_EMAIL;
+            } else {
+                user = userApi.getUserInfo(account, "", "").getCheckedData();
+                loginTypeEnum = LoginTypeEnum.LOGIN_USERNAME;
+            }
         } else {
             throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
         }
         if (!BCrypt.checkpw(reqVO.getPassword(), user.getPassword())) {
-            createLoginLog(user.getId(), username, loginTypeEnum, LoginResultEnum.BAD_CREDENTIALS);
+            createLoginLog(user.getId(), account, loginTypeEnum, LoginResultEnum.BAD_CREDENTIALS);
             throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
         }
         // 校验是否禁用
         if (ObjectUtil.notEqual(user.getStatus(), CommonStatusEnum.ENABLE.getStatus())) {
-            createLoginLog(user.getId(), username, loginTypeEnum, LoginResultEnum.USER_DISABLED);
+            createLoginLog(user.getId(), account, loginTypeEnum, LoginResultEnum.USER_DISABLED);
             throw exception(AUTH_LOGIN_USER_DISABLED);
         }
 
         // 创建 Token 令牌，记录登录日志
         LoginHelper.login(user, DeviceTypeEnum.PC);
-        createLoginLog(user.getId(), username, LoginTypeEnum.LOGIN_USERNAME, LoginResultEnum.SUCCESS);
+        createLoginLog(user.getId(), account, loginTypeEnum, LoginResultEnum.SUCCESS);
         return StpUtil.getTokenValue();
     }
 
@@ -93,13 +95,13 @@ public class AuthService {
         userApi.registerUser(reqDTO);
     }
 
-    private void createLoginLog(Long userId, String username, LoginTypeEnum loginTypeEnum, LoginResultEnum loginResultEnum) {
+    private void createLoginLog(Long userId, String account, LoginTypeEnum loginTypeEnum, LoginResultEnum loginResultEnum) {
         // 插入登录日志
         LoginLogCreateReqDTO reqDTO = new LoginLogCreateReqDTO();
         reqDTO.setLoginType(loginTypeEnum.getType());
         reqDTO.setUserId(userId);
         reqDTO.setUserType(UserTypeEnum.PC.getType());
-        reqDTO.setUsername(username);
+        reqDTO.setAccount(account);
         reqDTO.setUserAgent(ServletUtils.getUserAgent());
         reqDTO.setUserIp(ServletUtils.getClientIP());
         reqDTO.setResult(loginResultEnum.getResult());
