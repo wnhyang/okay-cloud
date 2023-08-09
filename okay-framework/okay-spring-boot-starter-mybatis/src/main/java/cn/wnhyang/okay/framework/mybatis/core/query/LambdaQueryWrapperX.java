@@ -93,6 +93,12 @@ public class LambdaQueryWrapperX<T> extends LambdaQueryWrapper<T> {
         return this;
     }
 
+    public LambdaQueryWrapperX<T> betweenIfPresent(SFunction<T, ?> column, Object[] values) {
+        Object val1 = ArrayUtil.get(values, 0);
+        Object val2 = ArrayUtil.get(values, 1);
+        return betweenIfPresent(column, val1, val2);
+    }
+
     // ========== 重写父类方法，方便链式调用 ==========
 
     @Override

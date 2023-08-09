@@ -1,12 +1,10 @@
 package cn.wnhyang.okay.system.service;
 
+import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.system.dto.LoginUser;
 import cn.wnhyang.okay.system.dto.user.UserCreateReqDTO;
 import cn.wnhyang.okay.system.entity.UserDO;
-import cn.wnhyang.okay.system.vo.user.UserCreateReqVO;
-import cn.wnhyang.okay.system.vo.user.UserUpdatePasswordReqVO;
-import cn.wnhyang.okay.system.vo.user.UserUpdateReqVO;
-import cn.wnhyang.okay.system.vo.user.UserUpdateStatusReqVO;
+import cn.wnhyang.okay.system.vo.user.*;
 
 /**
  * 用户信息表
@@ -85,4 +83,20 @@ public interface UserService {
      * @return loginUser
      */
     LoginUser getUserInfo(String username, String mobile, String email);
+
+    /**
+     * 查询用户信息
+     *
+     * @param id id
+     * @return 用户
+     */
+    UserDO getUser(Long id);
+
+    /**
+     * 查询用户信息列表
+     *
+     * @param reqVO 请求数据
+     * @return 用户列表
+     */
+    PageResult<UserDO> getUserPage(UserPageReqVO reqVO);
 }

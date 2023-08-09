@@ -3,6 +3,7 @@ package cn.wnhyang.okay.system.service.impl;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.common.util.CollectionUtils;
 import cn.wnhyang.okay.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.wnhyang.okay.framework.satoken.utils.LoginHelper;
@@ -16,10 +17,7 @@ import cn.wnhyang.okay.system.mapper.UserRoleMapper;
 import cn.wnhyang.okay.system.service.PermissionService;
 import cn.wnhyang.okay.system.service.RoleService;
 import cn.wnhyang.okay.system.service.UserService;
-import cn.wnhyang.okay.system.vo.user.UserCreateReqVO;
-import cn.wnhyang.okay.system.vo.user.UserUpdatePasswordReqVO;
-import cn.wnhyang.okay.system.vo.user.UserUpdateReqVO;
-import cn.wnhyang.okay.system.vo.user.UserUpdateStatusReqVO;
+import cn.wnhyang.okay.system.vo.user.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -131,6 +129,16 @@ public class UserServiceImpl implements UserService {
             throw exception(USER_BAD_CREDENTIALS);
         }
         return buildLoginUser(user);
+    }
+
+    @Override
+    public UserDO getUser(Long id) {
+        return userMapper.selectById(id);
+    }
+
+    @Override
+    public PageResult<UserDO> getUserPage(UserPageReqVO reqVO) {
+        return userMapper.selectPage(reqVO);
     }
 
     private LoginUser buildLoginUser(UserDO user) {

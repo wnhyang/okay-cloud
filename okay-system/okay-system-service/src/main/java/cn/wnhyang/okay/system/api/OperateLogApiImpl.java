@@ -22,6 +22,12 @@ public class OperateLogApiImpl implements OperateLogApi {
 
     private final OperateLogService operateLogService;
 
+    /**
+     * 记录操作日志
+     *
+     * @param createReqDTO 操作日志请求
+     * @return true/false
+     */
     @Override
     public CommonResult<Boolean> createOperateLog(OperateLogCreateReqDTO createReqDTO) {
         operateLogService.createOperateLog(createReqDTO);

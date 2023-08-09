@@ -19,6 +19,11 @@ public class LoginLogApiImpl implements LoginLogApi {
 
     private final LoginLogService loginLogService;
 
+    /**
+     * 创建登录日志
+     *
+     * @param reqDTO 日志信息
+     */
     @Override
     public void createLoginLog(LoginLogCreateReqDTO reqDTO) {
         loginLogService.createLoginLog(reqDTO);
