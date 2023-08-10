@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2023/06/05
  */
 @RestController
-@RequestMapping("/system/operate-log")
+@RequestMapping("/system/operateLog")
 public class OperateLogController {
 
 }

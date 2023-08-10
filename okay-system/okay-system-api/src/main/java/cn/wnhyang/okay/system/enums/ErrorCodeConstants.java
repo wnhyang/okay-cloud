@@ -33,6 +33,7 @@ public interface ErrorCodeConstants {
     ErrorCode ROLE_CAN_NOT_UPDATE_SYSTEM_TYPE_ROLE = new ErrorCode(1002002003, "不能操作类型为系统内置的角色");
     ErrorCode ROLE_IS_DISABLE = new ErrorCode(1002002004, "名字为【{}】的角色已被禁用");
     ErrorCode ROLE_ADMIN_CODE_ERROR = new ErrorCode(1002002005, "编码【{}】不能使用");
+    ErrorCode ROLE_HAS_USER = new ErrorCode(1002002006, "角色下存在用户");
 
     // ========== 用户模块 1002003000 ==========
 

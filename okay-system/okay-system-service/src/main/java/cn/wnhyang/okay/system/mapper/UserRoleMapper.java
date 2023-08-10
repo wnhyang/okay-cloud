@@ -2,6 +2,7 @@ package cn.wnhyang.okay.system.mapper;
 
 import cn.wnhyang.okay.framework.mybatis.core.mapper.BaseMapperX;
 import cn.wnhyang.okay.system.entity.UserRoleDO;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -22,5 +23,9 @@ public interface UserRoleMapper extends BaseMapperX<UserRoleDO> {
 
     default List<UserRoleDO> selectListByUserId(Long userId) {
         return selectList(UserRoleDO::getUserId, userId);
+    }
+
+    default void deleteByRoleId(Long roleId) {
+        delete(new LambdaQueryWrapper<UserRoleDO>().eq(UserRoleDO::getRoleId, roleId));
     }
 }

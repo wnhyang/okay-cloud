@@ -50,4 +50,11 @@ public class PermissionServiceImpl implements PermissionService {
         Set<Long> resourceIds = getRoleResourceListByRoleId(roleIds);
         return convertSet(resourceMapper.selectBatchIds(resourceIds), ResourceDO::getPermission);
     }
+
+    @Override
+    public void deleteRoleById(Long roleId) {
+        userRoleMapper.deleteByRoleId(roleId);
+
+        roleResourceMapper.deleteByRoleId(roleId);
+    }
 }

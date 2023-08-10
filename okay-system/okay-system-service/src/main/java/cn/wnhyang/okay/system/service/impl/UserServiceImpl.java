@@ -61,14 +61,14 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void registerUser(UserCreateReqDTO reqDTO) {
-        checkUserForCreateOrUpdate(reqDTO.getUsername(), reqDTO.getMobile(), reqDTO.getEmail());
+        validateUserForCreateOrUpdate(null, reqDTO.getUsername(), reqDTO.getMobile(), reqDTO.getEmail());
         userMapper.insert(UserConvert.INSTANCE.convert(reqDTO));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createUser(UserCreateReqVO reqVO) {
-        checkUserForCreateOrUpdate(reqVO.getUsername(), reqVO.getMobile(), reqVO.getEmail());
+        validateUserForCreateOrUpdate(null, reqVO.getUsername(), reqVO.getMobile(), reqVO.getEmail());
         UserDO user = UserConvert.INSTANCE.convert(reqVO);
         user.setPassword(BCrypt.hashpw(reqVO.getPassword()));
         userMapper.insert(user);
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateUser(UserUpdateReqVO reqVO) {
-        checkUserForCreateOrUpdate(reqVO.getUsername(), reqVO.getMobile(), reqVO.getEmail());
+        validateUserForCreateOrUpdate(reqVO.getId(), reqVO.getUsername(), reqVO.getMobile(), reqVO.getEmail());
         UserDO user = UserConvert.INSTANCE.convert(reqVO);
         userRoleMapper.deleteByUserId(user.getId());
         if (CollectionUtil.isNotEmpty(reqVO.getRoleIds())) {
@@ -95,22 +95,24 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteUser(Long id) {
-        checkUserExists(id);
+        validateUserExists(id);
         userMapper.deleteById(id);
         userRoleMapper.deleteByUserId(id);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void updateUserPassword(UserUpdatePasswordReqVO reqVO) {
-        checkUserExists(reqVO.getId());
+        validateUserExists(reqVO.getId());
         UserDO user = new UserDO().setId(reqVO.getId()).setPassword(reqVO.getPassword());
         userMapper.updateById(user);
     }
 
     @Override
-    public void updateUserStatus(UserUpdateStatusReqVO reqVO) {
-        checkUserExists(reqVO.getId());
-        UserDO user = new UserDO().setId(reqVO.getId()).setStatus(reqVO.getStatus());
+    @Transactional(rollbackFor = Exception.class)
+    public void updateUserStatus(Long id, Integer status) {
+        validateUserExists(id);
+        UserDO user = new UserDO().setId(id).setStatus(status);
         userMapper.updateById(user);
     }
 
@@ -157,7 +159,19 @@ public class UserServiceImpl implements UserService {
         return loginUser;
     }
 
-    private void checkUserExists(Long id) {
+
+    private void validateUserForCreateOrUpdate(Long id, String username, String mobile, String email) {
+        // 校验用户存在
+        validateUserExists(id);
+        // 校验用户名唯一
+        validateUsernameUnique(id, username);
+        // 校验手机号唯一
+        validateMobileUnique(id, mobile);
+        // 校验邮箱唯一
+        validateEmailUnique(id, email);
+    }
+
+    private void validateUserExists(Long id) {
         if (id == null) {
             return;
         }
@@ -167,28 +181,55 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void checkUserForCreateOrUpdate(String username, String mobile, String email) {
-        if (!checkUsernameUnique(username)) {
+    private void validateUsernameUnique(Long id, String username) {
+        if (StrUtil.isBlank(username)) {
+            return;
+        }
+        UserDO user = userMapper.selectByUsername(username);
+        if (user == null) {
+            return;
+        }
+        // 如果 id 为空，说明不用比较是否为相同 id 的用户
+        if (id == null) {
             throw exception(USER_USERNAME_EXISTS);
         }
-        if (!checkMobileUnique(mobile)) {
+        if (!user.getId().equals(id)) {
+            throw exception(USER_USERNAME_EXISTS);
+        }
+    }
+
+    private void validateMobileUnique(Long id, String mobile) {
+        if (StrUtil.isBlank(mobile)) {
+            return;
+        }
+        UserDO user = userMapper.selectByMobile(mobile);
+        if (user == null) {
+            return;
+        }
+        // 如果 id 为空，说明不用比较是否为相同 id 的用户
+        if (id == null) {
             throw exception(USER_MOBILE_EXISTS);
         }
-        if (!checkEmailUnique(email)) {
-            throw exception(USER_EMAIL_EXISTS);
+        if (!user.getId().equals(id)) {
+            throw exception(USER_MOBILE_EXISTS);
         }
     }
 
-    private boolean checkUsernameUnique(String username) {
-        return userMapper.selectOne(UserDO::getUsername, username) == null;
-    }
-
-    private boolean checkMobileUnique(String mobile) {
-        return userMapper.selectOne(UserDO::getMobile, mobile) == null;
-    }
-
-    private boolean checkEmailUnique(String email) {
-        return userMapper.selectOne(UserDO::getEmail, email) == null;
+    private void validateEmailUnique(Long id, String email) {
+        if (StrUtil.isBlank(email)) {
+            return;
+        }
+        UserDO user = userMapper.selectByEmail(email);
+        if (user == null) {
+            return;
+        }
+        // 如果 id 为空，说明不用比较是否为相同 id 的用户
+        if (id == null) {
+            throw exception(USER_EMAIL_EXISTS);
+        }
+        if (!user.getId().equals(id)) {
+            throw exception(USER_EMAIL_EXISTS);
+        }
     }
 
 }

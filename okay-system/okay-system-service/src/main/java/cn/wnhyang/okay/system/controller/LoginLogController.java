@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2023/07/25
  */
 @RestController
-@RequestMapping("/system/login-log")
+@RequestMapping("/system/loginLog")
 public class LoginLogController {
 
 }

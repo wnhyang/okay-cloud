@@ -1,6 +1,10 @@
 package cn.wnhyang.okay.system.service;
 
+import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.system.entity.RoleDO;
+import cn.wnhyang.okay.system.vo.role.RoleCreateReqVO;
+import cn.wnhyang.okay.system.vo.role.RolePageReqVO;
+import cn.wnhyang.okay.system.vo.role.RoleUpdateReqVO;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,4 +37,51 @@ public interface RoleService {
     default Set<String> getRoleCodeList(Set<Long> ids) {
         return convertSet(getRoleList(ids), RoleDO::getCode);
     }
+
+    /**
+     * 创建角色
+     *
+     * @param reqVO 角色信息
+     * @return 角色
+     */
+    Long createRole(RoleCreateReqVO reqVO);
+
+    /**
+     * 更新角色
+     *
+     * @param reqVO 角色信息
+     * @return 结果
+     */
+    void updateRole(RoleUpdateReqVO reqVO);
+
+    /**
+     * 更新用户状态
+     *
+     * @param id     id
+     * @param status 状态
+     */
+    void updateRoleStatus(Long id, Integer status);
+
+    /**
+     * 删除角色
+     *
+     * @param id id
+     */
+    void deleteRole(Long id);
+
+    /**
+     * 查询角色
+     *
+     * @param id id
+     * @return 角色
+     */
+    RoleDO getRole(Long id);
+
+    /**
+     * 查询角色列表
+     *
+     * @param reqVO 请求
+     * @return 角色列表
+     */
+    PageResult<RoleDO> getRolePage(RolePageReqVO reqVO);
 }

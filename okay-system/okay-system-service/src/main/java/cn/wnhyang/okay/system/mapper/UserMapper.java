@@ -20,12 +20,20 @@ public interface UserMapper extends BaseMapperX<UserDO> {
         return selectOne(UserDO::getUsername, username);
     }
 
-    default PageResult<UserDO> selectPage(UserPageReqVO reqVO){
+    default PageResult<UserDO> selectPage(UserPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<UserDO>()
                 .likeIfPresent(UserDO::getUsername, reqVO.getUsername())
                 .likeIfPresent(UserDO::getMobile, reqVO.getMobile())
                 .eqIfPresent(UserDO::getStatus, reqVO.getStatus())
                 .betweenIfPresent(UserDO::getCreateTime, reqVO.getCreateTime())
                 .orderByDesc(UserDO::getId));
+    }
+
+    default UserDO selectByMobile(String mobile) {
+        return selectOne(UserDO::getMobile, mobile);
+    }
+
+    default UserDO selectByEmail(String email) {
+        return selectOne(UserDO::getEmail, email);
     }
 }

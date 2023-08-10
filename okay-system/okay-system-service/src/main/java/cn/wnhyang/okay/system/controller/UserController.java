@@ -74,7 +74,7 @@ public class UserController {
      * @param reqVO id+密码
      * @return 结果
      */
-    @PutMapping("/update-password")
+    @PutMapping("/updatePassword")
     @OperateLog(module = "后台-用户", name = "更新用户密码")
     @SaCheckPermission("system:user:update-password")
     public CommonResult<Boolean> updateUserPassword(@RequestBody UserUpdatePasswordReqVO reqVO) {
@@ -88,11 +88,11 @@ public class UserController {
      * @param reqVO id+状态
      * @return 结果
      */
-    @PutMapping("/update-status")
+    @PutMapping("/updateStatus")
     @OperateLog(module = "后台-用户", name = "更新用户状态")
-    @SaCheckPermission("system:user:update-status")
+    @SaCheckPermission("system:user:update")
     public CommonResult<Boolean> updateUserStatus(@RequestBody UserUpdateStatusReqVO reqVO) {
-        userService.updateUserStatus(reqVO);
+        userService.updateUserStatus(reqVO.getId(), reqVO.getStatus());
         return success(true);
     }
 
@@ -110,6 +110,12 @@ public class UserController {
         return success(UserConvert.INSTANCE.convert02(user));
     }
 
+    /**
+     * 查询用户信息列表
+     *
+     * @param reqVO 查询条件
+     * @return 用户列表
+     */
     @GetMapping("/page")
     @OperateLog(module = "后台-用户", name = "查询用户信息列表")
     @SaCheckPermission("system:user:list")

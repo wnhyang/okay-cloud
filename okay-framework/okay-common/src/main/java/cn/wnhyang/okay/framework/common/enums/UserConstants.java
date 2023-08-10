@@ -10,4 +10,9 @@ public interface UserConstants {
      * 管理员ID
      */
     Long ADMINISTRATOR_ID = 1L;
+
+    /**
+     * 管理员code
+     */
+    String ADMINISTRATOR_CODE = "administrator";
 }

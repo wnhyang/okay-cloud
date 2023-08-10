@@ -1,5 +1,7 @@
 package cn.wnhyang.okay.system.controller;
 
+import cn.wnhyang.okay.system.service.ResourceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,6 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/system/resource")
+@RequiredArgsConstructor
 public class ResourceController {
+
+    private final ResourceService resourceService;
+
+
 
 }

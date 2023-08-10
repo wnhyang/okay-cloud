@@ -70,9 +70,10 @@ public interface UserService {
     /**
      * 更新用户状态
      *
-     * @param reqVO id+状态
+     * @param id     id
+     * @param status 状态
      */
-    void updateUserStatus(UserUpdateStatusReqVO reqVO);
+    void updateUserStatus(Long id, Integer status);
 
     /**
      * 根据用户名/手机号/邮箱获取用户信息
