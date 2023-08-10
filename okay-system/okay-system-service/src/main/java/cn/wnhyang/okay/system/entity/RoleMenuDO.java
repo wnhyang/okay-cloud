@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
 /**
- * 角色和资源关联表
+ * 角色和菜单关联表
  *
  * @author wnhyang
  * @since 2023/05/14
@@ -18,8 +18,8 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("sys_role_resource")
-public class RoleResourceDO extends BaseDO {
+@TableName("sys_role_menu")
+public class RoleMenuDO extends BaseDO {
 
     /**
      * 自增编号
@@ -34,8 +34,8 @@ public class RoleResourceDO extends BaseDO {
     private Long roleId;
 
     /**
-     * 资源ID
+     * 菜单ID
      */
-    @TableField("resource_id")
-    private Long resourceId;
+    @TableField("menu_id")
+    private Long menuId;
 }

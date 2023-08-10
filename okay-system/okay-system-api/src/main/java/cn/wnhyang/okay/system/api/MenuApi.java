@@ -8,5 +8,5 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @date 2023/6/5
  **/
 @FeignClient(name = ApiConstants.OKAY_SYSTEM_NAME)
-public interface ResourceApi {
+public interface MenuApi {
 }

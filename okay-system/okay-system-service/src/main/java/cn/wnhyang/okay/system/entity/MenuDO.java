@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
 /**
- * 资源权限表
+ * 菜单权限表
  *
  * @author wnhyang
  * @since 2023/05/14
@@ -18,17 +18,17 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("sys_resource")
-public class ResourceDO extends BaseDO {
+@TableName("sys_menu")
+public class MenuDO extends BaseDO {
 
     /**
-     * 资源ID
+     * 菜单ID
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 资源名称
+     * 菜单名称
      */
     @TableField("name")
     private String name;
@@ -40,7 +40,7 @@ public class ResourceDO extends BaseDO {
     private String permission;
 
     /**
-     * 资源类型
+     * 菜单类型
      */
     @TableField("type")
     private Integer type;
@@ -52,7 +52,7 @@ public class ResourceDO extends BaseDO {
     private Integer sort;
 
     /**
-     * 父资源ID
+     * 父菜单ID
      */
     @TableField("parent_id")
     private Long parentId;
@@ -64,7 +64,7 @@ public class ResourceDO extends BaseDO {
     private String path;
 
     /**
-     * 资源图标
+     * 菜单图标
      */
     @TableField("icon")
     private String icon;
@@ -82,7 +82,7 @@ public class ResourceDO extends BaseDO {
     private String componentName;
 
     /**
-     * 资源状态
+     * 菜单状态
      */
     @TableField("status")
     private Integer status;

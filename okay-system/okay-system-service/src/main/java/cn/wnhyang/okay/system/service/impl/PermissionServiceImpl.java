@@ -1,11 +1,11 @@
 package cn.wnhyang.okay.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.wnhyang.okay.system.entity.ResourceDO;
-import cn.wnhyang.okay.system.entity.RoleResourceDO;
+import cn.wnhyang.okay.system.entity.MenuDO;
+import cn.wnhyang.okay.system.entity.RoleMenuDO;
 import cn.wnhyang.okay.system.entity.UserRoleDO;
-import cn.wnhyang.okay.system.mapper.ResourceMapper;
-import cn.wnhyang.okay.system.mapper.RoleResourceMapper;
+import cn.wnhyang.okay.system.mapper.MenuMapper;
+import cn.wnhyang.okay.system.mapper.RoleMenuMapper;
 import cn.wnhyang.okay.system.mapper.UserRoleMapper;
 import cn.wnhyang.okay.system.service.PermissionService;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +25,11 @@ import static cn.wnhyang.okay.framework.common.util.CollectionUtils.convertSet;
 @RequiredArgsConstructor
 public class PermissionServiceImpl implements PermissionService {
 
-    private final ResourceMapper resourceMapper;
+    private final MenuMapper menuMapper;
 
     private final UserRoleMapper userRoleMapper;
 
-    private final RoleResourceMapper roleResourceMapper;
+    private final RoleMenuMapper roleMenuMapper;
 
     @Override
     public Set<Long> getUserRoleIdListByUserId(Long userId) {
@@ -37,24 +37,24 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public Set<Long> getRoleResourceListByRoleId(Collection<Long> roleIds) {
+    public Set<Long> getRoleMenuListByRoleId(Collection<Long> roleIds) {
         if (CollUtil.isEmpty(roleIds)) {
             return Collections.emptySet();
         }
         // 如果是非管理员的情况下，获得拥有的菜单编号
-        return convertSet(roleResourceMapper.selectListByRoleId(roleIds), RoleResourceDO::getResourceId);
+        return convertSet(roleMenuMapper.selectListByRoleId(roleIds), RoleMenuDO::getMenuId);
     }
 
     @Override
-    public Set<String> getRoleResourcePermsByRoleId(Collection<Long> roleIds) {
-        Set<Long> resourceIds = getRoleResourceListByRoleId(roleIds);
-        return convertSet(resourceMapper.selectBatchIds(resourceIds), ResourceDO::getPermission);
+    public Set<String> getRoleMenuPermsByRoleId(Collection<Long> roleIds) {
+        Set<Long> menuIds = getRoleMenuListByRoleId(roleIds);
+        return convertSet(menuMapper.selectBatchIds(menuIds), MenuDO::getPermission);
     }
 
     @Override
     public void deleteRoleById(Long roleId) {
         userRoleMapper.deleteByRoleId(roleId);
 
-        roleResourceMapper.deleteByRoleId(roleId);
+        roleMenuMapper.deleteByRoleId(roleId);
     }
 }

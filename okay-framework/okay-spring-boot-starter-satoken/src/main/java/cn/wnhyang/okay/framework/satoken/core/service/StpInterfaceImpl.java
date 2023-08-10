@@ -25,7 +25,7 @@ public class StpInterfaceImpl implements StpInterface {
         LoginUser loginUser = LoginHelper.getLoginUser();
         UserTypeEnum userType = UserTypeEnum.valueOf(loginUser.getType());
         if (userType == UserTypeEnum.PC) {
-            return new ArrayList<>(loginUser.getResourcePermission());
+            return new ArrayList<>(loginUser.getMenuPermission());
         }
 
         return new ArrayList<>();

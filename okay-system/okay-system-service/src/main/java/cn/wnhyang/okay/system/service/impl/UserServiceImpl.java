@@ -149,13 +149,13 @@ public class UserServiceImpl implements UserService {
         loginUser.setRoleIds(roleIds);
         Set<String> roleCodes = roleService.getRoleCodeList(roleIds);
         loginUser.setRoleCode(roleCodes);
-        Set<String> resourcePerms = new HashSet<>();
+        Set<String> menuPerms = new HashSet<>();
         if (LoginHelper.isAdministrator(loginUser.getId())) {
-            resourcePerms.add("*:*:*");
+            menuPerms.add("*:*:*");
         } else {
-            resourcePerms.addAll(permissionService.getRoleResourcePermsByRoleId(roleIds));
+            menuPerms.addAll(permissionService.getRoleMenuPermsByRoleId(roleIds));
         }
-        loginUser.setResourcePermission(resourcePerms);
+        loginUser.setMenuPermission(menuPerms);
         return loginUser;
     }
 

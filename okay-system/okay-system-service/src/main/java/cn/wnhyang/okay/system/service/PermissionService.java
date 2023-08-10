@@ -25,8 +25,8 @@ public interface PermissionService {
      * @param roleId 角色编号
      * @return 菜单编号集合
      */
-    default Set<Long> getRoleResourceListByRoleId(Long roleId) {
-        return getRoleResourceListByRoleId(singleton(roleId));
+    default Set<Long> getRoleMenuListByRoleId(Long roleId) {
+        return getRoleMenuListByRoleId(singleton(roleId));
     }
 
     /**
@@ -35,7 +35,7 @@ public interface PermissionService {
      * @param roleIds 角色编号数组
      * @return 菜单编号集合
      */
-    Set<Long> getRoleResourceListByRoleId(Collection<Long> roleIds);
+    Set<Long> getRoleMenuListByRoleId(Collection<Long> roleIds);
 
     /**
      * 获得角色拥有的菜单权限集合
@@ -43,8 +43,8 @@ public interface PermissionService {
      * @param roleId 角色编号
      * @return 菜单编号集合
      */
-    default Set<String> getRoleResourcePermsByRoleId(Long roleId) {
-        return getRoleResourcePermsByRoleId(singleton(roleId));
+    default Set<String> getRoleMenuPermsByRoleId(Long roleId) {
+        return getRoleMenuPermsByRoleId(singleton(roleId));
     }
 
     /**
@@ -53,10 +53,10 @@ public interface PermissionService {
      * @param roleIds 角色编号数组
      * @return 菜单编号集合
      */
-    Set<String> getRoleResourcePermsByRoleId(Collection<Long> roleIds);
+    Set<String> getRoleMenuPermsByRoleId(Collection<Long> roleIds);
 
     /**
-     * 删除角色-用户、角色-资源
+     * 删除角色-用户、角色-菜单
      *
      * @param roleId 角色id
      */

@@ -91,6 +91,6 @@ public class LoginUser implements Serializable {
     /**
      * 菜单权限
      */
-    private Set<String> resourcePermission;
+    private Set<String> menuPermission;
 
 }
