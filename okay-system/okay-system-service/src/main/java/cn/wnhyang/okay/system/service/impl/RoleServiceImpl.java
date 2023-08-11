@@ -10,12 +10,14 @@ import cn.wnhyang.okay.system.entity.RoleDO;
 import cn.wnhyang.okay.system.entity.UserRoleDO;
 import cn.wnhyang.okay.system.mapper.RoleMapper;
 import cn.wnhyang.okay.system.mapper.UserRoleMapper;
+import cn.wnhyang.okay.system.redis.RedisKeyConstants;
 import cn.wnhyang.okay.system.service.PermissionService;
 import cn.wnhyang.okay.system.service.RoleService;
 import cn.wnhyang.okay.system.vo.role.RoleCreateReqVO;
 import cn.wnhyang.okay.system.vo.role.RolePageReqVO;
 import cn.wnhyang.okay.system.vo.role.RoleUpdateReqVO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -62,6 +64,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @CacheEvict(value = RedisKeyConstants.ROLE, key = "#reqVO.id")
     @Transactional(rollbackFor = Exception.class)
     public void updateRole(RoleUpdateReqVO reqVO) {
         // 校验是否可以更新
@@ -75,6 +78,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @CacheEvict(value = RedisKeyConstants.ROLE, key = "#id")
     @Transactional(rollbackFor = Exception.class)
     public void updateRoleStatus(Long id, Integer status) {
         // 校验是否可以更新
@@ -86,6 +90,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @CacheEvict(value = RedisKeyConstants.ROLE, key = "#id")
     @Transactional(rollbackFor = Exception.class)
     public void deleteRole(Long id) {
         // 校验是否可以删除
