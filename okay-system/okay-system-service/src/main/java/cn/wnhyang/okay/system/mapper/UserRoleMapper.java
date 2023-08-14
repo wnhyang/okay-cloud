@@ -28,4 +28,8 @@ public interface UserRoleMapper extends BaseMapperX<UserRoleDO> {
     default void deleteByRoleId(Long roleId) {
         delete(new LambdaQueryWrapper<UserRoleDO>().eq(UserRoleDO::getRoleId, roleId));
     }
+
+    default Long selectCountByRoleId(Long roleId){
+        return selectCount(UserRoleDO::getRoleId, roleId);
+    }
 }

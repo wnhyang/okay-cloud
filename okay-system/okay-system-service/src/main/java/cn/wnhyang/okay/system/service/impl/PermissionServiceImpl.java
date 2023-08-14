@@ -53,8 +53,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public void deleteRoleById(Long roleId) {
-        userRoleMapper.deleteByRoleId(roleId);
-
         roleMenuMapper.deleteByRoleId(roleId);
     }
+
 }

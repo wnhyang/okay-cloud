@@ -56,9 +56,10 @@ public interface PermissionService {
     Set<String> getRoleMenuPermsByRoleId(Collection<Long> roleIds);
 
     /**
-     * 删除角色-用户、角色-菜单
+     * 删除 角色-菜单
      *
      * @param roleId 角色id
      */
     void deleteRoleById(Long roleId);
+
 }

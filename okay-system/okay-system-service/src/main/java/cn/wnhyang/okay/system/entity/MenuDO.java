@@ -22,6 +22,11 @@ import lombok.*;
 public class MenuDO extends BaseDO {
 
     /**
+     * 菜单编号 - 根节点
+     */
+    public static final Long ID_ROOT = 0L;
+
+    /**
      * 菜单ID
      */
     @TableId(value = "id", type = IdType.AUTO)

@@ -4,10 +4,8 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.wnhyang.okay.framework.common.enums.CommonStatusEnum;
 import cn.wnhyang.okay.framework.common.enums.UserConstants;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
-import cn.wnhyang.okay.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.wnhyang.okay.system.convert.role.RoleConvert;
 import cn.wnhyang.okay.system.entity.RoleDO;
-import cn.wnhyang.okay.system.entity.UserRoleDO;
 import cn.wnhyang.okay.system.mapper.RoleMapper;
 import cn.wnhyang.okay.system.mapper.UserRoleMapper;
 import cn.wnhyang.okay.system.redis.RedisKeyConstants;
@@ -113,8 +111,7 @@ public class RoleServiceImpl implements RoleService {
 
     private void validateRoleForDelete(Long id) {
         validateRoleForUpdate(id);
-        Long count = userRoleMapper.selectCount(
-                new LambdaQueryWrapperX<UserRoleDO>().eq(UserRoleDO::getRoleId, id));
+        Long count = userRoleMapper.selectCountByRoleId(id);
         if (count > 0) {
             throw exception(ROLE_HAS_USER);
         }

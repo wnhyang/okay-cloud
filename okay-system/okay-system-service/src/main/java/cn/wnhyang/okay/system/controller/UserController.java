@@ -103,7 +103,7 @@ public class UserController {
      * @return 用户
      */
     @GetMapping("/get")
-    @OperateLog(module = "后台-用户", name = "查询用户信息")
+    @OperateLog(module = "后台-用户", name = "查询用户")
     @SaCheckPermission("system:user:query")
     public CommonResult<UserRespVO> getUser(@RequestParam("id") Long id) {
         UserDO user = userService.getUser(id);
@@ -117,7 +117,7 @@ public class UserController {
      * @return 用户列表
      */
     @GetMapping("/page")
-    @OperateLog(module = "后台-用户", name = "查询用户信息列表")
+    @OperateLog(module = "后台-用户", name = "查询用户列表")
     @SaCheckPermission("system:user:list")
     public CommonResult<PageResult<UserRespVO>> getUserPage(@RequestBody UserPageReqVO reqVO) {
         PageResult<UserDO> pageResult = userService.getUserPage(reqVO);
