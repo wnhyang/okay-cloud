@@ -2,7 +2,6 @@ package cn.wnhyang.okay.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
-import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog;
 import cn.wnhyang.okay.system.convert.menu.MenuConvert;
 import cn.wnhyang.okay.system.entity.MenuDO;
@@ -82,9 +81,23 @@ public class MenuController {
     @GetMapping("/list")
     @OperateLog(module = "后台-菜单", name = "查询菜单列表")
     @SaCheckPermission("system:menu:query")
-    public CommonResult<PageResult<MenuRespVO>> getMenuList(@RequestBody MenuListReqVO reqVO) {
+    public CommonResult<List<MenuRespVO>> getMenuList(@RequestBody MenuListReqVO reqVO) {
         List<MenuDO> list = menuService.getMenuList(reqVO);
         list.sort(Comparator.comparing(MenuDO::getSort));
         return success(MenuConvert.INSTANCE.convertList(list));
+    }
+
+    /**
+     * 查询菜单
+     *
+     * @param id 菜单id
+     * @return 菜单
+     */
+    @GetMapping("/get")
+    @OperateLog(module = "后台-菜单", name = "查询菜单")
+    @SaCheckPermission("system:menu:query")
+    public CommonResult<MenuRespVO> getMenu(@RequestParam("id") Long id) {
+        MenuDO menu = menuService.getMenu(id);
+        return success(MenuConvert.INSTANCE.convert(menu));
     }
 }

@@ -1,10 +1,20 @@
 package cn.wnhyang.okay.system.service;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
+import cn.wnhyang.okay.framework.common.util.CollectionUtils;
 import cn.wnhyang.okay.system.dto.LoginUser;
 import cn.wnhyang.okay.system.dto.user.UserCreateReqDTO;
 import cn.wnhyang.okay.system.entity.UserDO;
-import cn.wnhyang.okay.system.vo.user.*;
+import cn.wnhyang.okay.system.vo.user.UserCreateReqVO;
+import cn.wnhyang.okay.system.vo.user.UserPageReqVO;
+import cn.wnhyang.okay.system.vo.user.UserUpdatePasswordReqVO;
+import cn.wnhyang.okay.system.vo.user.UserUpdateReqVO;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户信息表
@@ -100,4 +110,33 @@ public interface UserService {
      * @return 用户列表
      */
     PageResult<UserDO> getUserPage(UserPageReqVO reqVO);
+
+    /**
+     * 根据用户昵称查询用户列表
+     *
+     * @param nickname 用户昵称
+     * @return 用户列表
+     */
+    List<UserDO> getUserListByNickname(String nickname);
+
+    /**
+     * 根据用户id查询用户map
+     *
+     * @param ids 用户id
+     * @return 用户map
+     */
+    default Map<Long, UserDO> getUserMap(Collection<Long> ids) {
+        if (CollUtil.isEmpty(ids)) {
+            return new HashMap<>();
+        }
+        return CollectionUtils.convertMap(getUserList(ids), UserDO::getId);
+    }
+
+    /**
+     * 获取用户列表
+     *
+     * @param ids 用户id
+     * @return 用户列表
+     */
+    List<UserDO> getUserList(Collection<Long> ids);
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 /**
  * @author wnhyang
@@ -21,7 +22,7 @@ public class LoginReqVO {
     /**
      * 手机号/邮箱/账号
      */
-    @NotEmpty(message = "账号不能为空")
+    @Size(max = 30, message = "用户账号长度不能超过30个字符")
     private String account;
 
     @NotEmpty(message = "密码不能为空")

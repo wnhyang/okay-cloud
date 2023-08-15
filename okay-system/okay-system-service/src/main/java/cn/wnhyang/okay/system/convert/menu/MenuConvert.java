@@ -1,6 +1,5 @@
 package cn.wnhyang.okay.system.convert.menu;
 
-import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.system.entity.MenuDO;
 import cn.wnhyang.okay.system.vo.menu.MenuCreateReqVO;
 import cn.wnhyang.okay.system.vo.menu.MenuRespVO;
@@ -23,5 +22,7 @@ public interface MenuConvert {
 
     MenuDO convert(MenuUpdateReqVO reqVO);
 
-    PageResult<MenuRespVO> convertList(List<MenuDO> list);
+    List<MenuRespVO> convertList(List<MenuDO> list);
+
+    MenuRespVO convert(MenuDO menu);
 }

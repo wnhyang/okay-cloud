@@ -44,4 +44,12 @@ public interface MenuService {
      * @return 菜单列表
      */
     List<MenuDO> getMenuList(MenuListReqVO reqVO);
+
+    /**
+     * 查询菜单
+     *
+     * @param id 菜单id
+     * @return 菜单
+     */
+    MenuDO getMenu(Long id);
 }

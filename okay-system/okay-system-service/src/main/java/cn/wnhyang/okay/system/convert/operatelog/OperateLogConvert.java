@@ -2,6 +2,7 @@ package cn.wnhyang.okay.system.convert.operatelog;
 
 import cn.wnhyang.okay.system.dto.operatelog.OperateLogCreateReqDTO;
 import cn.wnhyang.okay.system.entity.OperateLogDO;
+import cn.wnhyang.okay.system.vo.operatelog.OperateLogRespVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -14,4 +15,6 @@ public interface OperateLogConvert {
     OperateLogConvert INSTANCE = Mappers.getMapper(OperateLogConvert.class);
 
     OperateLogDO convert(OperateLogCreateReqDTO reqDTO);
+
+    OperateLogRespVO convert(OperateLogDO operateLog);
 }

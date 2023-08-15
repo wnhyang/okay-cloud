@@ -7,6 +7,8 @@ import cn.wnhyang.okay.system.entity.UserDO;
 import cn.wnhyang.okay.system.vo.user.UserPageReqVO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 用户信息表
  *
@@ -35,5 +37,9 @@ public interface UserMapper extends BaseMapperX<UserDO> {
 
     default UserDO selectByEmail(String email) {
         return selectOne(UserDO::getEmail, email);
+    }
+
+    default List<UserDO> selectListByNickname(String nickname) {
+        return selectList(new LambdaQueryWrapperX<UserDO>().like(UserDO::getNickname, nickname));
     }
 }

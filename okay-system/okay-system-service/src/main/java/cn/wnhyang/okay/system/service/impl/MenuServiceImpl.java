@@ -89,6 +89,11 @@ public class MenuServiceImpl implements MenuService {
         return menuMapper.selectList(reqVO);
     }
 
+    @Override
+    public MenuDO getMenu(Long id) {
+        return menuMapper.selectById(id);
+    }
+
     /**
      * 校验父菜单是否合法
      * <p>

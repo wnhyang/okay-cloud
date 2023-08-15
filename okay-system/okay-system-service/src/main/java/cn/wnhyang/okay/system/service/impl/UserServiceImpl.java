@@ -1,6 +1,7 @@
 package cn.wnhyang.okay.system.service.impl;
 
 import cn.dev33.satoken.secure.BCrypt;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
@@ -23,8 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
@@ -141,6 +141,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public PageResult<UserDO> getUserPage(UserPageReqVO reqVO) {
         return userMapper.selectPage(reqVO);
+    }
+
+    @Override
+    public List<UserDO> getUserListByNickname(String nickname) {
+        return userMapper.selectListByNickname(nickname);
+    }
+
+    @Override
+    public List<UserDO> getUserList(Collection<Long> ids) {
+        if (CollUtil.isEmpty(ids)) {
+            return Collections.emptyList();
+        }
+        return userMapper.selectBatchIds(ids);
     }
 
     private LoginUser buildLoginUser(UserDO user) {
