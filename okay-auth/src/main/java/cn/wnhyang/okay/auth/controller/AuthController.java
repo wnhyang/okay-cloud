@@ -1,6 +1,7 @@
 package cn.wnhyang.okay.auth.controller;
 
 import cn.wnhyang.okay.auth.service.AuthService;
+import cn.wnhyang.okay.auth.vo.EmailLoginReqVO;
 import cn.wnhyang.okay.auth.vo.LoginReqVO;
 import cn.wnhyang.okay.auth.vo.RegisterReqVO;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
@@ -35,6 +36,28 @@ public class AuthController {
     @PostMapping("/login")
     public CommonResult<String> login(@RequestBody @Valid LoginReqVO reqVO) {
         return success(authService.login(reqVO));
+    }
+
+    /**
+     * 通过邮箱+验证码登录
+     *
+     * @param reqVO 邮箱+验证码
+     * @return token
+     */
+    @PostMapping("/loginByEmail")
+    public CommonResult<String> login(@RequestBody @Valid EmailLoginReqVO reqVO) {
+        return success(authService.login(reqVO));
+    }
+
+    /**
+     * 获取验证码
+     *
+     * @return true
+     */
+    @PostMapping("/generate/code")
+    public CommonResult<Boolean> generateCode(@RequestParam("account") String account) {
+        authService.generateCode(account);
+        return success(true);
     }
 
     @DeleteMapping("/logout")

@@ -5,6 +5,8 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.wnhyang.okay.auth.redis.RedisKeyConstants;
+import cn.wnhyang.okay.auth.vo.EmailLoginReqVO;
 import cn.wnhyang.okay.auth.vo.LoginReqVO;
 import cn.wnhyang.okay.auth.vo.RegisterReqVO;
 import cn.wnhyang.okay.framework.common.enums.CommonStatusEnum;
@@ -21,13 +23,13 @@ import cn.wnhyang.okay.system.dto.user.UserCreateReqDTO;
 import cn.wnhyang.okay.system.enums.login.LoginResultEnum;
 import cn.wnhyang.okay.system.enums.login.LoginTypeEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
 import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.AUTH_LOGIN_BAD_CREDENTIALS;
-import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.AUTH_LOGIN_USER_DISABLED;
+import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
 
 /**
  * @author wnhyang
@@ -40,6 +42,8 @@ public class AuthService {
     private final UserApi userApi;
 
     private final LoginLogApi loginLogApi;
+
+    private final ValueOperations<String, String> valueOperations;
 
     public String login(LoginReqVO reqVO) {
         String account = reqVO.getAccount();
@@ -73,6 +77,38 @@ public class AuthService {
         LoginHelper.login(user, DeviceTypeEnum.PC);
         createLoginLog(user.getId(), account, loginTypeEnum, LoginResultEnum.SUCCESS);
         return StpUtil.getTokenValue();
+    }
+
+    public String login(EmailLoginReqVO reqVO) {
+        String email = reqVO.getEmail();
+        String code = reqVO.getCode();
+        LoginUser user;
+        LoginTypeEnum loginTypeEnum;
+        if (StrUtil.isNotEmpty(email) && ReUtil.isMatch(RegexUtils.EMAIL, email)) {
+            user = userApi.getUserInfo("", "", email).getCheckedData();
+            loginTypeEnum = LoginTypeEnum.LOGIN_EMAIL_CODE;
+        } else {
+            throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
+        }
+        String emailCode = valueOperations.get(RedisKeyConstants.EMAIL_CODE);
+        if (!code.equals(emailCode)) {
+            createLoginLog(user.getId(), email, loginTypeEnum, LoginResultEnum.BAD_EMAIL_CODE);
+            throw exception(AUTH_LOGIN_BAD_EMAIL_CODE);
+        }
+        // 校验是否禁用
+        if (ObjectUtil.notEqual(user.getStatus(), CommonStatusEnum.ENABLE.getStatus())) {
+            createLoginLog(user.getId(), email, loginTypeEnum, LoginResultEnum.USER_DISABLED);
+            throw exception(AUTH_LOGIN_USER_DISABLED);
+        }
+
+        // 创建 Token 令牌，记录登录日志
+        LoginHelper.login(user, DeviceTypeEnum.PC);
+        createLoginLog(user.getId(), email, loginTypeEnum, LoginResultEnum.SUCCESS);
+        return StpUtil.getTokenValue();
+    }
+
+    public void generateCode(String account) {
+
     }
 
     public void logout() {
