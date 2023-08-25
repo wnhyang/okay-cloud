@@ -18,6 +18,7 @@ import reactor.core.publisher.Mono;
  * 跨域配置
  *
  * @author wnhyang
+ * @date 2023/8/25
  */
 @Component
 public class GlobalCorsFilter implements WebFilter, Ordered {
