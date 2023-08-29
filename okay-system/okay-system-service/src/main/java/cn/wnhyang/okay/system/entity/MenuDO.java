@@ -26,6 +26,8 @@ public class MenuDO extends BaseDO {
      */
     public static final Long ID_ROOT = 0L;
 
+    private static final long serialVersionUID = 986081501377397378L;
+
     /**
      * 菜单ID
      */

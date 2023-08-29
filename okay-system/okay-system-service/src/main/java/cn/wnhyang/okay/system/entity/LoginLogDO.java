@@ -21,6 +21,8 @@ import lombok.*;
 @TableName("sys_login_log")
 public class LoginLogDO extends BaseDO {
 
+    private static final long serialVersionUID = 8801638334750361566L;
+
     /**
      * 访问ID
      */

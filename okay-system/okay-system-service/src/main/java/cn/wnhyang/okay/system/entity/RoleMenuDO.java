@@ -21,6 +21,8 @@ import lombok.*;
 @TableName("sys_role_menu")
 public class RoleMenuDO extends BaseDO {
 
+    private static final long serialVersionUID = -6599548669320512013L;
+
     /**
      * 自增编号
      */

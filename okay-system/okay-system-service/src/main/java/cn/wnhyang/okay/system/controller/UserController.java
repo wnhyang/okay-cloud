@@ -76,7 +76,7 @@ public class UserController {
      */
     @PutMapping("/updatePassword")
     @OperateLog(module = "后台-用户", name = "更新用户密码")
-    @SaCheckPermission("system:user:update-password")
+    @SaCheckPermission("system:user:updatePassword")
     public CommonResult<Boolean> updateUserPassword(@RequestBody UserUpdatePasswordReqVO reqVO) {
         userService.updateUserPassword(reqVO);
         return success(true);

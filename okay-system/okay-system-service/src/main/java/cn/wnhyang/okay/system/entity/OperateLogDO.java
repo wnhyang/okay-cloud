@@ -35,6 +35,8 @@ public class OperateLogDO extends BaseDO {
      */
     public static final Integer RESULT_MAX_LENGTH = 4000;
 
+    private static final long serialVersionUID = 1797386582905133955L;
+
 
     /**
      * 日志主键

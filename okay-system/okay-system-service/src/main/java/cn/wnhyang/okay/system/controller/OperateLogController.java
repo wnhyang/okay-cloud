@@ -40,7 +40,7 @@ public class OperateLogController {
 
     @GetMapping("/page")
     @OperateLog(module = "后台-操作日志", name = "分页查询操作日志")
-    @SaCheckPermission("system:operatelog:query")
+    @SaCheckPermission("system:operateLog:query")
     public CommonResult<PageResult<OperateLogRespVO>> getOperateLogPage(@RequestBody OperateLogPageReqVO reqVO) {
         PageResult<OperateLogDO> pageResult = operateLogService.getOperateLogPage(reqVO);
 

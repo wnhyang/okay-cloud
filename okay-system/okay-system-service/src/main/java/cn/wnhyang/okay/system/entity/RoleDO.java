@@ -21,6 +21,8 @@ import lombok.*;
 @TableName("sys_role")
 public class RoleDO extends BaseDO {
 
+    private static final long serialVersionUID = 6734459350185846076L;
+
     /**
      * 角色ID
      */

@@ -36,7 +36,7 @@ public class LoginLogController {
      */
     @GetMapping("/page")
     @OperateLog(module = "后台-登录日志", name = "分页查询登录日志")
-    @SaCheckPermission("system:loginlog:query")
+    @SaCheckPermission("system:loginLog:query")
     public CommonResult<PageResult<LoginLogRespVO>> getLoginLogPage(@RequestBody LoginLogPageReqVO reqVO) {
         PageResult<LoginLogDO> page = loginLogService.getLoginLogPage(reqVO);
         return CommonResult.success(LoginLogConvert.INSTANCE.convertPage(page));

@@ -21,6 +21,8 @@ import lombok.*;
 @TableName("sys_user_role")
 public class UserRoleDO extends BaseDO {
 
+    private static final long serialVersionUID = 6268004928287728505L;
+
     /**
      * 自增编号
      */

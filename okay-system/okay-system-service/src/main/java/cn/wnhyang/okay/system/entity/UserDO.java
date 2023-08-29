@@ -23,6 +23,8 @@ import java.time.LocalDateTime;
 @TableName("sys_user")
 public class UserDO extends BaseDO {
 
+    private static final long serialVersionUID = -8660240418764574220L;
+
     /**
      * 用户ID
      */
