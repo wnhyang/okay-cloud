@@ -107,8 +107,7 @@ public class AuthService {
         return StpUtil.getTokenValue();
     }
 
-    public void generateCode(String account) {
-
+    public void generateEmailCode(String account) {
     }
 
     public void logout() {
