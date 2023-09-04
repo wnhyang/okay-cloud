@@ -35,12 +35,6 @@ public class MenuDO extends BaseDO {
     private Long id;
 
     /**
-     * 菜单名称
-     */
-    @TableField("name")
-    private String name;
-
-    /**
      * 权限标识
      */
     @TableField("permission")
@@ -65,16 +59,10 @@ public class MenuDO extends BaseDO {
     private Long parentId;
 
     /**
-     * 路由地址
+     * 菜单名称
      */
-    @TableField("path")
-    private String path;
-
-    /**
-     * 菜单图标
-     */
-    @TableField("icon")
-    private String icon;
+    @TableField("name")
+    private String name;
 
     /**
      * 组件路径
@@ -83,10 +71,48 @@ public class MenuDO extends BaseDO {
     private String component;
 
     /**
+     * 路由地址
+     */
+    @TableField("path")
+    private String path;
+
+    /**
+     * 当设置 noredirect 的时候该路由在面包屑导航中不可被点击
+     */
+    @TableField("redirect")
+    private String redirect;
+
+    // 下面是菜单meta
+
+    /**
+     * 是否隐藏
+     */
+    @TableField("hidden")
+    private Boolean hidden;
+
+    /**
+     * 是否总是显示
+     */
+    @TableField("always_show")
+    private Boolean alwaysShow;
+
+    /**
      * 组件名
      */
-    @TableField("component_name")
-    private String componentName;
+    @TableField("title")
+    private String title;
+
+    /**
+     * 菜单图标
+     */
+    @TableField("icon")
+    private String icon;
+
+    /**
+     * 是否可缓存
+     */
+    @TableField("no_cache")
+    private Boolean noCache;
 
     /**
      * 菜单状态
@@ -94,21 +120,4 @@ public class MenuDO extends BaseDO {
     @TableField("status")
     private Integer status;
 
-    /**
-     * 是否可见
-     */
-    @TableField("visible")
-    private Boolean visible;
-
-    /**
-     * 是否缓存
-     */
-    @TableField("keep_alive")
-    private Boolean keepAlive;
-
-    /**
-     * 是否总是显示
-     */
-    @TableField("always_show")
-    private Boolean alwaysShow;
 }

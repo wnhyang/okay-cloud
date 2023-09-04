@@ -37,14 +37,14 @@ public class MenuBaseVO {
     @Size(max = 200, message = "组件路径不能超过255个字符")
     private String component;
 
-    private String componentName;
+    private String title;
 
     @NotNull(message = "状态不能为空")
     private Integer status;
 
-    private Boolean visible;
+    private Boolean hidden;
 
-    private Boolean keepAlive;
+    private Boolean noCache;
 
     private Boolean alwaysShow;
 }
