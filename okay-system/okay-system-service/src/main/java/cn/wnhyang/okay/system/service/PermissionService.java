@@ -43,8 +43,8 @@ public interface PermissionService {
      * @param roleId 角色编号
      * @return 菜单编号集合
      */
-    default Set<String> getRoleMenuPermsByRoleId(Long roleId) {
-        return getRoleMenuPermsByRoleId(singleton(roleId));
+    default Set<String> getPermissionsByRoleIds(Long roleId) {
+        return getPermissionsByRoleIds(singleton(roleId));
     }
 
     /**
@@ -53,7 +53,7 @@ public interface PermissionService {
      * @param roleIds 角色编号数组
      * @return 菜单编号集合
      */
-    Set<String> getRoleMenuPermsByRoleId(Collection<Long> roleIds);
+    Set<String> getPermissionsByRoleIds(Collection<Long> roleIds);
 
     /**
      * 删除 角色-菜单

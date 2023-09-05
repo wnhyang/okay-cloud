@@ -86,11 +86,11 @@ public class LoginUser implements Serializable {
     /**
      * 角色权限
      */
-    private Set<String> roleCode;
+    private Set<String> roles;
 
     /**
      * 菜单权限
      */
-    private Set<String> menuPermission;
+    private Set<String> permissions;
 
 }

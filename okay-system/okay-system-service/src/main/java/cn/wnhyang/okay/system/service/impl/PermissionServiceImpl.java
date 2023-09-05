@@ -46,7 +46,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public Set<String> getRoleMenuPermsByRoleId(Collection<Long> roleIds) {
+    public Set<String> getPermissionsByRoleIds(Collection<Long> roleIds) {
         Set<Long> menuIds = getRoleMenuListByRoleId(roleIds);
         return convertSet(menuMapper.selectBatchIds(menuIds), MenuDO::getPermission);
     }
