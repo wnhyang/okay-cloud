@@ -6,6 +6,7 @@ import cn.wnhyang.okay.system.vo.menu.MenuListReqVO;
 import cn.wnhyang.okay.system.vo.menu.MenuUpdateReqVO;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 菜单权限表
@@ -52,4 +53,12 @@ public interface MenuService {
      * @return 菜单
      */
     MenuDO getMenu(Long id);
+
+    /**
+     * 根据菜单ids查询菜单
+     *
+     * @param ids 菜单ids
+     * @return 菜单
+     */
+    List<MenuDO> getMenuList(Set<Long> ids);
 }

@@ -101,7 +101,7 @@ public interface UserService {
      * @param id id
      * @return 用户
      */
-    UserDO getUser(Long id);
+    UserDO getUserById(Long id);
 
     /**
      * 查询用户信息列表

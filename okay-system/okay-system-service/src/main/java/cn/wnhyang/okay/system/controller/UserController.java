@@ -1,15 +1,25 @@
 package cn.wnhyang.okay.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog;
+import cn.wnhyang.okay.framework.satoken.utils.LoginHelper;
+import cn.wnhyang.okay.system.convert.menu.MenuConvert;
 import cn.wnhyang.okay.system.convert.user.UserConvert;
+import cn.wnhyang.okay.system.dto.LoginUser;
+import cn.wnhyang.okay.system.entity.MenuDO;
 import cn.wnhyang.okay.system.entity.UserDO;
+import cn.wnhyang.okay.system.service.MenuService;
+import cn.wnhyang.okay.system.service.PermissionService;
 import cn.wnhyang.okay.system.service.UserService;
 import cn.wnhyang.okay.system.vo.user.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
 
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 
@@ -25,6 +35,10 @@ import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 public class UserController {
 
     private final UserService userService;
+
+    private final MenuService menuService;
+
+    private final PermissionService permissionService;
 
     /**
      * 创建用户
@@ -106,7 +120,7 @@ public class UserController {
     @OperateLog(module = "后台-用户", name = "查询用户")
     @SaCheckPermission("system:user:query")
     public CommonResult<UserRespVO> getUser(@RequestParam("id") Long id) {
-        UserDO user = userService.getUser(id);
+        UserDO user = userService.getUserById(id);
         return success(UserConvert.INSTANCE.convert02(user));
     }
 
@@ -122,5 +136,21 @@ public class UserController {
     public CommonResult<PageResult<UserRespVO>> getUserPage(@RequestBody UserPageReqVO reqVO) {
         PageResult<UserDO> pageResult = userService.getUserPage(reqVO);
         return success(UserConvert.INSTANCE.convert(pageResult));
+    }
+
+    @GetMapping("/info")
+    @OperateLog(module = "后台-用户", name = "查询用户信息")
+    @SaCheckLogin
+    public CommonResult<UserInfoRespVO> getUserInfo() {
+        LoginUser loginUser = LoginHelper.getLoginUser();
+        UserInfoRespVO respVO = new UserInfoRespVO();
+        UserDO user = userService.getUserById(loginUser.getId());
+        respVO.setUser(UserConvert.INSTANCE.convert03(user));
+        respVO.setRoles(loginUser.getRoles());
+        respVO.setPermissions(loginUser.getPermissions());
+        Set<Long> menuIds = permissionService.getRoleMenuListByRoleId(loginUser.getRoleIds());
+        List<MenuDO> menus = menuService.getMenuList(menuIds);
+        respVO.setMenus(MenuConvert.INSTANCE.buildMenuTree(menus));
+        return success(respVO);
     }
 }

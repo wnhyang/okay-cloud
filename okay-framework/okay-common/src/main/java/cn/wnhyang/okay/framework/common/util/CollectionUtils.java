@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,13 @@ import java.util.stream.Collectors;
  * @date 2023/8/3
  **/
 public class CollectionUtils {
+
+    public static <T> List<T> filterList(Collection<T> from, Predicate<T> predicate) {
+        if (CollUtil.isEmpty(from)) {
+            return new ArrayList<>();
+        }
+        return from.stream().filter(predicate).collect(Collectors.toList());
+    }
 
     public static <T, U> List<U> convertList(Collection<T> from, Function<T, U> func) {
         if (CollUtil.isEmpty(from)) {

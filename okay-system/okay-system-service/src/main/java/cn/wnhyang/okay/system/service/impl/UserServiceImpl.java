@@ -134,7 +134,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDO getUser(Long id) {
+    public UserDO getUserById(Long id) {
         return userMapper.selectById(id);
     }
 

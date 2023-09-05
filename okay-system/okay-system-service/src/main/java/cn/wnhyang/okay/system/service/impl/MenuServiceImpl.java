@@ -1,5 +1,6 @@
 package cn.wnhyang.okay.system.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.wnhyang.okay.system.convert.menu.MenuConvert;
 import cn.wnhyang.okay.system.entity.MenuDO;
 import cn.wnhyang.okay.system.enums.permission.MenuTypeEnum;
@@ -13,7 +14,9 @@ import cn.wnhyang.okay.system.vo.menu.MenuUpdateReqVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.wnhyang.okay.system.entity.MenuDO.ID_ROOT;
@@ -92,6 +95,14 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public MenuDO getMenu(Long id) {
         return menuMapper.selectById(id);
+    }
+
+    @Override
+    public List<MenuDO> getMenuList(Set<Long> ids) {
+        if (CollectionUtil.isEmpty(ids)) {
+            return Collections.emptyList();
+        }
+        return menuMapper.selectBatchIds(ids);
     }
 
     /**
