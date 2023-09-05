@@ -54,12 +54,6 @@ public class RoleDO extends BaseDO {
     private Integer status;
 
     /**
-     * 角色类型
-     */
-    @TableField("type")
-    private Integer type;
-
-    /**
      * 备注
      */
     @TableField("remark")
