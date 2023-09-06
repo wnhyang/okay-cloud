@@ -1,15 +1,14 @@
 package cn.wnhyang.okay.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.wnhyang.okay.framework.common.enums.CommonStatusEnum;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog;
 import cn.wnhyang.okay.system.convert.menu.MenuConvert;
 import cn.wnhyang.okay.system.entity.MenuDO;
 import cn.wnhyang.okay.system.service.MenuService;
-import cn.wnhyang.okay.system.vo.menu.MenuCreateReqVO;
-import cn.wnhyang.okay.system.vo.menu.MenuListReqVO;
-import cn.wnhyang.okay.system.vo.menu.MenuRespVO;
-import cn.wnhyang.okay.system.vo.menu.MenuUpdateReqVO;
+import cn.wnhyang.okay.system.vo.menu.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -99,5 +98,18 @@ public class MenuController {
     public CommonResult<MenuRespVO> getMenu(@RequestParam("id") Long id) {
         MenuDO menu = menuService.getMenu(id);
         return success(MenuConvert.INSTANCE.convert(menu));
+    }
+
+    @GetMapping("/listAllSimple")
+    @OperateLog(module = "后台-菜单", name = "查询简单菜单")
+    @SaCheckLogin
+    public CommonResult<MenuSimpleRespVO> getSimpleMenuList() {
+        // 获得菜单列表，只要开启状态的
+        MenuListReqVO reqVO = new MenuListReqVO();
+        reqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
+        List<MenuDO> list = menuService.getMenuList(reqVO);
+        // 排序后，返回给前端
+        list.sort(Comparator.comparing(MenuDO::getSort));
+        return success(MenuConvert.INSTANCE.convertList02(list));
     }
 }
