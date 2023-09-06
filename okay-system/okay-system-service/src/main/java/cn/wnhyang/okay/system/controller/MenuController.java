@@ -81,7 +81,7 @@ public class MenuController {
     @GetMapping("/list")
     @OperateLog(module = "后台-菜单", name = "查询菜单列表")
     @SaCheckPermission("system:menu:query")
-    public CommonResult<List<MenuRespVO>> getMenuList(@RequestBody MenuListReqVO reqVO) {
+    public CommonResult<List<MenuRespVO>> getMenuList(MenuListReqVO reqVO) {
         List<MenuDO> list = menuService.getMenuList(reqVO);
         list.sort(Comparator.comparing(MenuDO::getSort));
         return success(MenuConvert.INSTANCE.convertList(list));

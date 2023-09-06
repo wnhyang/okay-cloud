@@ -11,7 +11,6 @@ import cn.wnhyang.okay.system.vo.loginlog.LoginLogPageReqVO;
 import cn.wnhyang.okay.system.vo.loginlog.LoginLogRespVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,7 +36,7 @@ public class LoginLogController {
     @GetMapping("/page")
     @OperateLog(module = "后台-登录日志", name = "分页查询登录日志")
     @SaCheckPermission("system:loginLog:query")
-    public CommonResult<PageResult<LoginLogRespVO>> getLoginLogPage(@RequestBody LoginLogPageReqVO reqVO) {
+    public CommonResult<PageResult<LoginLogRespVO>> getLoginLogPage(LoginLogPageReqVO reqVO) {
         PageResult<LoginLogDO> page = loginLogService.getLoginLogPage(reqVO);
         return CommonResult.success(LoginLogConvert.INSTANCE.convertPage(page));
     }

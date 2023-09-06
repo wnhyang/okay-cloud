@@ -73,7 +73,7 @@ public class AuthController {
      * @return 加密数据
      */
     @GetMapping("/register")
-    public CommonResult<Boolean> register(@RequestBody RegisterReqVO reqVO) {
+    public CommonResult<Boolean> register(RegisterReqVO reqVO) {
         authService.register(reqVO);
         return success(true);
     }

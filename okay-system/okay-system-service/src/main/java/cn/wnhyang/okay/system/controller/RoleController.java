@@ -104,7 +104,7 @@ public class RoleController {
     @GetMapping("/page")
     @OperateLog(module = "后台-角色", name = "查询角色列表")
     @SaCheckPermission("system:role:list")
-    public CommonResult<PageResult<RoleRespVO>> getRolePage(@RequestBody RolePageReqVO reqVO) {
+    public CommonResult<PageResult<RoleRespVO>> getRolePage(RolePageReqVO reqVO) {
         PageResult<RoleDO> pageResult = roleService.getRolePage(reqVO);
         return success(RoleConvert.INSTANCE.convert(pageResult));
     }

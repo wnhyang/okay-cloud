@@ -14,7 +14,6 @@ import cn.wnhyang.okay.system.vo.operatelog.OperateLogPageReqVO;
 import cn.wnhyang.okay.system.vo.operatelog.OperateLogRespVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,7 +40,7 @@ public class OperateLogController {
     @GetMapping("/page")
     @OperateLog(module = "后台-操作日志", name = "分页查询操作日志")
     @SaCheckPermission("system:operateLog:query")
-    public CommonResult<PageResult<OperateLogRespVO>> getOperateLogPage(@RequestBody OperateLogPageReqVO reqVO) {
+    public CommonResult<PageResult<OperateLogRespVO>> getOperateLogPage(OperateLogPageReqVO reqVO) {
         PageResult<OperateLogDO> pageResult = operateLogService.getOperateLogPage(reqVO);
 
         // 获得拼接需要的数据

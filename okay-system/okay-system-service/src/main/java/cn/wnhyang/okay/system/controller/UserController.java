@@ -133,7 +133,7 @@ public class UserController {
     @GetMapping("/page")
     @OperateLog(module = "后台-用户", name = "查询用户列表")
     @SaCheckPermission("system:user:list")
-    public CommonResult<PageResult<UserRespVO>> getUserPage(@RequestBody UserPageReqVO reqVO) {
+    public CommonResult<PageResult<UserRespVO>> getUserPage(UserPageReqVO reqVO) {
         PageResult<UserDO> pageResult = userService.getUserPage(reqVO);
         return success(UserConvert.INSTANCE.convert(pageResult));
     }
