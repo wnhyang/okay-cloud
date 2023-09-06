@@ -68,5 +68,5 @@ public interface MenuConvert {
 
     UserInfoRespVO.MenuVO convertTreeNode(MenuDO menu);
 
-    MenuSimpleRespVO convertList02(List<MenuDO> list);
+    List<MenuSimpleRespVO> convertList02(List<MenuDO> list);
 }

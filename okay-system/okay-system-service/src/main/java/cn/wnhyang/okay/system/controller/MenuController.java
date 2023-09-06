@@ -103,7 +103,7 @@ public class MenuController {
     @GetMapping("/listAllSimple")
     @OperateLog(module = "后台-菜单", name = "查询简单菜单")
     @SaCheckLogin
-    public CommonResult<MenuSimpleRespVO> getSimpleMenuList() {
+    public CommonResult<List<MenuSimpleRespVO>> getSimpleMenuList() {
         // 获得菜单列表，只要开启状态的
         MenuListReqVO reqVO = new MenuListReqVO();
         reqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
