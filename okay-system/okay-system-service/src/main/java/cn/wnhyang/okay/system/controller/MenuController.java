@@ -100,6 +100,11 @@ public class MenuController {
         return success(MenuConvert.INSTANCE.convert(menu));
     }
 
+    /**
+     * 查询简单菜单列表
+     *
+     * @return 菜单列表
+     */
     @GetMapping("/listAllSimple")
     @OperateLog(module = "后台-菜单", name = "查询简单菜单")
     @SaCheckLogin
