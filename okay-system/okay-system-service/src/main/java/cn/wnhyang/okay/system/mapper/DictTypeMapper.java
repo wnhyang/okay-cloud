@@ -13,4 +13,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface DictTypeMapper extends BaseMapperX<DictTypeDO> {
 
+    default DictTypeDO selectByType(String type) {
+        return selectOne(DictTypeDO::getType, type);
+    }
+
+    default DictTypeDO selectByName(String name) {
+        return selectOne(DictTypeDO::getName, name);
+    }
 }

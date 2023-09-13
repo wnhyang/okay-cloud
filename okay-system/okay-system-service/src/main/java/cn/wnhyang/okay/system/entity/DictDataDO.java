@@ -21,6 +21,7 @@ import lombok.*;
 @TableName("sys_dict_data")
 public class DictDataDO extends BaseDO {
 
+    private static final long serialVersionUID = 2306681901836679890L;
     /**
      * 字典数据主键
      */
