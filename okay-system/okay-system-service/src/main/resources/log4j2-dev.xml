@@ -11,7 +11,7 @@
         <!-- %logger{36} 表示 Logger 名字最长36个字符 -->
         <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         <!-- 定义日志存储的路径 -->
-        <property name="FILE_PATH" value="logs/okay-system"/>
+        <property name="FILE_PATH" value="logs/okay-system-service-service"/>
     </Properties>
 
     <appenders>
