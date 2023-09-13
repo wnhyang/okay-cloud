@@ -1,0 +1,65 @@
+package cn.wnhyang.okay.system.entity;
+
+import cn.wnhyang.okay.framework.mybatis.core.base.BaseDO;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.*;
+
+/**
+ * 字典数据表
+ *
+ * @author wnhyang
+ * @since 2023/09/13
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@TableName("sys_dict_data")
+public class DictDataDO extends BaseDO {
+
+    /**
+     * 字典数据主键
+     */
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
+
+    /**
+     * 字典排序
+     */
+    @TableField("sort")
+    private Integer sort;
+
+    /**
+     * 字典标签
+     */
+    @TableField("label")
+    private String label;
+
+    /**
+     * 字典键值
+     */
+    @TableField("value")
+    private String value;
+
+    /**
+     * 字典类型
+     */
+    @TableField("dict_type")
+    private String dictType;
+
+    /**
+     * 状态（0正常 1停用）
+     */
+    @TableField("status")
+    private Byte status;
+
+    /**
+     * 备注
+     */
+    @TableField("remark")
+    private String remark;
+}

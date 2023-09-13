@@ -16,7 +16,7 @@ import javax.validation.Valid;
 @FeignClient(name = ApiConstants.OKAY_SYSTEM_NAME)
 public interface OperateLogApi {
 
-    String PREFIX = ApiConstants.OKAY_SYSTEM_PREFIX + "/operate-log";
+    String PREFIX = ApiConstants.OKAY_SYSTEM_PREFIX + "/operateLog";
 
     /**
      * 记录操作日志
