@@ -56,7 +56,7 @@ public class DictDataDO extends BaseDO {
      * 状态（0正常 1停用）
      */
     @TableField("status")
-    private Byte status;
+    private Integer status;
 
     /**
      * 备注

@@ -17,6 +17,7 @@ import java.util.List;
  **/
 @Mapper
 public interface DictTypeConvert {
+
     DictTypeConvert INSTANCE = Mappers.getMapper(DictTypeConvert.class);
 
     DictTypeDO convert(DictTypeCreateReqVO reqVO);

@@ -45,7 +45,7 @@ public class LoginLogDO extends BaseDO {
      * 用户类型
      */
     @TableField("user_type")
-    private Byte userType;
+    private Integer userType;
 
     /**
      * 用户账号
@@ -57,7 +57,7 @@ public class LoginLogDO extends BaseDO {
      * 登录结果
      */
     @TableField("result")
-    private Byte result;
+    private Integer result;
 
     /**
      * 用户 IP
