@@ -1,15 +1,19 @@
 package cn.wnhyang.okay.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.system.convert.dicttype.DictTypeConvert;
 import cn.wnhyang.okay.system.entity.DictTypeDO;
 import cn.wnhyang.okay.system.mapper.DictDataMapper;
 import cn.wnhyang.okay.system.mapper.DictTypeMapper;
 import cn.wnhyang.okay.system.service.DictTypeService;
 import cn.wnhyang.okay.system.vo.dicttype.DictTypeCreateReqVO;
+import cn.wnhyang.okay.system.vo.dicttype.DictTypePageReqVO;
 import cn.wnhyang.okay.system.vo.dicttype.DictTypeUpdateReqVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
@@ -59,6 +63,21 @@ public class DictTypeServiceImpl implements DictTypeService {
         }
         // 删除字典类型
         dictTypeMapper.deleteById(id);
+    }
+
+    @Override
+    public PageResult<DictTypeDO> getDictTypePage(DictTypePageReqVO reqVO) {
+        return dictTypeMapper.selectPage(reqVO);
+    }
+
+    @Override
+    public DictTypeDO getDictType(Long id) {
+        return dictTypeMapper.selectById(id);
+    }
+
+    @Override
+    public List<DictTypeDO> getDictTypeList() {
+        return dictTypeMapper.selectList();
     }
 
     private void validateDictTypeForCreateOrUpdate(Long id, String name, String type) {
