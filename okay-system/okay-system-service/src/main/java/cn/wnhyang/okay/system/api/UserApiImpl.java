@@ -38,7 +38,6 @@ public class UserApiImpl implements UserApi {
     }
 
     /**
-     *
      * @param userId  用户id
      * @param loginIp 登录ip
      */

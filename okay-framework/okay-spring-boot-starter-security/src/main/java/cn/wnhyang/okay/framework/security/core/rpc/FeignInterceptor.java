@@ -12,6 +12,7 @@ public class FeignInterceptor implements RequestInterceptor {
 
     /**
      * 为 Feign 的 RCP调用 添加请求头Same-Token
+     *
      * @param requestTemplate r
      */
     @Override

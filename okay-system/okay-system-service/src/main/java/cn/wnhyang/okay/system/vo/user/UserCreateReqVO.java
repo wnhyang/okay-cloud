@@ -12,7 +12,7 @@ import javax.validation.constraints.NotEmpty;
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UserCreateReqVO extends UserBaseVO{
+public class UserCreateReqVO extends UserBaseVO {
 
     /**
      * 密码

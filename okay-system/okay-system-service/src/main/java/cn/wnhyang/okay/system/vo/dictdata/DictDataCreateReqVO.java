@@ -9,5 +9,5 @@ import lombok.EqualsAndHashCode;
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class DictDataCreateReqVO extends DictDataBaseVO{
+public class DictDataCreateReqVO extends DictDataBaseVO {
 }

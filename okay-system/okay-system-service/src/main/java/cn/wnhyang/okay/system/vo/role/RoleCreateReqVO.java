@@ -9,5 +9,5 @@ import lombok.EqualsAndHashCode;
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RoleCreateReqVO extends RoleBaseVO{
+public class RoleCreateReqVO extends RoleBaseVO {
 }

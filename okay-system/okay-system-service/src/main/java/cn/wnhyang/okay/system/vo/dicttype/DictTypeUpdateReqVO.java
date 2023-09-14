@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class DictTypeUpdateReqVO extends DictTypeBaseVO{
+public class DictTypeUpdateReqVO extends DictTypeBaseVO {
 
     @NotNull(message = "字典类型编号不能为空")
     private Long id;
