@@ -18,6 +18,7 @@ import java.util.Set;
 import static cn.wnhyang.okay.framework.common.util.CollectionUtils.convertSet;
 
 /**
+ * 权限
  * @author wnhyang
  * @date 2023/8/4
  **/

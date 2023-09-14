@@ -16,7 +16,7 @@ import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUt
 import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
 
 /**
- * 字典数据表 服务实现类
+ * 字典数据
  *
  * @author wnhyang
  * @since 2023/09/13

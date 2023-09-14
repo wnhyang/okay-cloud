@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
- * 系统访问记录
+ * 登录日志
  *
  * @author wnhyang
  * @since 2023/07/25

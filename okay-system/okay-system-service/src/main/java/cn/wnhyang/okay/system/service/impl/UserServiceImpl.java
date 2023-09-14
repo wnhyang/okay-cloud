@@ -33,7 +33,7 @@ import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUt
 import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
 
 /**
- * 用户信息表
+ * 用户
  *
  * @author wnhyang
  * @since 2023/05/14

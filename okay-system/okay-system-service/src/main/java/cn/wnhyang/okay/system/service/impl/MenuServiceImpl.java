@@ -23,7 +23,7 @@ import static cn.wnhyang.okay.system.entity.MenuDO.ID_ROOT;
 import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
 
 /**
- * 菜单权限表
+ * 菜单
  *
  * @author wnhyang
  * @since 2023/05/14

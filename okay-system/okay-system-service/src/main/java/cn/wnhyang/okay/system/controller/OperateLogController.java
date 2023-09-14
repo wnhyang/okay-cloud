@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 操作日志记录
+ * 操作日志
  *
  * @author wnhyang
  * @since 2023/06/05

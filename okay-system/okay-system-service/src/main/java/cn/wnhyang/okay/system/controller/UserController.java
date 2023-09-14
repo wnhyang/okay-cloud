@@ -24,7 +24,7 @@ import java.util.Set;
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 
 /**
- * 用户信息表
+ * 用户
  *
  * @author wnhyang
  * @since 2023/05/14

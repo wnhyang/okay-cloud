@@ -18,7 +18,7 @@ import java.util.List;
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 
 /**
- * 字典类型表
+ * 字典类型
  *
  * @author wnhyang
  * @since 2023/09/13

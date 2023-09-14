@@ -18,7 +18,7 @@ import java.util.List;
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 
 /**
- * 菜单权限表
+ * 菜单
  *
  * @author wnhyang
  * @since 2023/05/14

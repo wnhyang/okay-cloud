@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 
 /**
- * 角色信息表
+ * 角色
  *
  * @author wnhyang
  * @since 2023/05/14

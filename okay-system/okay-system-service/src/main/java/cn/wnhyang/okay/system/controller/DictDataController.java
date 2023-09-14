@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 
 /**
- * 字典数据表
+ * 字典数据
  *
  * @author wnhyang
  * @since 2023/09/13
