@@ -1,6 +1,7 @@
 package cn.wnhyang.okay.system.service.impl;
 
 import cn.wnhyang.okay.framework.common.enums.CommonStatusEnum;
+import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.system.convert.dictdata.DictDataConvert;
 import cn.wnhyang.okay.system.entity.DictDataDO;
 import cn.wnhyang.okay.system.entity.DictTypeDO;
@@ -8,9 +9,13 @@ import cn.wnhyang.okay.system.mapper.DictDataMapper;
 import cn.wnhyang.okay.system.mapper.DictTypeMapper;
 import cn.wnhyang.okay.system.service.DictDataService;
 import cn.wnhyang.okay.system.vo.dictdata.DictDataCreateReqVO;
+import cn.wnhyang.okay.system.vo.dictdata.DictDataPageReqVO;
 import cn.wnhyang.okay.system.vo.dictdata.DictDataUpdateReqVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Comparator;
+import java.util.List;
 
 import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
@@ -24,6 +29,13 @@ import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
 @Service
 @RequiredArgsConstructor
 public class DictDataServiceImpl implements DictDataService {
+
+    /**
+     * 排序 dictType > sort
+     */
+    private static final Comparator<DictDataDO> COMPARATOR_TYPE_AND_SORT = Comparator
+            .comparing(DictDataDO::getDictType)
+            .thenComparingInt(DictDataDO::getSort);
 
     private final DictDataMapper dictDataMapper;
 
@@ -57,6 +69,23 @@ public class DictDataServiceImpl implements DictDataService {
 
         // 删除字典数据
         dictDataMapper.deleteById(id);
+    }
+
+    @Override
+    public List<DictDataDO> getDictDataList() {
+        List<DictDataDO> list = dictDataMapper.selectList();
+        list.sort(COMPARATOR_TYPE_AND_SORT);
+        return list;
+    }
+
+    @Override
+    public PageResult<DictDataDO> getDictDataPage(DictDataPageReqVO reqVO) {
+        return dictDataMapper.selectPage(reqVO);
+    }
+
+    @Override
+    public DictDataDO getDictData(Long id) {
+        return dictDataMapper.selectById(id);
     }
 
     private void validateDictDataForCreateOrUpdate(Long id, String value, String dictType) {

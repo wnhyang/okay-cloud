@@ -1,15 +1,19 @@
 package cn.wnhyang.okay.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
+import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog;
+import cn.wnhyang.okay.system.convert.dictdata.DictDataConvert;
+import cn.wnhyang.okay.system.entity.DictDataDO;
 import cn.wnhyang.okay.system.service.DictDataService;
-import cn.wnhyang.okay.system.vo.dictdata.DictDataCreateReqVO;
-import cn.wnhyang.okay.system.vo.dictdata.DictDataUpdateReqVO;
+import cn.wnhyang.okay.system.vo.dictdata.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 
@@ -66,6 +70,46 @@ public class DictDataController {
     public CommonResult<Boolean> deleteDictData(Long id) {
         dictDataService.deleteDictData(id);
         return success(true);
+    }
+
+    /**
+     * 查询简单菜单数据
+     *
+     * @return 菜单列表
+     */
+    @GetMapping("/listAllSimple")
+    @OperateLog(module = "后台-字典", name = "查询简单菜单数据")
+    @SaCheckLogin
+    // 无需添加权限认证，因为前端全局都需要
+    public CommonResult<List<DictDataSimpleRespVO>> getSimpleDictDataList() {
+        List<DictDataDO> list = dictDataService.getDictDataList();
+        return success(DictDataConvert.INSTANCE.convertList(list));
+    }
+
+    /**
+     * 分页字典数据
+     *
+     * @param reqVO 分页请求
+     * @return 字典数据
+     */
+    @GetMapping("/page")
+    @OperateLog(module = "后台-字典", name = "分页字典数据")
+    @SaCheckPermission("system:dict:query")
+    public CommonResult<PageResult<DictDataRespVO>> getDictTypePage(@Valid DictDataPageReqVO reqVO) {
+        return success(DictDataConvert.INSTANCE.convertPage(dictDataService.getDictDataPage(reqVO)));
+    }
+
+    /**
+     * 查询详细字典数据
+     *
+     * @param id 字典数据id
+     * @return 字典数据
+     */
+    @GetMapping(value = "/get")
+    @OperateLog(module = "后台-字典", name = "查询详细字典数据")
+    @SaCheckPermission("system:dict:query")
+    public CommonResult<DictDataRespVO> getDictData(@RequestParam("id") Long id) {
+        return success(DictDataConvert.INSTANCE.convert(dictDataService.getDictData(id)));
     }
 
 }

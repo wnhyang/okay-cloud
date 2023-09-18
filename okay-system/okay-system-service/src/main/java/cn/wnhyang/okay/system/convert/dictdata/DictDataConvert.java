@@ -1,9 +1,14 @@
 package cn.wnhyang.okay.system.convert.dictdata;
 
+import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.system.entity.DictDataDO;
 import cn.wnhyang.okay.system.vo.dictdata.DictDataCreateReqVO;
+import cn.wnhyang.okay.system.vo.dictdata.DictDataRespVO;
+import cn.wnhyang.okay.system.vo.dictdata.DictDataSimpleRespVO;
 import cn.wnhyang.okay.system.vo.dictdata.DictDataUpdateReqVO;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 /**
  * @author wnhyang
@@ -15,5 +20,11 @@ public interface DictDataConvert {
 
     DictDataDO convert(DictDataCreateReqVO reqVO);
 
+    DictDataRespVO convert(DictDataDO bean);
+
     DictDataDO convert(DictDataUpdateReqVO reqVO);
+
+    List<DictDataSimpleRespVO> convertList(List<DictDataDO> list);
+
+    PageResult<DictDataRespVO> convertPage(PageResult<DictDataDO> page);
 }

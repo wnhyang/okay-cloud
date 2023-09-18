@@ -73,7 +73,7 @@ public class DictTypeController {
     }
 
     /**
-     * 分页字典数据
+     * 分页字典类型
      *
      * @param reqVO 分页请求
      * @return 分页字典类型
