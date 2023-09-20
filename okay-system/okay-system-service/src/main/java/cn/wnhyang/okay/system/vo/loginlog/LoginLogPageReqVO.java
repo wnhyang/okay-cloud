@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 public class LoginLogPageReqVO extends PageParam {
 
+    private static final long serialVersionUID = -3755641368582812482L;
+
     private String userIp;
 
     private String account;

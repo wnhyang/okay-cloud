@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @Data
 public class OperateLogPageReqVO extends PageParam {
 
+    private static final long serialVersionUID = -1856008201727537612L;
+
     private String module;
 
     private String userNickname;

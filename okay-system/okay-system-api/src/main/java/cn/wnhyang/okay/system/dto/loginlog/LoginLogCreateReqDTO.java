@@ -15,6 +15,8 @@ import java.io.Serializable;
 @Data
 public class LoginLogCreateReqDTO implements Serializable {
 
+    private static final long serialVersionUID = -3025051336842878235L;
+
     @NotNull(message = "日志类型不能为空")
     private Integer loginType;
 

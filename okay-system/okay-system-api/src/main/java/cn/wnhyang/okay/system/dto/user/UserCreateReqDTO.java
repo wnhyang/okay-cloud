@@ -11,6 +11,8 @@ import java.io.Serializable;
 @Data
 public class UserCreateReqDTO implements Serializable {
 
+    private static final long serialVersionUID = 451667800659896712L;
+
     /**
      * 用户账号
      */

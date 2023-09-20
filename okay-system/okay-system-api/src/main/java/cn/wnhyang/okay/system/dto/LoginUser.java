@@ -13,6 +13,8 @@ import java.util.Set;
 @Data
 public class LoginUser implements Serializable {
 
+    private static final long serialVersionUID = -1621620881010359627L;
+
     /**
      * 用户ID
      */

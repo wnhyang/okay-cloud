@@ -80,7 +80,6 @@ public class DictDataController {
     @GetMapping("/listAllSimple")
     @OperateLog(module = "后台-字典", name = "查询简单菜单数据")
     @SaCheckLogin
-    // 无需添加权限认证，因为前端全局都需要
     public CommonResult<List<DictDataSimpleRespVO>> getSimpleDictDataList() {
         List<DictDataDO> list = dictDataService.getDictDataList();
         return success(DictDataConvert.INSTANCE.convertList(list));

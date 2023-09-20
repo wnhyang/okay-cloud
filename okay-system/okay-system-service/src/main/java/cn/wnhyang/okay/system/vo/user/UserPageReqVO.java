@@ -20,6 +20,8 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 public class UserPageReqVO extends PageParam {
 
+    private static final long serialVersionUID = 1382984856072227773L;
+
     private String username;
 
     private String mobile;

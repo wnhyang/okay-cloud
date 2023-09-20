@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 public class RolePageReqVO extends PageParam {
 
+    private static final long serialVersionUID = -5653242641955460431L;
+
     private String name;
 
     private String code;

@@ -15,6 +15,8 @@ import java.util.Map;
 @Data
 public class OperateLogCreateReqDTO implements Serializable {
 
+    private static final long serialVersionUID = 541323985520059827L;
+
     @NotNull(message = "用户编号不能为空")
     private Long userId;
 

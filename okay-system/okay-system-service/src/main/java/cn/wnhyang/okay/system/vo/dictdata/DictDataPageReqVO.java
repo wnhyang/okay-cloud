@@ -14,6 +14,8 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = true)
 public class DictDataPageReqVO extends PageParam {
 
+    private static final long serialVersionUID = 7765456791884144537L;
+
     @Size(max = 100, message = "字典标签长度不能超过100个字符")
     private String label;
 

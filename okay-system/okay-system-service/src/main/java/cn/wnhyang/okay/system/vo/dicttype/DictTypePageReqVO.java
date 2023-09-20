@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 public class DictTypePageReqVO extends PageParam {
 
+    private static final long serialVersionUID = -2268644414650536395L;
+
     private String name;
 
     @Size(max = 100, message = "字典类型类型长度不能超过100个字符")
