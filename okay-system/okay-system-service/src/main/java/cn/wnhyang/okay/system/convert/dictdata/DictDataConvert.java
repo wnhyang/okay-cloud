@@ -1,6 +1,7 @@
 package cn.wnhyang.okay.system.convert.dictdata;
 
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
+import cn.wnhyang.okay.system.dto.dict.DictDataRespDTO;
 import cn.wnhyang.okay.system.entity.DictDataDO;
 import cn.wnhyang.okay.system.vo.dictdata.DictDataCreateReqVO;
 import cn.wnhyang.okay.system.vo.dictdata.DictDataRespVO;
@@ -27,4 +28,6 @@ public interface DictDataConvert {
     List<DictDataSimpleRespVO> convertList(List<DictDataDO> list);
 
     PageResult<DictDataRespVO> convertPage(PageResult<DictDataDO> page);
+
+    DictDataRespDTO convert02(DictDataDO dictData);
 }

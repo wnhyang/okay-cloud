@@ -44,7 +44,6 @@ public interface UserService {
      * 注册用户
      *
      * @param reqDTO 用户信息
-     * @return 结果
      */
     void registerUser(UserCreateReqDTO reqDTO);
 

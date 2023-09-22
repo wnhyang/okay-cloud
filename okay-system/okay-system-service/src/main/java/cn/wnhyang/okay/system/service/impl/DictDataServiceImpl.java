@@ -88,6 +88,11 @@ public class DictDataServiceImpl implements DictDataService {
         return dictDataMapper.selectById(id);
     }
 
+    @Override
+    public DictDataDO getDictData(String dictType, String value) {
+        return dictDataMapper.selectByDictTypeAndValue(dictType, value);
+    }
+
     private void validateDictDataForCreateOrUpdate(Long id, String value, String dictType) {
         // 校验自己存在
         validateDictDataExists(id);

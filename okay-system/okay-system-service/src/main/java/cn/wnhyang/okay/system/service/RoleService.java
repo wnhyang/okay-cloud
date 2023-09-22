@@ -50,7 +50,6 @@ public interface RoleService {
      * 更新角色
      *
      * @param reqVO 角色信息
-     * @return 结果
      */
     void updateRole(RoleUpdateReqVO reqVO);
 
