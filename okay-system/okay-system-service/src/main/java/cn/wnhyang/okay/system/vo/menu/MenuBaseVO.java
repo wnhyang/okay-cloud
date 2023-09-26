@@ -13,8 +13,7 @@ import javax.validation.constraints.Size;
 @Data
 public class MenuBaseVO {
 
-    @NotBlank(message = "菜单名称不能为空")
-    @Size(max = 50, message = "菜单名称长度不能超过50个字符")
+
     private String name;
 
     @Size(max = 100)
@@ -37,6 +36,8 @@ public class MenuBaseVO {
     @Size(max = 200, message = "组件路径不能超过255个字符")
     private String component;
 
+    @NotBlank(message = "菜单名称不能为空")
+    @Size(max = 50, message = "菜单名称长度不能超过50个字符")
     private String title;
 
     @NotNull(message = "状态不能为空")

@@ -15,7 +15,7 @@ public class MenuSimpleRespVO {
 
     private Long id;
 
-    private String name;
+    private String title;
 
     private Long parentId;
 

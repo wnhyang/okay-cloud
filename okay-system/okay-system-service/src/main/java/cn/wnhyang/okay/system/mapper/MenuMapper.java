@@ -27,7 +27,7 @@ public interface MenuMapper extends BaseMapperX<MenuDO> {
 
     default List<MenuDO> selectList(MenuListReqVO reqVO) {
         return selectList(new LambdaQueryWrapperX<MenuDO>()
-                .likeIfPresent(MenuDO::getName, reqVO.getName())
+                .likeIfPresent(MenuDO::getTitle, reqVO.getTitle())
                 .eqIfPresent(MenuDO::getStatus, reqVO.getStatus()));
     }
 }

@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class MenuListReqVO {
 
-    private String name;
+    private String title;
 
     private Integer status;
 }
