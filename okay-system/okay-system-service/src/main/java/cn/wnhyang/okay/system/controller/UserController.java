@@ -143,13 +143,22 @@ public class UserController {
     @SaCheckLogin
     public CommonResult<UserInfoRespVO> getUserInfo() {
         LoginUser loginUser = LoginHelper.getLoginUser();
+        assert loginUser != null;
+        Long id = loginUser.getId();
+
         UserInfoRespVO respVO = new UserInfoRespVO();
-        UserDO user = userService.getUserById(loginUser.getId());
+        UserDO user = userService.getUserById(id);
         respVO.setUser(UserConvert.INSTANCE.convert03(user));
         respVO.setRoles(loginUser.getRoles());
         respVO.setPermissions(loginUser.getPermissions());
-        Set<Long> menuIds = permissionService.getRoleMenuListByRoleId(loginUser.getRoleIds());
-        List<MenuDO> menus = menuService.getMenuList(menuIds);
+
+        List<MenuDO> menus;
+        if (LoginHelper.isAdministrator(id)) {
+            menus = menuService.getMenuList();
+        } else {
+            Set<Long> menuIds = permissionService.getRoleMenuListByRoleId(loginUser.getRoleIds());
+            menus = menuService.getMenuList(menuIds);
+        }
         respVO.setMenus(MenuConvert.INSTANCE.buildMenuTree(menus));
         return success(respVO);
     }

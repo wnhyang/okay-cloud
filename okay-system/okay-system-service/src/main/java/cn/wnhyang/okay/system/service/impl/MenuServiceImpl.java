@@ -105,6 +105,11 @@ public class MenuServiceImpl implements MenuService {
         return menuMapper.selectBatchIds(ids);
     }
 
+    @Override
+    public List<MenuDO> getMenuList() {
+        return menuMapper.selectList();
+    }
+
     /**
      * 校验父菜单是否合法
      * <p>

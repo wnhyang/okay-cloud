@@ -61,4 +61,11 @@ public interface MenuService {
      * @return 菜单
      */
     List<MenuDO> getMenuList(Set<Long> ids);
+
+    /**
+     * 获取所有菜单列表
+     *
+     * @return 菜单列表
+     */
+    List<MenuDO> getMenuList();
 }
