@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 /**
@@ -21,7 +20,6 @@ public class DictTypePageReqVO extends PageParam {
 
     private String name;
 
-    @Size(max = 100, message = "字典类型类型长度不能超过100个字符")
     private String type;
 
     private Integer status;

@@ -24,7 +24,7 @@ import java.util.List;
 @Slf4j
 public class JsonUtils {
 
-    private static ObjectMapper objectMapper = SpringUtil.getBean(ObjectMapper.class);
+    private static final ObjectMapper objectMapper = SpringUtil.getBean(ObjectMapper.class);
 
     @SneakyThrows
     public static String toJsonString(Object object) {
