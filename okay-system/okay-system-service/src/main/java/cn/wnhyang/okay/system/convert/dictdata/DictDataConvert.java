@@ -7,6 +7,7 @@ import cn.wnhyang.okay.system.vo.dictdata.DictDataCreateReqVO;
 import cn.wnhyang.okay.system.vo.dictdata.DictDataRespVO;
 import cn.wnhyang.okay.system.vo.dictdata.DictDataSimpleRespVO;
 import cn.wnhyang.okay.system.vo.dictdata.DictDataUpdateReqVO;
+import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author wnhyang
  * @date 2023/9/14
  **/
+@Mapper
 public interface DictDataConvert {
 
     DictDataConvert INSTANCE = Mappers.getMapper(DictDataConvert.class);

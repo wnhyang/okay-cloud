@@ -30,16 +30,16 @@ import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
 @RequiredArgsConstructor
 public class DictDataServiceImpl implements DictDataService {
 
+    private final DictDataMapper dictDataMapper;
+
+    private final DictTypeMapper dictTypeMapper;
+
     /**
      * 排序 dictType > sort
      */
     private static final Comparator<DictDataDO> COMPARATOR_TYPE_AND_SORT = Comparator
             .comparing(DictDataDO::getDictType)
             .thenComparingInt(DictDataDO::getSort);
-
-    private final DictDataMapper dictDataMapper;
-
-    private final DictTypeMapper dictTypeMapper;
 
     @Override
     public Long createDictData(DictDataCreateReqVO reqVO) {
