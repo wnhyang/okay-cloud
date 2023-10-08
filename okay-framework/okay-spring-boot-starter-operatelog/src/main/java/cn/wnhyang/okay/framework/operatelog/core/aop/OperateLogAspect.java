@@ -102,16 +102,16 @@ public class OperateLogAspect {
                 operateLogObj.setUserId(loginUser.getId());
             }
             // 日志组装2
-            sb.append("\nuserId : ").append(operateLogObj.getUserId()).append(" ");
+            sb.append("\nuserId:").append(operateLogObj.getUserId()).append(",");
             // 补全模块信息
             fillModuleFields(operateLogObj, joinPoint, operateLog);
             // 日志组装3
-            sb.append("\nmodule : ").append(operateLogObj.getModule()).append(" ")
-                    .append("name : ").append(operateLogObj.getName()).append(" ")
-                    .append("type : ").append(operateLogObj.getType()).append(" ");
+            sb.append("module:").append(operateLogObj.getModule()).append(",")
+                    .append("name:").append(operateLogObj.getName()).append(",")
+                    .append("type:").append(operateLogObj.getType()).append(",");
             // 日志组装4
-            sb.append("\ncontent : ").append(operateLogObj.getContent()).append(" ")
-                    .append("exts : ").append(operateLogObj.getExts()).append(" ");
+            sb.append("content:").append(operateLogObj.getContent()).append(",")
+                    .append("exts:").append(operateLogObj.getExts());
             // 补全请求信息
             fillRequestFields(operateLogObj, joinPoint, operateLog, sb);
             sb.append("\n==========================================");
@@ -200,14 +200,14 @@ public class OperateLogAspect {
         operateLogObj.setUserIp(ServletUtil.getClientIP(request));
         operateLogObj.setUserAgent(ServletUtils.getUserAgent(request));
         // 日志组装5
-        sb.append("\nrequestMethod : ").append(operateLogObj.getRequestMethod()).append(" ")
-                .append("requestUrl : ").append(operateLogObj.getRequestUrl()).append(" ")
-                .append("userIp : ").append(operateLogObj.getUserIp()).append(" ")
-                .append("userAgent : ").append(operateLogObj.getUserAgent()).append(" ");
+        sb.append("\nrequestMethod:").append(operateLogObj.getRequestMethod()).append(",")
+                .append("requestUrl:").append(operateLogObj.getRequestUrl()).append(",")
+                .append("userIp:").append(operateLogObj.getUserIp()).append(",")
+                .append("userAgent:").append(operateLogObj.getUserAgent());
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         operateLogObj.setJavaMethod(methodSignature.toString());
         // 日志组装6
-        sb.append("\njavaMethod : ").append(operateLogObj.getJavaMethod()).append(" ");
+        sb.append("\njavaMethod:").append(operateLogObj.getJavaMethod());
         if (operateLog == null || operateLog.logArgs()) {
             operateLogObj.setJavaMethodArgs(obtainMethodArgs(joinPoint, sb));
         }
@@ -218,8 +218,8 @@ public class OperateLogAspect {
                                          LocalDateTime startTime, Object result, Throwable exception, StringBuilder sb) {
         operateLogObj.setDuration((int) (LocalDateTimeUtil.between(startTime, LocalDateTime.now()).toMillis()));
         // 日志组装8
-        sb.append("\nstartTime : ").append(startTime).append(" ")
-                .append("\nduration : ").append(operateLogObj.getDuration()).append(" ");
+        sb.append("\nstartTime:").append(startTime)
+                .append("\nduration:").append(operateLogObj.getDuration());
 
         // （正常）处理 resultCode 和 resultMsg 字段
         if (result instanceof CommonResult) {
@@ -235,8 +235,8 @@ public class OperateLogAspect {
             operateLogObj.setResultMsg(ExceptionUtil.getRootCauseMessage(exception));
         }
         // 日志组装9
-        sb.append("\nresultCode : ").append(operateLogObj.getResultCode()).append(" ")
-                .append("\nresultMsg : ").append(operateLogObj.getResultMsg()).append(" ");
+        sb.append("\nresultCode:").append(operateLogObj.getResultCode()).append(",")
+                .append("\nresultMsg:").append(operateLogObj.getResultMsg());
         if (operateLog == null || operateLog.logResultData()) {
             operateLogObj.setResultData(obtainResultData(result, sb));
         }
@@ -315,7 +315,7 @@ public class OperateLogAspect {
             args.put(argName, !isIgnoreArgs(argValue) ? argValue : "[ignore]");
         }
         // 日志组装7
-        sb.append("\njavaMethodArgs : \n").append(JsonUtils.toJsonPrettyString(args));
+        sb.append("\njavaMethodArgs:\n").append(JsonUtils.toJsonPrettyString(args));
         return JsonUtils.toJsonString(args);
     }
 
@@ -325,7 +325,7 @@ public class OperateLogAspect {
             result = ((CommonResult<?>) result).getData();
         }
         // 日志组装10
-        sb.append("\njavaMethodArgs : \n").append(JsonUtils.toJsonPrettyString(result));
+        sb.append("\njavaMethodArgs:\n").append(JsonUtils.toJsonPrettyString(result));
         return JsonUtils.toJsonString(result);
     }
 
