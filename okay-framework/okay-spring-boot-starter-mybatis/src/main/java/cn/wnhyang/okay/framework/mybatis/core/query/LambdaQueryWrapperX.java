@@ -1,6 +1,7 @@
 package cn.wnhyang.okay.framework.mybatis.core.query;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
@@ -39,42 +40,42 @@ public class LambdaQueryWrapperX<T> extends LambdaQueryWrapper<T> {
     }
 
     public LambdaQueryWrapperX<T> eqIfPresent(SFunction<T, ?> column, Object val) {
-        if (val != null) {
+        if (ObjectUtil.isNotEmpty(val)) {
             return (LambdaQueryWrapperX<T>) super.eq(column, val);
         }
         return this;
     }
 
     public LambdaQueryWrapperX<T> neIfPresent(SFunction<T, ?> column, Object val) {
-        if (val != null) {
+        if (ObjectUtil.isNotEmpty(val)) {
             return (LambdaQueryWrapperX<T>) super.ne(column, val);
         }
         return this;
     }
 
     public LambdaQueryWrapperX<T> gtIfPresent(SFunction<T, ?> column, Object val) {
-        if (val != null) {
+        if (ObjectUtil.isNotEmpty(val)) {
             return (LambdaQueryWrapperX<T>) super.gt(column, val);
         }
         return this;
     }
 
     public LambdaQueryWrapperX<T> geIfPresent(SFunction<T, ?> column, Object val) {
-        if (val != null) {
+        if (ObjectUtil.isNotEmpty(val)) {
             return (LambdaQueryWrapperX<T>) super.ge(column, val);
         }
         return this;
     }
 
     public LambdaQueryWrapperX<T> ltIfPresent(SFunction<T, ?> column, Object val) {
-        if (val != null) {
+        if (ObjectUtil.isNotEmpty(val)) {
             return (LambdaQueryWrapperX<T>) super.lt(column, val);
         }
         return this;
     }
 
     public LambdaQueryWrapperX<T> leIfPresent(SFunction<T, ?> column, Object val) {
-        if (val != null) {
+        if (ObjectUtil.isNotEmpty(val)) {
             return (LambdaQueryWrapperX<T>) super.le(column, val);
         }
         return this;

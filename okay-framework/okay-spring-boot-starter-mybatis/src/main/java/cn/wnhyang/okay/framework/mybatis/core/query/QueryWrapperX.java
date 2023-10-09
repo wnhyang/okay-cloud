@@ -1,5 +1,6 @@
 package cn.wnhyang.okay.framework.mybatis.core.query;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
@@ -38,42 +39,42 @@ public class QueryWrapperX<T> extends QueryWrapper<T> {
     }
 
     public QueryWrapperX<T> eqIfPresent(String column, Object val) {
-        if (val != null) {
+        if (ObjectUtil.isNotEmpty(val)) {
             return (QueryWrapperX<T>) super.eq(column, val);
         }
         return this;
     }
 
     public QueryWrapperX<T> neIfPresent(String column, Object val) {
-        if (val != null) {
+        if (ObjectUtil.isNotEmpty(val)) {
             return (QueryWrapperX<T>) super.ne(column, val);
         }
         return this;
     }
 
     public QueryWrapperX<T> gtIfPresent(String column, Object val) {
-        if (val != null) {
+        if (ObjectUtil.isNotEmpty(val)) {
             return (QueryWrapperX<T>) super.gt(column, val);
         }
         return this;
     }
 
     public QueryWrapperX<T> geIfPresent(String column, Object val) {
-        if (val != null) {
+        if (ObjectUtil.isNotEmpty(val)) {
             return (QueryWrapperX<T>) super.ge(column, val);
         }
         return this;
     }
 
     public QueryWrapperX<T> ltIfPresent(String column, Object val) {
-        if (val != null) {
+        if (ObjectUtil.isNotEmpty(val)) {
             return (QueryWrapperX<T>) super.lt(column, val);
         }
         return this;
     }
 
     public QueryWrapperX<T> leIfPresent(String column, Object val) {
-        if (val != null) {
+        if (ObjectUtil.isNotEmpty(val)) {
             return (QueryWrapperX<T>) super.le(column, val);
         }
         return this;

@@ -91,9 +91,10 @@ public class OperateLogAspect {
         Object result = null;
         try {
             OperateLogCreateReqDTO operateLogObj = new OperateLogCreateReqDTO();
-            // 日志组装1
-            StringBuilder sb = new StringBuilder();
-            sb.append("\n------------------------------------------");
+            log.info("userId:{},module:{},name:{},type:{},content:{},exts:{}",
+                    operateLogObj.getUserId(), operateLogObj.getModule(),
+                    operateLogObj.getName(), operateLogObj.getType(),
+                    operateLogObj.getContent(), operateLogObj.getExts());
             // 补全通用字段
             operateLogObj.setStartTime(startTime);
             // 补充用户信息
@@ -101,33 +102,17 @@ public class OperateLogAspect {
             if (ObjectUtil.isNotNull(loginUser)) {
                 operateLogObj.setUserId(loginUser.getId());
             }
-            // 日志组装2
-            sb.append("\nuserId:").append(operateLogObj.getUserId()).append(",");
             // 补全模块信息
             fillModuleFields(operateLogObj, joinPoint, operateLog);
-            // 日志组装3
-            sb.append("module:").append(operateLogObj.getModule()).append(",")
-                    .append("name:").append(operateLogObj.getName()).append(",")
-                    .append("type:").append(operateLogObj.getType()).append(",");
-            // 日志组装4
-            sb.append("content:").append(operateLogObj.getContent()).append(",")
-                    .append("exts:").append(operateLogObj.getExts());
             // 补全请求信息
-            fillRequestFields(operateLogObj, joinPoint, operateLog, sb);
-            sb.append("\n==========================================");
-            // 打印方法前信息
-            log.info(sb.toString());
+            fillRequestFields(operateLogObj, joinPoint, operateLog);
+
             // 执行原有方法
             result = joinPoint.proceed();
 
-            sb.setLength(0);
-            sb.append("\n------------------------------------------");
             // 补全结果信息
-            fillResultFields(operateLogObj, operateLog, startTime, result, null, sb);
+            fillResultFields(operateLogObj, operateLog, startTime, result, null);
 
-            sb.append("\n==========================================");
-            // 打印方法后信息
-            log.info(sb.toString());
             // 判断不记录的情况
             if (!isLogEnable(joinPoint, operateLog)) {
                 return result;
@@ -188,7 +173,7 @@ public class OperateLogAspect {
     }
 
     private static void fillRequestFields(OperateLogCreateReqDTO operateLogObj, ProceedingJoinPoint joinPoint,
-                                          OperateLog operateLog, StringBuilder sb) {
+                                          OperateLog operateLog) {
         // 获得 Request 对象
         HttpServletRequest request = ServletUtils.getRequest();
         if (request == null) {
@@ -199,27 +184,23 @@ public class OperateLogAspect {
         operateLogObj.setRequestUrl(request.getRequestURI());
         operateLogObj.setUserIp(ServletUtil.getClientIP(request));
         operateLogObj.setUserAgent(ServletUtils.getUserAgent(request));
-        // 日志组装5
-        sb.append("\nrequestMethod:").append(operateLogObj.getRequestMethod()).append(",")
-                .append("requestUrl:").append(operateLogObj.getRequestUrl()).append(",")
-                .append("userIp:").append(operateLogObj.getUserIp()).append(",")
-                .append("userAgent:").append(operateLogObj.getUserAgent());
+        log.info("requestMethod:{},requestUrl:{},userIp:{},userAgent:{},javaMethod:{}",
+                operateLogObj.getRequestMethod(), operateLogObj.getRequestUrl(),
+                operateLogObj.getUserIp(), operateLogObj.getUserAgent(),
+                operateLogObj.getJavaMethod());
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         operateLogObj.setJavaMethod(methodSignature.toString());
-        // 日志组装6
-        sb.append("\njavaMethod:").append(operateLogObj.getJavaMethod());
         if (operateLog == null || operateLog.logArgs()) {
-            operateLogObj.setJavaMethodArgs(obtainMethodArgs(joinPoint, sb));
+            operateLogObj.setJavaMethodArgs(obtainMethodArgs(joinPoint));
         }
     }
 
     private static void fillResultFields(OperateLogCreateReqDTO operateLogObj,
                                          OperateLog operateLog,
-                                         LocalDateTime startTime, Object result, Throwable exception, StringBuilder sb) {
+                                         LocalDateTime startTime, Object result, Throwable exception) {
         operateLogObj.setDuration((int) (LocalDateTimeUtil.between(startTime, LocalDateTime.now()).toMillis()));
-        // 日志组装8
-        sb.append("\nstartTime:").append(startTime)
-                .append("\nduration:").append(operateLogObj.getDuration());
+        log.info("startTime:{},duration:{},resultCode:{},resultMsg:{}",
+                startTime, operateLogObj.getDuration(), operateLogObj.getResultCode(), operateLogObj.getResultMsg());
 
         // （正常）处理 resultCode 和 resultMsg 字段
         if (result instanceof CommonResult) {
@@ -234,11 +215,8 @@ public class OperateLogAspect {
             operateLogObj.setResultCode(INTERNAL_SERVER_ERROR.getCode());
             operateLogObj.setResultMsg(ExceptionUtil.getRootCauseMessage(exception));
         }
-        // 日志组装9
-        sb.append("\nresultCode:").append(operateLogObj.getResultCode()).append(",")
-                .append("\nresultMsg:").append(operateLogObj.getResultMsg());
         if (operateLog == null || operateLog.logResultData()) {
-            operateLogObj.setResultData(obtainResultData(result, sb));
+            operateLogObj.setResultData(obtainResultData(result));
         }
     }
 
@@ -301,7 +279,7 @@ public class OperateLogAspect {
         return requestMapping != null ? requestMapping.method() : new RequestMethod[]{};
     }
 
-    private static String obtainMethodArgs(ProceedingJoinPoint joinPoint, StringBuilder sb) {
+    private static String obtainMethodArgs(ProceedingJoinPoint joinPoint) {
         // TODO 提升：参数脱敏和忽略
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String[] argNames = methodSignature.getParameterNames();
@@ -314,18 +292,16 @@ public class OperateLogAspect {
             // 被忽略时，标记为 ignore 字符串，避免和 null 混在一起
             args.put(argName, !isIgnoreArgs(argValue) ? argValue : "[ignore]");
         }
-        // 日志组装7
-        sb.append("\njavaMethodArgs:\n").append(JsonUtils.toJsonPrettyString(args));
+        log.info("javaMethodArgs:{}", args);
         return JsonUtils.toJsonString(args);
     }
 
-    private static String obtainResultData(Object result, StringBuilder sb) {
+    private static String obtainResultData(Object result) {
         // TODO 提升：结果脱敏和忽略
         if (result instanceof CommonResult) {
             result = ((CommonResult<?>) result).getData();
         }
-        // 日志组装10
-        sb.append("\njavaMethodArgs:\n").append(JsonUtils.toJsonPrettyString(result));
+        log.info("javaMethodArgs:{}", result);
         return JsonUtils.toJsonString(result);
     }
 
