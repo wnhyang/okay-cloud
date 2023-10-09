@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 
 /**
+ * 字典api
+ *
  * @author wnhyang
  * @date 2023/9/21
  **/

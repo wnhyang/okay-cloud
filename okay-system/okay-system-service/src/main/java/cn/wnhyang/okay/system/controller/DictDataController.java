@@ -94,7 +94,7 @@ public class DictDataController {
     @GetMapping("/page")
     @OperateLog(module = "后台-字典", name = "分页字典数据")
     @SaCheckPermission("system:dict:query")
-    public CommonResult<PageResult<DictDataRespVO>> getDictTypePage(@Valid DictDataPageReqVO reqVO) {
+    public CommonResult<PageResult<DictDataRespVO>> getDictDataPage(@Valid DictDataPageReqVO reqVO) {
         return success(DictDataConvert.INSTANCE.convertPage(dictDataService.getDictDataPage(reqVO)));
     }
 
