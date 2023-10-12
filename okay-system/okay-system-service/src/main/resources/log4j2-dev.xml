@@ -36,7 +36,7 @@
             </Policies>
             <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件开始覆盖-->
             <DefaultRolloverStrategy max="7">
-                <Delete basePath="${FILE_PATH}" maxDepth="1">
+                <Delete basePath="${FILE_PATH}" maxDepth="2">
                     <IfLastModified age="15d"/>
                 </Delete>
             </DefaultRolloverStrategy>
