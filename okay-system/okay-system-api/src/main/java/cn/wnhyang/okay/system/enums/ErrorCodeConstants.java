@@ -170,4 +170,6 @@ public interface ErrorCodeConstants {
     // ========== 站内信发送 1002028000 ==========
     ErrorCode NOTIFY_SEND_TEMPLATE_PARAM_MISS = new ErrorCode(1002028000, "模板参数({})缺失");
 
+    // ========== 密钥模块 1002029000 ==========
+    ErrorCode SECRET_KEY_NOT_SUPPORT = new ErrorCode(1002029001, "密钥不支持");
 }

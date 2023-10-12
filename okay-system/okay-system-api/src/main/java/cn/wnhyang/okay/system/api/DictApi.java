@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = ApiConstants.OKAY_SYSTEM_NAME)
 public interface DictApi {
 
-    String PREFIX = ApiConstants.OKAY_SYSTEM_PREFIX + "/loginLog";
+    String PREFIX = ApiConstants.OKAY_SYSTEM_PREFIX + "/dict";
 
     /**
      * @param dictType 字典类型

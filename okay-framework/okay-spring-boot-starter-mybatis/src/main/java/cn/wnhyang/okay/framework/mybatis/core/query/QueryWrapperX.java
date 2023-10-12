@@ -25,14 +25,14 @@ public class QueryWrapperX<T> extends QueryWrapper<T> {
     }
 
     public QueryWrapperX<T> inIfPresent(String column, Collection<?> values) {
-        if (!CollectionUtils.isEmpty(values)) {
+        if (CollectionUtils.isNotEmpty(values)) {
             return (QueryWrapperX<T>) super.in(column, values);
         }
         return this;
     }
 
     public QueryWrapperX<T> inIfPresent(String column, Object... values) {
-        if (!ArrayUtils.isEmpty(values)) {
+        if (ArrayUtils.isNotEmpty(values)) {
             return (QueryWrapperX<T>) super.in(column, values);
         }
         return this;
