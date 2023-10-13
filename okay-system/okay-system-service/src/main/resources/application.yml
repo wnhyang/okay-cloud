@@ -25,4 +25,4 @@ spring:
     active: @profiles.active@
 
 logging:
-  config: classpath:log4j2-${spring.profiles.active}.xml
+  config: classpath:log4j2.xml
