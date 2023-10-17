@@ -1,4 +1,4 @@
-package cn.wnhyang.okay.system.vo.secretkey;
+package cn.wnhyang.okay.system.vo.rsa;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,5 +9,5 @@ import lombok.EqualsAndHashCode;
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SecretKeyRespVO extends SecretKeyBaseVO {
+public class RsaPairRespVO extends RsaBaseVO {
 }

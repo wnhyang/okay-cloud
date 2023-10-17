@@ -1,4 +1,4 @@
-package cn.wnhyang.okay.system.vo.secretkey;
+package cn.wnhyang.okay.system.vo.rsa;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SecretKeyCreateReqVO extends SecretKeyBaseVO{
+public class RsaCreateReqVO extends RsaBaseVO {
 
     /**
      * 备注

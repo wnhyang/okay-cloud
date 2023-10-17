@@ -1,7 +1,7 @@
 package cn.wnhyang.okay.system.mapper;
 
 import cn.wnhyang.okay.framework.mybatis.core.mapper.BaseMapperX;
-import cn.wnhyang.okay.system.entity.SecretKeyDO;
+import cn.wnhyang.okay.system.entity.RsaDO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,6 +11,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2023/10/10
  */
 @Mapper
-public interface SecretKeyMapper extends BaseMapperX<SecretKeyDO> {
+public interface RsaMapper extends BaseMapperX<RsaDO> {
 
 }

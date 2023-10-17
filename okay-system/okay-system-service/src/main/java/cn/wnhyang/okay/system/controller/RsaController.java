@@ -3,10 +3,9 @@ package cn.wnhyang.okay.system.controller;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog;
-import cn.wnhyang.okay.system.service.SecretKeyService;
-import cn.wnhyang.okay.system.vo.secretkey.SecretKeyCreateReqVO;
-import cn.wnhyang.okay.system.vo.secretkey.SecretKeyPairReqVO;
-import cn.wnhyang.okay.system.vo.secretkey.SecretKeyPairRespVO;
+import cn.wnhyang.okay.system.service.RsaService;
+import cn.wnhyang.okay.system.vo.rsa.RsaCreateReqVO;
+import cn.wnhyang.okay.system.vo.rsa.RsaPairRespVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,28 +21,35 @@ import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
  * @since 2023/10/10
  */
 @RestController
-@RequestMapping("/system/secretKey")
+@RequestMapping("/system/rsa")
 @RequiredArgsConstructor
-public class SecretKeyController {
+public class RsaController {
 
-    private final SecretKeyService secretKeyService;
+    private final RsaService rsaService;
 
     /**
      * 生成密钥
      *
-     * @param reqVO 密钥类型
      * @return 密钥对
      */
     @PostMapping("/generate")
     @OperateLog(module = "后台-密钥", name = "生成密钥")
-    @SaCheckPermission("system:secretKey:generate")
-    public CommonResult<SecretKeyPairRespVO> generateKeyPair(@RequestBody SecretKeyPairReqVO reqVO) {
-        return success(secretKeyService.generateKeyPair(reqVO));
+    @SaCheckPermission("system:rsa:generate")
+    public CommonResult<RsaPairRespVO> generateKeyPair() {
+        return success(rsaService.generateKeyPair());
     }
 
+    /**
+     * 创建rsa密钥
+     *
+     * @param reqVO 密钥，可以是单个私钥或公钥
+     * @return id
+     */
     @PostMapping("/create")
-    public CommonResult<Boolean> createSecretKey(@RequestBody SecretKeyCreateReqVO reqVO) {
-        return success(true);
+    public CommonResult<Long> createRsa(@RequestBody RsaCreateReqVO reqVO) {
+        return success(rsaService.createSecretKey(reqVO));
     }
+
+
 
 }

@@ -17,8 +17,8 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("sys_secret_key")
-public class SecretKeyDO extends BaseDO {
+@TableName("sys_rsa")
+public class RsaDO extends BaseDO {
 
     private static final long serialVersionUID = -2948312666702883764L;
 
@@ -27,18 +27,6 @@ public class SecretKeyDO extends BaseDO {
      */
     @TableId("id")
     private Long id;
-
-    /**
-     * 密钥类型
-     */
-    @TableField("algorithm")
-    private String algorithm;
-
-    /**
-     * 密钥长度
-     */
-    @TableField("key_size")
-    private Integer keySize;
 
     /**
      * 私钥
