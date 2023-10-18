@@ -1,12 +1,15 @@
 package cn.wnhyang.okay.system.service.impl;
 
 import cn.hutool.crypto.asymmetric.RSA;
+import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.system.convert.rsa.RsaConvert;
 import cn.wnhyang.okay.system.entity.RsaDO;
 import cn.wnhyang.okay.system.mapper.RsaMapper;
 import cn.wnhyang.okay.system.service.RsaService;
 import cn.wnhyang.okay.system.vo.rsa.RsaCreateReqVO;
+import cn.wnhyang.okay.system.vo.rsa.RsaPageReqVO;
 import cn.wnhyang.okay.system.vo.rsa.RsaPairRespVO;
+import cn.wnhyang.okay.system.vo.rsa.RsaUpdateReqVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,5 +40,26 @@ public class RsaServiceImpl implements RsaService {
         RsaDO rsaDO = RsaConvert.INSTANCE.convert(reqVO);
         rsaMapper.insert(rsaDO);
         return rsaDO.getId();
+    }
+
+    @Override
+    public void updateRsa(RsaUpdateReqVO reqVO) {
+        RsaDO rsaDO = RsaConvert.INSTANCE.convert(reqVO);
+        rsaMapper.updateById(rsaDO);
+    }
+
+    @Override
+    public void deleteRsa(Long id) {
+        rsaMapper.deleteById(id);
+    }
+
+    @Override
+    public PageResult<RsaDO> getRsaPage(RsaPageReqVO reqVO) {
+        return rsaMapper.selectPage(reqVO, null);
+    }
+
+    @Override
+    public RsaDO getRsa(Long id) {
+        return rsaMapper.selectById(id);
     }
 }
