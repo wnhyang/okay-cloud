@@ -1,0 +1,25 @@
+server:
+  port: 8999
+spring:
+  application:
+    name: @artifactId@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_HOST:nacos}:${NACOS_PORT:8848}
+        namespace: @nacos.namespace@
+        group: @nacos.group@
+      config:
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        namespace: @nacos.namespace@
+        group: @nacos.group@
+  config:
+    import:
+      - optional:nacos:okay-common.yml
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml
+
+  profiles:
+    active: @profiles.active@
+
+logging:
+  config: classpath:log4j2.xml

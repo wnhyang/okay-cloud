@@ -22,6 +22,7 @@
         <module>okay-spring-boot-starter-job</module>
         <module>okay-spring-boot-starter-operatelog</module>
         <module>okay-spring-boot-starter-satoken</module>
+        <module>okay-spring-boot-starter-monitor</module>
     </modules>
 
 </project>

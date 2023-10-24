@@ -14,6 +14,7 @@
         <module>okay-system</module>
         <module>okay-gateway</module>
         <module>okay-auth</module>
+        <module>okay-monitor</module>
     </modules>
 
     <properties>

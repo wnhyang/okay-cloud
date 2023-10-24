@@ -89,12 +89,9 @@ public class OperateLogAspect {
         // 记录开始时间
         LocalDateTime startTime = LocalDateTime.now();
         Object result = null;
+        OperateLogCreateReqDTO operateLogObj = null;
         try {
-            OperateLogCreateReqDTO operateLogObj = new OperateLogCreateReqDTO();
-            log.info("userId:{},module:{},name:{},type:{},content:{},exts:{}",
-                    operateLogObj.getUserId(), operateLogObj.getModule(),
-                    operateLogObj.getName(), operateLogObj.getType(),
-                    operateLogObj.getContent(), operateLogObj.getExts());
+            operateLogObj = new OperateLogCreateReqDTO();
             // 补全通用字段
             operateLogObj.setStartTime(startTime);
             // 补充用户信息
@@ -104,6 +101,12 @@ public class OperateLogAspect {
             }
             // 补全模块信息
             fillModuleFields(operateLogObj, joinPoint, operateLog);
+
+            log.info("userId:{}, module:{}, name:{}, type:{}, content:{}, exts:{}",
+                    operateLogObj.getUserId(), operateLogObj.getModule(),
+                    operateLogObj.getName(), operateLogObj.getType(),
+                    operateLogObj.getContent(), operateLogObj.getExts());
+
             // 补全请求信息
             fillRequestFields(operateLogObj, joinPoint, operateLog);
 
@@ -126,6 +129,8 @@ public class OperateLogAspect {
         } catch (Throwable exception) {
             log.error("[log][记录操作日志时，发生异常，其中参数是 joinPoint({}) operateLog({}) result({}) exception({}) ]",
                     joinPoint, operateLog, result, exception, exception);
+            // 补全结果信息
+            fillResultFields(operateLogObj, operateLog, startTime, result, exception);
             throw exception;
         } finally {
             clearThreadLocal();
@@ -184,7 +189,7 @@ public class OperateLogAspect {
         operateLogObj.setRequestUrl(request.getRequestURI());
         operateLogObj.setUserIp(ServletUtil.getClientIP(request));
         operateLogObj.setUserAgent(ServletUtils.getUserAgent(request));
-        log.info("requestMethod:{},requestUrl:{},userIp:{},userAgent:{},javaMethod:{}",
+        log.info("requestMethod:{}, requestUrl:{}, userIp:{}, userAgent:{}, javaMethod:{}",
                 operateLogObj.getRequestMethod(), operateLogObj.getRequestUrl(),
                 operateLogObj.getUserIp(), operateLogObj.getUserAgent(),
                 operateLogObj.getJavaMethod());
@@ -199,7 +204,7 @@ public class OperateLogAspect {
                                          OperateLog operateLog,
                                          LocalDateTime startTime, Object result, Throwable exception) {
         operateLogObj.setDuration((int) (LocalDateTimeUtil.between(startTime, LocalDateTime.now()).toMillis()));
-        log.info("startTime:{},duration:{},resultCode:{},resultMsg:{}",
+        log.info("startTime:{}, duration:{}, resultCode:{}, resultMsg:{}",
                 startTime, operateLogObj.getDuration(), operateLogObj.getResultCode(), operateLogObj.getResultMsg());
 
         // （正常）处理 resultCode 和 resultMsg 字段
@@ -301,7 +306,7 @@ public class OperateLogAspect {
         if (result instanceof CommonResult) {
             result = ((CommonResult<?>) result).getData();
         }
-        log.info("javaMethodArgs:{}", result);
+        log.info("resultData:{}", result);
         return JsonUtils.toJsonString(result);
     }
 

@@ -33,7 +33,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
     public SaServletFilter getSaServletFilter() {
         return new SaServletFilter()
                 .addInclude("/**")
-                .addExclude("/favicon.ico", "/rpc-api/**")
+                .addExclude("/favicon.ico", "/rpc-api/**", "/actuator/**")
                 .setAuth(obj -> {
                     // 校验 Same-Token 身份凭证     —— 以下两句代码可简化为：SaSameUtil.checkCurrentRequestToken();
                     SaSameUtil.checkCurrentRequestToken();

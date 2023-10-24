@@ -5,42 +5,31 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cn.wnhyang.cloud</groupId>
-        <artifactId>okay-system</artifactId>
+        <artifactId>okay</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>okay-system-service</artifactId>
+    <artifactId>okay-monitor</artifactId>
     <packaging>jar</packaging>
+
     <dependencies>
-        <!-- 依赖服务 -->
+        <!-- 监控相关 -->
         <dependency>
             <groupId>cn.wnhyang.cloud</groupId>
-            <artifactId>okay-system-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>okay-spring-boot-starter-monitor</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>cn.wnhyang.cloud</groupId>
-            <artifactId>okay-spring-boot-starter-operatelog</artifactId>
+            <groupId>de.codecentric</groupId>
+            <artifactId>spring-boot-admin-starter-server</artifactId> <!-- 实现 Spring Boot Admin Server 服务端 -->
+            <exclusions>
+                <!--排除默认log-->
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-
-        <!-- Web 相关 -->
-        <dependency>
-            <groupId>cn.wnhyang.cloud</groupId>
-            <artifactId>okay-spring-boot-starter-security</artifactId>
-        </dependency>
-
-        <!-- DB 相关 -->
-        <dependency>
-            <groupId>cn.wnhyang.cloud</groupId>
-            <artifactId>okay-spring-boot-starter-mybatis</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.wnhyang.cloud</groupId>
-            <artifactId>okay-spring-boot-starter-redis</artifactId>
-        </dependency>
-
 
         <!-- Registry 注册中心相关 -->
         <dependency>
@@ -54,6 +43,11 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>cn.wnhyang.cloud</groupId>
+            <artifactId>okay-spring-boot-starter-operatelog</artifactId>
+        </dependency>
+
         <!-- RPC 远程调用相关 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -64,17 +58,10 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
-        <!-- Job 定时任务相关 -->
-        <dependency>
-            <groupId>cn.wnhyang.cloud</groupId>
-            <artifactId>okay-spring-boot-starter-job</artifactId>
-        </dependency>
-
-        <!-- 工具类相关 -->
-
+        <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
+            <artifactId>spring-boot-starter-security</artifactId>
             <exclusions>
                 <!--排除默认log-->
                 <exclusion>
@@ -84,18 +71,8 @@
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>cn.wnhyang.cloud</groupId>
-            <artifactId>okay-spring-boot-starter-monitor</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
+
     <build>
         <!-- 设置构建的 jar 包名 -->
         <finalName>${project.artifactId}</finalName>
