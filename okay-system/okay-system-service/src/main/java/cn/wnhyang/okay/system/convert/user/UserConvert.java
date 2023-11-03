@@ -31,5 +31,5 @@ public interface UserConvert {
 
     PageResult<UserRespVO> convert(PageResult<UserDO> pageResult);
 
-    UserInfoRespVO.UserVO convert03(UserDO user);
+    UserInfoRespVO convert03(UserDO user);
 }
