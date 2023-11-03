@@ -38,8 +38,8 @@ public class RoleDO extends BaseDO {
     /**
      * 角色权限字符串
      */
-    @TableField("code")
-    private String code;
+    @TableField("value")
+    private String value;
 
     /**
      * 显示顺序

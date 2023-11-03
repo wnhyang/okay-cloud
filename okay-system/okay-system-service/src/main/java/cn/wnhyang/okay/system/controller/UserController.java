@@ -149,14 +149,14 @@ public class UserController {
         UserInfoRespVO respVO = new UserInfoRespVO();
         UserDO user = userService.getUserById(id);
         respVO.setUser(UserConvert.INSTANCE.convert03(user));
-        respVO.setRoles(loginUser.getRoles());
+        respVO.setRoles(loginUser.getRoleValueList());
         respVO.setPermissions(loginUser.getPermissions());
 
         List<MenuDO> menus;
         if (LoginHelper.isAdministrator(id)) {
             menus = menuService.getMenuList();
         } else {
-            Set<Long> menuIds = permissionService.getRoleMenuListByRoleId(loginUser.getRoleIds());
+            Set<Long> menuIds = permissionService.getRoleMenuListByRoleId(loginUser.getRoleIdList());
             menus = menuService.getMenuList(menuIds);
         }
         respVO.setMenus(MenuConvert.INSTANCE.buildMenuTree(menus));

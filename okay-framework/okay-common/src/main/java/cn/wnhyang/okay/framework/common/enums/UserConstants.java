@@ -14,5 +14,5 @@ public interface UserConstants {
     /**
      * 管理员code
      */
-    String ADMINISTRATOR_CODE = "administrator";
+    String ADMINISTRATOR_VALUE = "administrator";
 }

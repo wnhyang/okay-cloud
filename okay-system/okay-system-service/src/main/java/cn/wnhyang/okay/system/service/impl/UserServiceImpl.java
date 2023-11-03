@@ -10,7 +10,9 @@ import cn.wnhyang.okay.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.wnhyang.okay.framework.satoken.utils.LoginHelper;
 import cn.wnhyang.okay.system.convert.user.UserConvert;
 import cn.wnhyang.okay.system.dto.LoginUser;
+import cn.wnhyang.okay.system.dto.user.RoleSimpleRespVO;
 import cn.wnhyang.okay.system.dto.user.UserCreateReqDTO;
+import cn.wnhyang.okay.system.entity.RoleDO;
 import cn.wnhyang.okay.system.entity.UserDO;
 import cn.wnhyang.okay.system.entity.UserRoleDO;
 import cn.wnhyang.okay.system.mapper.UserMapper;
@@ -28,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
@@ -162,9 +165,13 @@ public class UserServiceImpl implements UserService {
     private LoginUser buildLoginUser(UserDO user) {
         LoginUser loginUser = UserConvert.INSTANCE.convert(user);
         Set<Long> roleIds = permissionService.getUserRoleIdListByUserId(loginUser.getId());
-        loginUser.setRoleIds(roleIds);
-        Set<String> roleCodes = roleService.getRoleCodeList(roleIds);
-        loginUser.setRoles(roleCodes);
+        List<RoleDO> roleList = roleService.getRoleList(roleIds);
+        List<RoleSimpleRespVO> roleSimpleList = roleList.stream().map(item -> {
+            RoleSimpleRespVO respVO = new RoleSimpleRespVO();
+            respVO.setId(item.getId()).setName(item.getName()).setValue(item.getValue());
+            return respVO;
+        }).collect(Collectors.toList());
+        loginUser.setRoles(roleSimpleList);
         Set<String> perms = new HashSet<>();
         if (LoginHelper.isAdministrator(loginUser.getId())) {
             perms.add("*:*:*");

@@ -54,7 +54,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createRole(RoleCreateReqVO reqVO) {
-        validateRoleForCreateOrUpdate(null, reqVO.getName(), reqVO.getCode());
+        validateRoleForCreateOrUpdate(null, reqVO.getName(), reqVO.getValue());
         RoleDO role = RoleConvert.INSTANCE.convert(reqVO);
         role.setStatus(CommonStatusEnum.ENABLE.getStatus());
         roleMapper.insert(role);
@@ -68,7 +68,7 @@ public class RoleServiceImpl implements RoleService {
         // 校验是否可以更新
         validateRoleForUpdate(reqVO.getId());
         // 校验角色的唯一字段是否重复
-        validateRoleForCreateOrUpdate(reqVO.getId(), reqVO.getName(), reqVO.getCode());
+        validateRoleForCreateOrUpdate(reqVO.getId(), reqVO.getName(), reqVO.getValue());
 
         // 更新到数据库
         RoleDO role = RoleConvert.INSTANCE.convert(reqVO);
@@ -123,15 +123,15 @@ public class RoleServiceImpl implements RoleService {
             throw exception(ROLE_NOT_EXISTS);
         }
         // 内置角色，不允许删除
-        if (UserConstants.ADMINISTRATOR_CODE.equals(roleDO.getCode())) {
+        if (UserConstants.ADMINISTRATOR_VALUE.equals(roleDO.getValue())) {
             throw exception(ROLE_CAN_NOT_UPDATE_SYSTEM_TYPE_ROLE);
         }
     }
 
-    private void validateRoleForCreateOrUpdate(Long id, String name, String code) {
+    private void validateRoleForCreateOrUpdate(Long id, String name, String value) {
         // 0. 超级管理员，不允许创建
-        if (UserConstants.ADMINISTRATOR_CODE.equals(code)) {
-            throw exception(ROLE_ADMIN_CODE_ERROR, code);
+        if (UserConstants.ADMINISTRATOR_VALUE.equals(value)) {
+            throw exception(ROLE_ADMIN_CODE_ERROR, value);
         }
         // 1. 该 name 名字被其它角色所使用
         RoleDO role = roleMapper.selectByName(name);
@@ -139,13 +139,13 @@ public class RoleServiceImpl implements RoleService {
             throw exception(ROLE_NAME_DUPLICATE, name);
         }
         // 2. 是否存在相同编码的角色
-        if (!StringUtils.hasText(code)) {
+        if (!StringUtils.hasText(value)) {
             return;
         }
-        // 该 code 编码被其它角色所使用
-        role = roleMapper.selectByCode(code);
+        // 该 value 编码被其它角色所使用
+        role = roleMapper.selectByValue(value);
         if (role != null && !role.getId().equals(id)) {
-            throw exception(ROLE_CODE_DUPLICATE, code);
+            throw exception(ROLE_CODE_DUPLICATE, value);
         }
     }
 }

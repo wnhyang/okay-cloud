@@ -43,7 +43,7 @@ public class StpInterfaceImpl implements StpInterface {
         LoginUser loginUser = LoginHelper.getLoginUser();
         UserTypeEnum userType = UserTypeEnum.valueOf(loginUser.getType());
         if (userType == UserTypeEnum.PC) {
-            return new ArrayList<>(loginUser.getRoles());
+            return new ArrayList<>(loginUser.getRoleValueList());
         }
 
         return new ArrayList<>();

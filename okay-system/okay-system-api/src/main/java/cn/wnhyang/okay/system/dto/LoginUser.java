@@ -1,9 +1,12 @@
 package cn.wnhyang.okay.system.dto;
 
+import cn.wnhyang.okay.framework.common.util.CollectionUtils;
+import cn.wnhyang.okay.system.dto.user.RoleSimpleRespVO;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -83,12 +86,20 @@ public class LoginUser implements Serializable {
     /**
      * 角色集合
      */
-    private Set<Long> roleIds;
+    private List<RoleSimpleRespVO> roles;
 
-    /**
-     * 角色权限
-     */
-    private Set<String> roles;
+    public Set<Long> getRoleIdList() {
+        return CollectionUtils.convertSet(roles, RoleSimpleRespVO::getId);
+    }
+
+    public Set<String> getRoleNameList() {
+        return CollectionUtils.convertSet(roles, RoleSimpleRespVO::getName);
+    }
+
+    public Set<String> getRoleValueList() {
+        return CollectionUtils.convertSet(roles, RoleSimpleRespVO::getValue);
+    }
+
 
     /**
      * 菜单权限

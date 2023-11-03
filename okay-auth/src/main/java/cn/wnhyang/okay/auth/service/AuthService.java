@@ -8,6 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.wnhyang.okay.auth.redis.RedisKeyConstants;
 import cn.wnhyang.okay.auth.vo.EmailLoginReqVO;
 import cn.wnhyang.okay.auth.vo.LoginReqVO;
+import cn.wnhyang.okay.auth.vo.LoginRespVO;
 import cn.wnhyang.okay.auth.vo.RegisterReqVO;
 import cn.wnhyang.okay.framework.common.enums.CommonStatusEnum;
 import cn.wnhyang.okay.framework.common.enums.DeviceTypeEnum;
@@ -45,7 +46,7 @@ public class AuthService {
 
     private final ValueOperations<String, String> valueOperations;
 
-    public String login(LoginReqVO reqVO) {
+    public LoginRespVO login(LoginReqVO reqVO) {
         String account = reqVO.getAccount();
         LoginUser user;
         LoginTypeEnum loginTypeEnum;
@@ -76,7 +77,11 @@ public class AuthService {
         // 创建 Token 令牌，记录登录日志
         LoginHelper.login(user, DeviceTypeEnum.PC);
         createLoginLog(user.getId(), account, loginTypeEnum, LoginResultEnum.SUCCESS);
-        return StpUtil.getTokenValue();
+        LoginRespVO loginRespVO = new LoginRespVO();
+        loginRespVO.setUserId(user.getId());
+        loginRespVO.setToken(StpUtil.getTokenValue());
+        loginRespVO.setRoles(user.getRoles());
+        return loginRespVO;
     }
 
     public String login(EmailLoginReqVO reqVO) {

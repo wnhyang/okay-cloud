@@ -20,14 +20,14 @@ public interface RoleMapper extends BaseMapperX<RoleDO> {
         return selectOne(RoleDO::getName, name);
     }
 
-    default RoleDO selectByCode(String code) {
-        return selectOne(RoleDO::getCode, code);
+    default RoleDO selectByValue(String value) {
+        return selectOne(RoleDO::getValue, value);
     }
 
     default PageResult<RoleDO> selectPage(RolePageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<RoleDO>()
                 .likeIfPresent(RoleDO::getName, reqVO.getName())
-                .likeIfPresent(RoleDO::getCode, reqVO.getCode())
+                .likeIfPresent(RoleDO::getValue, reqVO.getCode())
                 .eqIfPresent(RoleDO::getStatus, reqVO.getStatus())
                 .betweenIfPresent(RoleDO::getCreateTime, reqVO.getCreateTime())
                 .orderByDesc(RoleDO::getId));
