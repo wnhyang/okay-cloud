@@ -84,7 +84,7 @@ public class AuthService {
         return loginRespVO;
     }
 
-    public String login(EmailLoginReqVO reqVO) {
+    public LoginRespVO login(EmailLoginReqVO reqVO) {
         String email = reqVO.getEmail();
         String code = reqVO.getCode();
         LoginUser user;
@@ -109,7 +109,11 @@ public class AuthService {
         // 创建 Token 令牌，记录登录日志
         LoginHelper.login(user, DeviceTypeEnum.PC);
         createLoginLog(user.getId(), email, loginTypeEnum, LoginResultEnum.SUCCESS);
-        return StpUtil.getTokenValue();
+        LoginRespVO loginRespVO = new LoginRespVO();
+        loginRespVO.setUserId(user.getId());
+        loginRespVO.setToken(StpUtil.getTokenValue());
+        loginRespVO.setRoles(user.getRoles());
+        return loginRespVO;
     }
 
     public void generateEmailCode(String account) {

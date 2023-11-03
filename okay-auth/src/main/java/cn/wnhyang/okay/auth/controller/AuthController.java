@@ -46,7 +46,7 @@ public class AuthController {
      * @return token
      */
     @PostMapping("/loginByEmail")
-    public CommonResult<String> login(@RequestBody @Valid EmailLoginReqVO reqVO) {
+    public CommonResult<LoginRespVO> login(@RequestBody @Valid EmailLoginReqVO reqVO) {
         return success(authService.login(reqVO));
     }
 
