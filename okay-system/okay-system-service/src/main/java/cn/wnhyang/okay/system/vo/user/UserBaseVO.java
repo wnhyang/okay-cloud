@@ -36,9 +36,9 @@ public class UserBaseVO {
     private Integer type;
 
     /**
-     * 备注
+     * 描述
      */
-    private String remark;
+    private String desc;
 
     /**
      * 用户邮箱

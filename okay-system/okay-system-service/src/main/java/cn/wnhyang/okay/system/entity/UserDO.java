@@ -56,10 +56,10 @@ public class UserDO extends BaseDO {
     private Integer type;
 
     /**
-     * 备注
+     * 描述
      */
-    @TableField("remark")
-    private String remark;
+    @TableField("desc")
+    private String desc;
 
     /**
      * 用户邮箱
