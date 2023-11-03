@@ -38,7 +38,7 @@ public class UserBaseVO {
     /**
      * 描述
      */
-    private String desc;
+    private String remark;
 
     /**
      * 用户邮箱

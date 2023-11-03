@@ -36,7 +36,7 @@ public class UserCreateReqDTO implements Serializable {
     /**
      * 描述
      */
-    private String desc;
+    private String remark;
 
     /**
      * 用户邮箱

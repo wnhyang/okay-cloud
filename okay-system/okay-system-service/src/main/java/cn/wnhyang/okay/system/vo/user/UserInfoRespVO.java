@@ -40,7 +40,7 @@ public class UserInfoRespVO {
 
         private String avatar;
 
-        private String desc;
+        private String remark;
 
     }
 

@@ -58,8 +58,8 @@ public class UserDO extends BaseDO {
     /**
      * 描述
      */
-    @TableField("desc")
-    private String desc;
+    @TableField("remark")
+    private String remark;
 
     /**
      * 用户邮箱
