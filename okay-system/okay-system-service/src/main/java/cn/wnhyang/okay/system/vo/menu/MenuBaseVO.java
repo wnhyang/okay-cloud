@@ -57,7 +57,7 @@ public class MenuBaseVO {
 
     private Boolean isExt;
 
-    private Boolean show;
+    private Boolean isShow;
 
     @NotNull(message = "状态不能为空")
     private Integer status;

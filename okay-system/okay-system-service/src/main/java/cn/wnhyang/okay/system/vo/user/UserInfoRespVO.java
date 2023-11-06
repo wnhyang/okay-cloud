@@ -114,7 +114,7 @@ public class UserInfoRespVO {
         /**
          * 是否显示
          */
-        private Boolean show;
+        private Boolean isShow;
 
         private Boolean isExt;
 

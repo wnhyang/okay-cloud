@@ -125,8 +125,8 @@ public class MenuDO extends BaseDO {
     /**
      * 是否显示
      */
-    @TableField("show")
-    private Boolean show;
+    @TableField("is_show")
+    private Boolean isShow;
 
     /**
      * 菜单状态
