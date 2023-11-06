@@ -19,7 +19,5 @@ public class MenuRespVO extends MenuBaseVO {
 
     private Long id;
 
-    private Integer status;
-
     private LocalDateTime createTime;
 }

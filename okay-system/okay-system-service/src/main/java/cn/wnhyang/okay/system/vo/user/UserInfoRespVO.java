@@ -42,26 +42,85 @@ public class UserInfoRespVO {
 
         private Long id;
 
-        private Long parentId;
+        /**
+         * 菜单类型 目录0 菜单1 按钮2
+         */
+        private Integer type;
 
+        /**
+         * 菜单名称
+         */
         private String name;
 
-        private String component;
-
+        /**
+         * 路由地址
+         */
         private String path;
 
+        /**
+         * 组件路径
+         */
+        private String component;
+
+        /**
+         * 当设置 noredirect 的时候该路由在面包屑导航中不可被点击
+         */
         private String redirect;
 
-        private Boolean hidden;
+        // meta start----------
 
-        private Boolean alwaysShow;
+        /**
+         * 显示顺序
+         */
+        private Integer orderNo;
 
+        /**
+         * 组件名
+         */
         private String title;
 
+        /**
+         * 菜单图标
+         */
         private String icon;
 
-        private Boolean noCache;
+        /**
+         * 隐藏面包屑显示
+         */
+        private Boolean hideBreadcrumb;
 
+        /**
+         * 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
+         */
+        private String currentActiveMenu;
+
+        /**
+         * 缓存
+         */
+        private Boolean keepalive;
+
+        // meta end----------
+
+        /**
+         * 权限标识
+         */
+        private String permission;
+
+        /**
+         * 父菜单ID
+         */
+        private Long parentId;
+
+        /**
+         * 是否显示
+         */
+        private Boolean show;
+
+        private Boolean isExt;
+
+        /**
+         * 菜单状态
+         */
         private Integer status;
 
         /**

@@ -35,28 +35,10 @@ public class MenuDO extends BaseDO {
     private Long id;
 
     /**
-     * 权限标识
-     */
-    @TableField("permission")
-    private String permission;
-
-    /**
-     * 菜单类型
+     * 菜单类型 目录0 菜单1 按钮2
      */
     @TableField("type")
     private Integer type;
-
-    /**
-     * 显示顺序
-     */
-    @TableField("sort")
-    private Integer sort;
-
-    /**
-     * 父菜单ID
-     */
-    @TableField("parent_id")
-    private Long parentId;
 
     /**
      * 菜单名称
@@ -65,16 +47,16 @@ public class MenuDO extends BaseDO {
     private String name;
 
     /**
-     * 组件路径
-     */
-    @TableField("component")
-    private String component;
-
-    /**
      * 路由地址
      */
     @TableField("path")
     private String path;
+
+    /**
+     * 组件路径
+     */
+    @TableField("component")
+    private String component;
 
     /**
      * 当设置 noredirect 的时候该路由在面包屑导航中不可被点击
@@ -82,19 +64,13 @@ public class MenuDO extends BaseDO {
     @TableField("redirect")
     private String redirect;
 
-    // 下面是菜单meta
+    // meta start----------
 
     /**
-     * 是否隐藏
+     * 显示顺序
      */
-    @TableField("hidden")
-    private Boolean hidden;
-
-    /**
-     * 是否总是显示
-     */
-    @TableField("always_show")
-    private Boolean alwaysShow;
+    @TableField("order_no")
+    private Integer orderNo;
 
     /**
      * 组件名
@@ -109,10 +85,48 @@ public class MenuDO extends BaseDO {
     private String icon;
 
     /**
-     * 是否可缓存
+     * 隐藏面包屑显示
      */
-    @TableField("no_cache")
-    private Boolean noCache;
+    @TableField("hide_breadcrumb")
+    private Boolean hideBreadcrumb;
+
+    /**
+     * 当前激活的菜单。用于配置详情页时左侧激活的菜单路径
+     */
+    @TableField("current_active_menu")
+    private String currentActiveMenu;
+
+    /**
+     * 缓存
+     */
+    @TableField("keepalive")
+    private Boolean keepalive;
+
+    // meta end----------
+
+    /**
+     * 权限标识
+     */
+    @TableField("permission")
+    private String permission;
+
+    /**
+     * 父菜单ID
+     */
+    @TableField("parent_id")
+    private Long parentId;
+
+    /**
+     * 是否外链
+     */
+    @TableField("is_ext")
+    private Boolean isExt;
+
+    /**
+     * 是否显示
+     */
+    @TableField("show")
+    private Boolean show;
 
     /**
      * 菜单状态

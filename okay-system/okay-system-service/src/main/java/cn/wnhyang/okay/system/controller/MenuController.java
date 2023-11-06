@@ -82,7 +82,7 @@ public class MenuController {
     @SaCheckPermission("system:menu:query")
     public CommonResult<List<MenuRespVO>> getMenuList(MenuListReqVO reqVO) {
         List<MenuDO> list = menuService.getMenuList(reqVO);
-        list.sort(Comparator.comparing(MenuDO::getSort));
+        list.sort(Comparator.comparing(MenuDO::getOrderNo));
         return success(MenuConvert.INSTANCE.convertList(list));
     }
 
@@ -114,7 +114,7 @@ public class MenuController {
         reqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
         List<MenuDO> list = menuService.getMenuList(reqVO);
         // 排序后，返回给前端
-        list.sort(Comparator.comparing(MenuDO::getSort));
+        list.sort(Comparator.comparing(MenuDO::getOrderNo));
         return success(MenuConvert.INSTANCE.convertList02(list));
     }
 }
