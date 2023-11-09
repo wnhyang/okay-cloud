@@ -2,7 +2,6 @@ package cn.wnhyang.okay.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.wnhyang.okay.framework.common.enums.CommonStatusEnum;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog;
 import cn.wnhyang.okay.system.convert.menu.MenuConvert;
@@ -12,7 +11,6 @@ import cn.wnhyang.okay.system.vo.menu.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
 import java.util.List;
 
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
@@ -80,10 +78,8 @@ public class MenuController {
     @GetMapping("/list")
     @OperateLog(module = "后台-菜单", name = "查询菜单列表")
     @SaCheckPermission("system:menu:query")
-    public CommonResult<List<MenuRespVO>> getMenuList(MenuListReqVO reqVO) {
-        List<MenuDO> list = menuService.getMenuList(reqVO);
-        list.sort(Comparator.comparing(MenuDO::getOrderNo));
-        return success(MenuConvert.INSTANCE.convertList(list));
+    public CommonResult<List<MenuTreeRespVO>> getMenuList(MenuListReqVO reqVO) {
+        return success(menuService.getMenuTreeList(reqVO));
     }
 
     /**
@@ -105,16 +101,10 @@ public class MenuController {
      *
      * @return 菜单列表
      */
-    @GetMapping("/listAllSimple")
+    @GetMapping("/simpleList")
     @OperateLog(module = "后台-菜单", name = "查询简单菜单")
     @SaCheckLogin
-    public CommonResult<List<MenuSimpleRespVO>> getSimpleMenuList() {
-        // 获得菜单列表，只要开启状态的
-        MenuListReqVO reqVO = new MenuListReqVO();
-        reqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
-        List<MenuDO> list = menuService.getMenuList(reqVO);
-        // 排序后，返回给前端
-        list.sort(Comparator.comparing(MenuDO::getOrderNo));
-        return success(MenuConvert.INSTANCE.convertList02(list));
+    public CommonResult<List<MenuSimpleTreeRespVO>> getSimpleMenuList() {
+        return success(menuService.getMenuSimpleTreeList());
     }
 }

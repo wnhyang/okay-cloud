@@ -1,9 +1,7 @@
 package cn.wnhyang.okay.system.service;
 
 import cn.wnhyang.okay.system.entity.MenuDO;
-import cn.wnhyang.okay.system.vo.menu.MenuCreateReqVO;
-import cn.wnhyang.okay.system.vo.menu.MenuListReqVO;
-import cn.wnhyang.okay.system.vo.menu.MenuUpdateReqVO;
+import cn.wnhyang.okay.system.vo.menu.*;
 
 import java.util.List;
 import java.util.Set;
@@ -68,4 +66,19 @@ public interface MenuService {
      * @return 菜单列表
      */
     List<MenuDO> getMenuList();
+
+    /**
+     * 获取树形菜单列表
+     *
+     * @param reqVO 树形菜单请求
+     * @return 树形菜单列表
+     */
+    List<MenuTreeRespVO> getMenuTreeList(MenuListReqVO reqVO);
+
+    /**
+     * 获取简单树形菜单
+     *
+     * @return 树形菜单
+     */
+    List<MenuSimpleTreeRespVO> getMenuSimpleTreeList();
 }

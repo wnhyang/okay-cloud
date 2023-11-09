@@ -1,10 +1,7 @@
 package cn.wnhyang.okay.system.convert.menu;
 
 import cn.wnhyang.okay.system.entity.MenuDO;
-import cn.wnhyang.okay.system.vo.menu.MenuCreateReqVO;
-import cn.wnhyang.okay.system.vo.menu.MenuRespVO;
-import cn.wnhyang.okay.system.vo.menu.MenuSimpleRespVO;
-import cn.wnhyang.okay.system.vo.menu.MenuUpdateReqVO;
+import cn.wnhyang.okay.system.vo.menu.*;
 import cn.wnhyang.okay.system.vo.user.UserInfoRespVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -68,5 +65,7 @@ public interface MenuConvert {
 
     UserInfoRespVO.MenuVO convertTreeNode(MenuDO menu);
 
-    List<MenuSimpleRespVO> convertList02(List<MenuDO> list);
+    List<MenuSimpleTreeRespVO> convert02(List<MenuDO> list);
+
+    List<MenuTreeRespVO> convert(List<MenuDO> menus);
 }

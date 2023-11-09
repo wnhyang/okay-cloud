@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * @author wnhyang
  * @date 2023/9/6
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenuSimpleRespVO {
+public class MenuSimpleTreeRespVO {
 
     private Long id;
 
@@ -20,5 +22,9 @@ public class MenuSimpleRespVO {
     private Long parentId;
 
     private Integer type;
+
+    private Integer orderNo;
+
+    private List<MenuSimpleTreeRespVO> children;
 
 }

@@ -8,15 +8,15 @@ import cn.wnhyang.okay.system.mapper.MenuMapper;
 import cn.wnhyang.okay.system.mapper.RoleMenuMapper;
 import cn.wnhyang.okay.system.service.MenuService;
 import cn.wnhyang.okay.system.service.PermissionService;
-import cn.wnhyang.okay.system.vo.menu.MenuCreateReqVO;
-import cn.wnhyang.okay.system.vo.menu.MenuListReqVO;
-import cn.wnhyang.okay.system.vo.menu.MenuUpdateReqVO;
+import cn.wnhyang.okay.system.vo.menu.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.wnhyang.okay.system.entity.MenuDO.ID_ROOT;
@@ -109,6 +109,63 @@ public class MenuServiceImpl implements MenuService {
     public List<MenuDO> getMenuList() {
         return menuMapper.selectList();
     }
+
+    @Override
+    public List<MenuTreeRespVO> getMenuTreeList(MenuListReqVO reqVO) {
+
+        // 1、查询所有的菜单
+        List<MenuDO> menus = menuMapper.selectList();
+
+        List<MenuTreeRespVO> allMenus = MenuConvert.INSTANCE.convert(menus);
+
+        // 2、形成树形结合
+        return allMenus.stream().filter((menu) ->
+                menu.getParentId().equals(ID_ROOT)
+        ).peek((menu) ->
+                menu.setChildren(getChildren01(menu.getId(), allMenus))
+        ).sorted(
+                Comparator.comparingInt(MenuTreeRespVO::getOrderNo)
+        ).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MenuSimpleTreeRespVO> getMenuSimpleTreeList() {
+        // 1、查询所有的菜单
+        List<MenuDO> menus = menuMapper.selectList();
+
+        List<MenuSimpleTreeRespVO> allMenus = MenuConvert.INSTANCE.convert02(menus);
+
+        // 2、形成树形结合
+        return allMenus.stream().filter((menu) ->
+                menu.getParentId().equals(ID_ROOT)
+        ).peek((menu) ->
+                menu.setChildren(getChildren02(menu.getId(), allMenus))
+        ).sorted(
+                Comparator.comparingInt(MenuSimpleTreeRespVO::getOrderNo)
+        ).collect(Collectors.toList());
+    }
+
+    private List<MenuTreeRespVO> getChildren01(Long parentId, List<MenuTreeRespVO> all) {
+        return all.stream().filter((menu ->
+                menu.getParentId().equals(parentId))
+        ).peek((menu ->
+                menu.setChildren(getChildren01(menu.getId(), all)))
+        ).sorted(
+                Comparator.comparingInt(MenuTreeRespVO::getOrderNo)
+        ).collect(Collectors.toList());
+    }
+
+    private List<MenuSimpleTreeRespVO> getChildren02(Long parentId, List<MenuSimpleTreeRespVO> all) {
+        return all.stream().filter((menu ->
+                menu.getParentId().equals(parentId))
+        ).peek((menu ->
+                menu.setChildren(getChildren02(menu.getId(), all)))
+        ).sorted(
+                Comparator.comparingInt(MenuSimpleTreeRespVO::getOrderNo)
+        ).collect(Collectors.toList());
+    }
+
+
 
     /**
      * 校验父菜单是否合法
