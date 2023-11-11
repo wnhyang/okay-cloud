@@ -7,15 +7,11 @@ import cn.wnhyang.okay.system.enums.permission.MenuTypeEnum;
 import cn.wnhyang.okay.system.mapper.MenuMapper;
 import cn.wnhyang.okay.system.mapper.RoleMenuMapper;
 import cn.wnhyang.okay.system.service.MenuService;
-import cn.wnhyang.okay.system.service.PermissionService;
 import cn.wnhyang.okay.system.vo.menu.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -35,8 +31,6 @@ public class MenuServiceImpl implements MenuService {
     private final MenuMapper menuMapper;
 
     private final RoleMenuMapper roleMenuMapper;
-
-    private final PermissionService permissionService;
 
     @Override
     public Long createMenu(MenuCreateReqVO reqVO) {
@@ -113,10 +107,24 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<MenuTreeRespVO> getMenuTreeList(MenuListReqVO reqVO) {
 
-        // 1、查询所有的菜单
-        List<MenuDO> menus = menuMapper.selectList();
+        // 1、查询所有菜单
+        List<MenuDO> all = menuMapper.selectList();
 
-        List<MenuTreeRespVO> allMenus = MenuConvert.INSTANCE.convert(menus);
+        // 1、查询满足条件的菜单
+        List<MenuDO> menus = menuMapper.selectList(reqVO);
+
+        Set<Long> menuIds = menus.stream().map(MenuDO::getId).collect(Collectors.toSet());
+
+        // 2、查询满足条件的的菜单的所有父菜单、父祖菜单的id set，直到父菜单的parentId等于0
+        Set<Long> parentIds = getParentIds(menus, all);
+
+        Set<Long> childrenIds = getChildrenIds(menus, all);
+
+        menuIds.addAll(parentIds);
+        menuIds.addAll(childrenIds);
+
+        List<MenuTreeRespVO> allMenus = all.stream().filter(menu -> menuIds.contains(menu.getId()))
+                .map(MenuConvert.INSTANCE::convert01).collect(Collectors.toList());
 
         // 2、形成树形结合
         return allMenus.stream().filter((menu) ->
@@ -128,6 +136,41 @@ public class MenuServiceImpl implements MenuService {
         ).collect(Collectors.toList());
     }
 
+    private Set<Long> getChildrenIds(List<MenuDO> menus, List<MenuDO> all) {
+        // 获取menus在all中的子菜单id集合
+        return menus.stream().map(MenuDO::getId).map(id ->
+                all.stream().filter(menu ->
+                        menu.getParentId().equals(id)
+                ).map(MenuDO::getId).collect(Collectors.toSet())
+        ).flatMap(Collection::stream).collect(Collectors.toSet());
+    }
+
+    /**
+     * 获取所有父菜单的id
+     */
+    private Set<Long> getParentIds(List<MenuDO> menus, List<MenuDO> all) {
+
+        // 当menus的parentId不为0，取parentId的set集合
+        Set<Long> parentIds = menus.stream().map(MenuDO::getParentId).filter(parentId ->
+                !parentId.equals(ID_ROOT)
+        ).collect(Collectors.toSet());
+
+        if (parentIds.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        Set<Long> result = new HashSet<>(parentIds);
+
+        // 从所有菜单all中查询id等于parentIds的set集合中任意的菜单，直到顶级菜单，顶级菜单的parentId等于0
+        for (MenuDO menu : all) {
+            if (parentIds.contains(menu.getId())) {
+                result.addAll(getParentIds(Collections.singletonList(menu), all));
+            }
+        }
+        return result;
+    }
+
+
     @Override
     public List<MenuSimpleTreeRespVO> getMenuSimpleTreeList() {
         // 1、查询所有的菜单
@@ -136,13 +179,19 @@ public class MenuServiceImpl implements MenuService {
         List<MenuSimpleTreeRespVO> allMenus = MenuConvert.INSTANCE.convert02(menus);
 
         // 2、形成树形结合
-        return allMenus.stream().filter((menu) ->
+        List<MenuSimpleTreeRespVO> collect = allMenus.stream().filter((menu) ->
                 menu.getParentId().equals(ID_ROOT)
         ).peek((menu) ->
                 menu.setChildren(getChildren02(menu.getId(), allMenus))
         ).sorted(
                 Comparator.comparingInt(MenuSimpleTreeRespVO::getOrderNo)
         ).collect(Collectors.toList());
+
+        MenuSimpleTreeRespVO result = new MenuSimpleTreeRespVO();
+        result.setId(ID_ROOT).setTitle("根目录").setChildren(collect);
+
+        // 返回result
+        return Collections.singletonList(result);
     }
 
     private List<MenuTreeRespVO> getChildren01(Long parentId, List<MenuTreeRespVO> all) {
@@ -164,7 +213,6 @@ public class MenuServiceImpl implements MenuService {
                 Comparator.comparingInt(MenuSimpleTreeRespVO::getOrderNo)
         ).collect(Collectors.toList());
     }
-
 
 
     /**

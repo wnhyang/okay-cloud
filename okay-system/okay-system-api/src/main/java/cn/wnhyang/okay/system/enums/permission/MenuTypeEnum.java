@@ -14,17 +14,17 @@ public enum MenuTypeEnum {
     /**
      * 目录
      */
-    DIR(1),
+    DIR(0),
 
     /**
      * 菜单
      */
-    MENU(2),
+    MENU(1),
 
     /**
      * 按钮
      */
-    BUTTON(3);
+    BUTTON(2);
 
     /**
      * 菜单类型

@@ -30,6 +30,8 @@ public interface MenuConvert {
 
     MenuRespVO convert(MenuDO menu);
 
+    MenuTreeRespVO convert01(MenuDO menu);
+
     /**
      * 将菜单列表，构建成菜单树
      *
