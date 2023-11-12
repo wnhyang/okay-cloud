@@ -77,7 +77,7 @@ public class MenuController {
      */
     @GetMapping("/list")
     @OperateLog(module = "后台-菜单", name = "查询菜单列表")
-    @SaCheckPermission("system:menu:query")
+    @SaCheckPermission("system:menu:list")
     public CommonResult<List<MenuTreeRespVO>> getMenuList(MenuListReqVO reqVO) {
         return success(menuService.getMenuTreeList(reqVO));
     }
