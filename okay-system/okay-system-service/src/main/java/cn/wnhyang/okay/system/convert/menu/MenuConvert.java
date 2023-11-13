@@ -1,6 +1,8 @@
 package cn.wnhyang.okay.system.convert.menu;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.wnhyang.okay.system.entity.MenuDO;
+import cn.wnhyang.okay.system.enums.permission.MenuTypeEnum;
 import cn.wnhyang.okay.system.vo.menu.*;
 import cn.wnhyang.okay.system.vo.user.UserInfoRespVO;
 import org.mapstruct.Mapper;
@@ -39,6 +41,12 @@ public interface MenuConvert {
      * @return 菜单树
      */
     default List<UserInfoRespVO.MenuVO> buildMenuTree(List<MenuDO> menuList) {
+        if (CollUtil.isEmpty(menuList)) {
+            return Collections.emptyList();
+        }
+        // 移除按钮
+        menuList.removeIf(menu -> menu.getType().equals(MenuTypeEnum.BUTTON.getType()));
+
         // 排序，保证菜单的有序性
         menuList.sort(Comparator.comparing(MenuDO::getOrderNo));
 
