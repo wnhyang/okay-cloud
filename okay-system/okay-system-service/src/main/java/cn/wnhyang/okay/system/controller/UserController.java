@@ -147,7 +147,9 @@ public class UserController {
         Long id = loginUser.getId();
 
         UserDO user = userService.getUserById(id);
-        UserInfoRespVO respVO = UserConvert.INSTANCE.convert03(user);
+        UserInfoRespVO respVO = new UserInfoRespVO();
+        UserInfoRespVO.UserVO userVO = UserConvert.INSTANCE.convert03(user);
+        respVO.setUser(userVO);
         respVO.setRoles(loginUser.getRoleValueList());
         respVO.setPermissions(loginUser.getPermissions());
 

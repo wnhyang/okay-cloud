@@ -18,21 +18,29 @@ import java.util.Set;
 @Builder
 public class UserInfoRespVO {
 
-    private Long id;
-
-    private String username;
-
-    private String nickname;
-
-    private String avatar;
-
-    private String remark;
+    private UserVO user;
 
     private Set<String> roles;
 
     private Set<String> permissions;
 
     private List<MenuVO> menus;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class UserVO {
+        private Long id;
+
+        private String username;
+
+        private String nickname;
+
+        private String avatar;
+
+        private String remark;
+    }
 
     @Data
     @NoArgsConstructor
