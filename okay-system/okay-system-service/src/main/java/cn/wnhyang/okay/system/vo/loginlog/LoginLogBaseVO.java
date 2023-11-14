@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 public class LoginLogBaseVO {
 
     @NotNull(message = "日志类型不能为空")
-    private Integer logType;
+    private Integer loginType;
 
     @NotBlank(message = "用户账号不能为空")
     @Size(max = 30, message = "用户账号长度不能超过30个字符")
