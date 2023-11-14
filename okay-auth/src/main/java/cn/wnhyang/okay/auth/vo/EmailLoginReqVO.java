@@ -24,6 +24,9 @@ public class EmailLoginReqVO {
     @Email(message = "邮箱格式不正确")
     private String email;
 
+    /**
+     * 验证码
+     */
     @NotEmpty
     private String code;
 }
