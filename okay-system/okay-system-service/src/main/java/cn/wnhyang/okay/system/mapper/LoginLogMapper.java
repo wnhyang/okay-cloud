@@ -22,9 +22,9 @@ public interface LoginLogMapper extends BaseMapperX<LoginLogDO> {
                 .likeIfPresent(LoginLogDO::getUserIp, reqVO.getUserIp())
                 .likeIfPresent(LoginLogDO::getAccount, reqVO.getAccount())
                 .betweenIfPresent(LoginLogDO::getCreateTime, reqVO.getCreateTime());
-        if (Boolean.TRUE.equals(reqVO.getStatus())) {
+        if (Boolean.TRUE.equals(reqVO.getResult())) {
             query.eq(LoginLogDO::getResult, LoginResultEnum.SUCCESS.getResult());
-        } else if (Boolean.FALSE.equals(reqVO.getStatus())) {
+        } else if (Boolean.FALSE.equals(reqVO.getResult())) {
             query.gt(LoginLogDO::getResult, LoginResultEnum.SUCCESS.getResult());
         }
         // 降序

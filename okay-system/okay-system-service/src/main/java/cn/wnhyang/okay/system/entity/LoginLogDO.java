@@ -33,7 +33,7 @@ public class LoginLogDO extends BaseDO {
      * 登录类型
      */
     @TableField("login_type")
-    private Long loginType;
+    private Integer loginType;
 
     /**
      * 用户编号

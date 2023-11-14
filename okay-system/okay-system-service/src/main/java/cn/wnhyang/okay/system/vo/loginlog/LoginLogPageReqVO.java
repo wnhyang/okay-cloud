@@ -22,7 +22,7 @@ public class LoginLogPageReqVO extends PageParam {
 
     private String account;
 
-    private Boolean status;
+    private Boolean result;
 
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime[] createTime;
