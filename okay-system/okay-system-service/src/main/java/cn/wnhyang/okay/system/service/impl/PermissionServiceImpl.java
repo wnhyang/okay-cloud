@@ -2,6 +2,7 @@ package cn.wnhyang.okay.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.wnhyang.okay.framework.common.enums.UserConstants;
 import cn.wnhyang.okay.framework.common.util.CollectionUtils;
 import cn.wnhyang.okay.system.entity.MenuDO;
 import cn.wnhyang.okay.system.entity.RoleMenuDO;
@@ -10,7 +11,6 @@ import cn.wnhyang.okay.system.mapper.MenuMapper;
 import cn.wnhyang.okay.system.mapper.RoleMenuMapper;
 import cn.wnhyang.okay.system.mapper.UserRoleMapper;
 import cn.wnhyang.okay.system.service.PermissionService;
-import cn.wnhyang.okay.system.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +30,6 @@ import static cn.wnhyang.okay.framework.common.util.CollectionUtils.convertSet;
 @RequiredArgsConstructor
 public class PermissionServiceImpl implements PermissionService {
 
-    private final RoleService roleService;
-
     private final MenuMapper menuMapper;
 
     private final UserRoleMapper userRoleMapper;
@@ -49,7 +47,7 @@ public class PermissionServiceImpl implements PermissionService {
             return Collections.emptySet();
         }
         // 如果是管理员的情况下，获取全部菜单编号
-        if (roleService.hasAnyAdministrator(roleIds)) {
+        if (hasAnyAdministrator(roleIds)) {
             return convertSet(menuMapper.selectList(), MenuDO::getId);
         }
         // 如果是非管理员的情况下，获得拥有的菜单编号
@@ -62,12 +60,19 @@ public class PermissionServiceImpl implements PermissionService {
             return Collections.emptySet();
         }
         // 如果是管理员的情况下，获取全部菜单编号
-        if (roleService.hasAnyAdministrator(roleIds)) {
+        if (hasAnyAdministrator(roleIds)) {
             return Collections.singleton("*:*:*");
         }
         // 如果是非管理员的情况下，获得拥有的菜单编号
         Set<Long> menuIds = getRoleMenuListByRoleId(roleIds);
         return convertSet(menuMapper.selectBatchIds(menuIds), MenuDO::getPermission);
+    }
+
+    private boolean hasAnyAdministrator(Collection<Long> ids) {
+        if (CollectionUtil.isEmpty(ids)) {
+            return false;
+        }
+        return ids.stream().anyMatch(UserConstants.ADMINISTRATOR_ROLE_ID::equals);
     }
 
     @Override

@@ -83,12 +83,4 @@ public interface RoleService {
      * @return 角色列表
      */
     PageResult<RoleDO> getRolePage(RolePageReqVO reqVO);
-
-    /**
-     * 判断是否有管理员角色
-     *
-     * @param ids 角色编号数组
-     * @return 是否有管理员角色
-     */
-    boolean hasAnyAdministrator(Collection<Long> ids);
 }

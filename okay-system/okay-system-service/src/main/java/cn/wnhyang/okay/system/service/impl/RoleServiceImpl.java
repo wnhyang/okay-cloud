@@ -109,14 +109,6 @@ public class RoleServiceImpl implements RoleService {
         return roleMapper.selectPage(reqVO);
     }
 
-    @Override
-    public boolean hasAnyAdministrator(Collection<Long> ids) {
-        if (CollectionUtil.isEmpty(ids)) {
-            return false;
-        }
-        return ids.stream().anyMatch(UserConstants.ADMINISTRATOR_ROLE_ID::equals);
-    }
-
     private void validateRoleForDelete(Long id) {
         validateRoleForUpdate(id);
         Long count = userRoleMapper.selectCountByRoleId(id);
