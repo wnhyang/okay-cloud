@@ -62,4 +62,19 @@ public interface PermissionService {
      */
     void deleteRoleById(Long roleId);
 
+    /**
+     * 角色-菜单
+     *
+     * @param roleId  角色id
+     * @param menuIds 菜单id集合
+     */
+    void roleMenu(Long roleId, Set<Long> menuIds);
+
+    /**
+     * 用户-角色
+     *
+     * @param userId  用户id
+     * @param roleIds 角色id集合
+     */
+    void userRole(Long userId, Set<Long> roleIds);
 }

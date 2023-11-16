@@ -21,7 +21,5 @@ public class RoleRespVO extends RoleBaseVO {
 
     private Integer status;
 
-    private Integer type;
-
     private LocalDateTime createTime;
 }

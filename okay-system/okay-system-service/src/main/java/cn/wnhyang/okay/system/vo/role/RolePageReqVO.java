@@ -20,7 +20,7 @@ public class RolePageReqVO extends PageParam {
 
     private String name;
 
-    private String code;
+    private String value;
 
     private Integer status;
 

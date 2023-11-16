@@ -28,4 +28,14 @@ public interface RoleMenuMapper extends BaseMapperX<RoleMenuDO> {
     default Long selectCountByMenuId(Long menuId) {
         return selectCount(RoleMenuDO::getMenuId, menuId);
     }
+
+    default List<RoleMenuDO> selectListByRoleId(Long roleId) {
+        return selectList(RoleMenuDO::getRoleId, roleId);
+    }
+
+    default void deleteListByRoleIdAndMenuIds(Long roleId, Collection<Long> menuIds) {
+        delete(new LambdaQueryWrapper<RoleMenuDO>()
+                .eq(RoleMenuDO::getRoleId, roleId)
+                .in(RoleMenuDO::getMenuId, menuIds));
+    }
 }
