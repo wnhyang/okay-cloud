@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 /**
+ * 权限
+ *
  * @author wnhyang
  * @date 2023/11/13
  **/
@@ -64,6 +66,12 @@ public class PermissionController {
         return CommonResult.success(true);
     }
 
+    /**
+     * 查询用户角色列表
+     *
+     * @param userId 用户ID
+     * @return 用户对应的角色ID集合
+     */
     @GetMapping("/getUserRoleList")
     @OperateLog(module = "后台-权限", name = "查询用户角色列表")
     @SaCheckPermission("system:permission:userRoleList")

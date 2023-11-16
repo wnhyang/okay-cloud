@@ -97,7 +97,7 @@ public class MenuController {
     }
 
     /**
-     * 查询简单菜单列表
+     * 查询简单菜单列表不带根节点
      *
      * @return 菜单列表
      */
@@ -106,5 +106,17 @@ public class MenuController {
     @SaCheckLogin
     public CommonResult<List<MenuSimpleTreeRespVO>> getSimpleMenuList() {
         return success(menuService.getMenuSimpleTreeList());
+    }
+
+    /**
+     * 查询简单菜单列表带根节点
+     *
+     * @return 菜单列表
+     */
+    @GetMapping("/simpleListA")
+    @OperateLog(module = "后台-菜单", name = "查询简单菜单")
+    @SaCheckLogin
+    public CommonResult<List<MenuSimpleTreeRespVO>> getSimpleMenuListA() {
+        return success(menuService.getMenuSimpleTreeListA());
     }
 }

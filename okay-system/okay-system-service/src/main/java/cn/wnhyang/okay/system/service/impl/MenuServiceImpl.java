@@ -173,6 +173,15 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuSimpleTreeRespVO> getMenuSimpleTreeList() {
+        return getMenuSimpleTreeList(false);
+    }
+
+    @Override
+    public List<MenuSimpleTreeRespVO> getMenuSimpleTreeListA() {
+        return getMenuSimpleTreeList(true);
+    }
+
+    private List<MenuSimpleTreeRespVO> getMenuSimpleTreeList(boolean withRoot) {
         // 1、查询所有的菜单
         List<MenuDO> menus = menuMapper.selectList();
 
@@ -187,11 +196,14 @@ public class MenuServiceImpl implements MenuService {
                 Comparator.comparingInt(MenuSimpleTreeRespVO::getOrderNo)
         ).collect(Collectors.toList());
 
-        MenuSimpleTreeRespVO result = new MenuSimpleTreeRespVO();
-        result.setId(ID_ROOT).setTitle("根目录").setChildren(collect);
+        if (withRoot) {
+            MenuSimpleTreeRespVO result = new MenuSimpleTreeRespVO();
+            result.setId(ID_ROOT).setTitle("根目录").setChildren(collect);
+            return Collections.singletonList(result);
+        }
 
         // 返回result
-        return Collections.singletonList(result);
+        return collect;
     }
 
     private List<MenuTreeRespVO> getChildren01(Long parentId, List<MenuTreeRespVO> all) {

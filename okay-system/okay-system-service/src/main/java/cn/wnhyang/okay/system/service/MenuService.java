@@ -76,9 +76,16 @@ public interface MenuService {
     List<MenuTreeRespVO> getMenuTreeList(MenuListReqVO reqVO);
 
     /**
-     * 获取简单树形菜单
+     * 获取简单树形菜单不带根节点
      *
      * @return 树形菜单
      */
     List<MenuSimpleTreeRespVO> getMenuSimpleTreeList();
+
+    /**
+     * 获取简单树形菜单带根节点
+     *
+     * @return 树形菜单
+     */
+    List<MenuSimpleTreeRespVO> getMenuSimpleTreeListA();
 }

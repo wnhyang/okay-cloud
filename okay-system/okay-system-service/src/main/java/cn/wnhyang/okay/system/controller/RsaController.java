@@ -15,7 +15,7 @@ import javax.validation.Valid;
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 
 /**
- * 密钥表
+ * rsa密钥
  *
  * @author wnhyang
  * @since 2023/10/10
