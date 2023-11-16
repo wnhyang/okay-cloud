@@ -10,6 +10,7 @@ import cn.wnhyang.okay.system.mapper.MenuMapper;
 import cn.wnhyang.okay.system.mapper.RoleMenuMapper;
 import cn.wnhyang.okay.system.mapper.UserRoleMapper;
 import cn.wnhyang.okay.system.service.PermissionService;
+import cn.wnhyang.okay.system.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,8 @@ import static cn.wnhyang.okay.framework.common.util.CollectionUtils.convertSet;
 @RequiredArgsConstructor
 public class PermissionServiceImpl implements PermissionService {
 
+    private final RoleService roleService;
+
     private final MenuMapper menuMapper;
 
     private final UserRoleMapper userRoleMapper;
@@ -45,12 +48,24 @@ public class PermissionServiceImpl implements PermissionService {
         if (CollUtil.isEmpty(roleIds)) {
             return Collections.emptySet();
         }
+        // 如果是管理员的情况下，获取全部菜单编号
+        if (roleService.hasAnyAdministrator(roleIds)) {
+            return convertSet(menuMapper.selectList(), MenuDO::getId);
+        }
         // 如果是非管理员的情况下，获得拥有的菜单编号
         return convertSet(roleMenuMapper.selectListByRoleId(roleIds), RoleMenuDO::getMenuId);
     }
 
     @Override
     public Set<String> getPermissionsByRoleIds(Collection<Long> roleIds) {
+        if (CollUtil.isEmpty(roleIds)) {
+            return Collections.emptySet();
+        }
+        // 如果是管理员的情况下，获取全部菜单编号
+        if (roleService.hasAnyAdministrator(roleIds)) {
+            return Collections.singleton("*:*:*");
+        }
+        // 如果是非管理员的情况下，获得拥有的菜单编号
         Set<Long> menuIds = getRoleMenuListByRoleId(roleIds);
         return convertSet(menuMapper.selectBatchIds(menuIds), MenuDO::getPermission);
     }

@@ -7,12 +7,17 @@ package cn.wnhyang.okay.framework.common.enums;
 public interface UserConstants {
 
     /**
-     * 管理员ID
+     * 管理员用户ID
      */
     Long ADMINISTRATOR_ID = 1L;
 
     /**
-     * 管理员code
+     * 管理员角色id
+     */
+    Long ADMINISTRATOR_ROLE_ID = 1L;
+
+    /**
+     * 管理员角色code
      */
     String ADMINISTRATOR_VALUE = "administrator";
 }
