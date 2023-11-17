@@ -25,5 +25,8 @@ public class OperateLogPageReqVO extends PageParam {
     private Boolean success;
 
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime[] startTime;
+    private LocalDateTime startTime;
+
+    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    private LocalDateTime endTime;
 }

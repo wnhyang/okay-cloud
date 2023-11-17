@@ -25,6 +25,9 @@ public class DictTypePageReqVO extends PageParam {
     private Integer status;
 
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
-    private LocalDateTime[] createTime;
+    private LocalDateTime startTime;
+
+    @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
+    private LocalDateTime endTime;
 
 }

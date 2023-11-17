@@ -29,7 +29,7 @@ public interface DictTypeMapper extends BaseMapperX<DictTypeDO> {
                 .likeIfPresent(DictTypeDO::getName, reqVO.getName())
                 .likeIfPresent(DictTypeDO::getType, reqVO.getType())
                 .eqIfPresent(DictTypeDO::getStatus, reqVO.getStatus())
-                .betweenIfPresent(DictTypeDO::getCreateTime, reqVO.getCreateTime())
+                .betweenIfPresent(DictTypeDO::getCreateTime, reqVO.getStartTime(), reqVO.getEndTime())
                 .orderByDesc(DictTypeDO::getId));
     }
 }
