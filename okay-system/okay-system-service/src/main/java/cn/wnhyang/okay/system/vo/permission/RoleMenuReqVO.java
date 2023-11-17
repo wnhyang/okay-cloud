@@ -12,7 +12,7 @@ import java.util.Set;
 @Data
 public class RoleMenuReqVO {
 
-    @NotNull
+    @NotNull(message = "角色编号不能为空")
     private Long roleId;
 
     private Set<Long> menuIds;

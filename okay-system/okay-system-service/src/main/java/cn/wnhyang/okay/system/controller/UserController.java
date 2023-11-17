@@ -18,6 +18,7 @@ import cn.wnhyang.okay.system.vo.user.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -49,7 +50,7 @@ public class UserController {
     @PostMapping("/create")
     @OperateLog(module = "后台-用户", name = "创建用户")
     @SaCheckPermission("system:user:create")
-    public CommonResult<Long> createUser(@RequestBody UserCreateReqVO reqVO) {
+    public CommonResult<Long> createUser(@Valid @RequestBody UserCreateReqVO reqVO) {
         Long id = userService.createUser(reqVO);
         return success(id);
     }
@@ -63,7 +64,7 @@ public class UserController {
     @PutMapping("/update")
     @OperateLog(module = "后台-用户", name = "修改用户信息")
     @SaCheckPermission("system:user:update")
-    public CommonResult<Boolean> updateUser(@RequestBody UserUpdateReqVO reqVO) {
+    public CommonResult<Boolean> updateUser(@Valid @RequestBody UserUpdateReqVO reqVO) {
         userService.updateUser(reqVO);
         return success(true);
     }
@@ -91,7 +92,7 @@ public class UserController {
     @PutMapping("/updatePassword")
     @OperateLog(module = "后台-用户", name = "更新用户密码")
     @SaCheckPermission("system:user:updatePassword")
-    public CommonResult<Boolean> updateUserPassword(@RequestBody UserUpdatePasswordReqVO reqVO) {
+    public CommonResult<Boolean> updateUserPassword(@Valid @RequestBody UserUpdatePasswordReqVO reqVO) {
         userService.updateUserPassword(reqVO);
         return success(true);
     }
@@ -105,7 +106,7 @@ public class UserController {
     @PutMapping("/updateStatus")
     @OperateLog(module = "后台-用户", name = "更新用户状态")
     @SaCheckPermission("system:user:update")
-    public CommonResult<Boolean> updateUserStatus(@RequestBody UserUpdateStatusReqVO reqVO) {
+    public CommonResult<Boolean> updateUserStatus(@Valid @RequestBody UserUpdateStatusReqVO reqVO) {
         userService.updateUserStatus(reqVO.getId(), reqVO.getStatus());
         return success(true);
     }
@@ -133,11 +134,16 @@ public class UserController {
     @GetMapping("/page")
     @OperateLog(module = "后台-用户", name = "查询用户列表")
     @SaCheckPermission("system:user:list")
-    public CommonResult<PageResult<UserRespVO>> getUserPage(UserPageReqVO reqVO) {
+    public CommonResult<PageResult<UserRespVO>> getUserPage(@Valid UserPageReqVO reqVO) {
         PageResult<UserDO> pageResult = userService.getUserPage(reqVO);
         return success(UserConvert.INSTANCE.convert(pageResult));
     }
 
+    /**
+     * 查询用户信息
+     *
+     * @return 用户信息
+     */
     @GetMapping("/info")
     @OperateLog(module = "后台-用户", name = "查询用户信息")
     @SaCheckLogin

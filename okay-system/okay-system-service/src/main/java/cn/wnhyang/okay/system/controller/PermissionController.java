@@ -7,9 +7,9 @@ import cn.wnhyang.okay.system.service.PermissionService;
 import cn.wnhyang.okay.system.vo.permission.RoleMenuReqVO;
 import cn.wnhyang.okay.system.vo.permission.UserRoleReqVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Set;
 
 /**
@@ -34,7 +34,7 @@ public class PermissionController {
     @PostMapping("/roleMenu")
     @OperateLog(module = "后台-权限", name = "给角色赋予菜单")
     @SaCheckPermission("system:permission:roleMenu")
-    public CommonResult<Boolean> roleMenu(@Validated @RequestBody RoleMenuReqVO reqVO) {
+    public CommonResult<Boolean> roleMenu(@Valid @RequestBody RoleMenuReqVO reqVO) {
         permissionService.roleMenu(reqVO.getRoleId(), reqVO.getMenuIds());
         return CommonResult.success(true);
     }
@@ -48,7 +48,7 @@ public class PermissionController {
     @GetMapping("/getRoleMenuList")
     @OperateLog(module = "后台-权限", name = "查询角色菜单列表")
     @SaCheckPermission("system:permission:roleMenuList")
-    public CommonResult<Set<Long>> getRoleMenuList(Long roleId) {
+    public CommonResult<Set<Long>> getRoleMenuList(@RequestParam("roleId") Long roleId) {
         return CommonResult.success(permissionService.getRoleMenuListByRoleId(roleId));
     }
 
@@ -61,7 +61,7 @@ public class PermissionController {
     @PostMapping("/userRole")
     @OperateLog(module = "后台-权限", name = "给角色赋予菜单")
     @SaCheckPermission("system:permission:userRole")
-    public CommonResult<Boolean> roleMenu(@Validated @RequestBody UserRoleReqVO reqVO) {
+    public CommonResult<Boolean> roleMenu(@Valid @RequestBody UserRoleReqVO reqVO) {
         permissionService.userRole(reqVO.getUserId(), reqVO.getRoleIds());
         return CommonResult.success(true);
     }
@@ -75,7 +75,7 @@ public class PermissionController {
     @GetMapping("/getUserRoleList")
     @OperateLog(module = "后台-权限", name = "查询用户角色列表")
     @SaCheckPermission("system:permission:userRoleList")
-    public CommonResult<Set<Long>> getUserRoleList(Long userId) {
+    public CommonResult<Set<Long>> getUserRoleList(@RequestParam("userId") Long userId) {
         return CommonResult.success(permissionService.getUserRoleIdListByUserId(userId));
     }
 

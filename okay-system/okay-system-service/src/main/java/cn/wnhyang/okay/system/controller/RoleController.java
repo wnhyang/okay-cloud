@@ -11,6 +11,8 @@ import cn.wnhyang.okay.system.vo.role.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 
 /**
@@ -35,7 +37,7 @@ public class RoleController {
     @PostMapping("/create")
     @OperateLog(module = "后台-角色", name = "创建角色")
     @SaCheckPermission("system:role:create")
-    public CommonResult<Long> createRole(@RequestBody RoleCreateReqVO reqVO) {
+    public CommonResult<Long> createRole(@Valid @RequestBody RoleCreateReqVO reqVO) {
         return success(roleService.createRole(reqVO));
     }
 
@@ -48,7 +50,7 @@ public class RoleController {
     @PutMapping("/update")
     @OperateLog(module = "后台-角色", name = "更新角色")
     @SaCheckPermission("system:role:update")
-    public CommonResult<Boolean> updateRole(@RequestBody RoleUpdateReqVO reqVO) {
+    public CommonResult<Boolean> updateRole(@Valid @RequestBody RoleUpdateReqVO reqVO) {
         roleService.updateRole(reqVO);
         return success(true);
     }
@@ -62,7 +64,7 @@ public class RoleController {
     @PutMapping("/updateStatus")
     @OperateLog(module = "后台-角色", name = "更新角色状态")
     @SaCheckPermission("system:role:update")
-    public CommonResult<Boolean> updateRoleStatus(@RequestBody RoleUpdateStatusReqVO reqVO) {
+    public CommonResult<Boolean> updateRoleStatus(@Valid @RequestBody RoleUpdateStatusReqVO reqVO) {
         roleService.updateRoleStatus(reqVO.getId(), reqVO.getStatus());
         return success(true);
     }
@@ -104,7 +106,7 @@ public class RoleController {
     @GetMapping("/page")
     @OperateLog(module = "后台-角色", name = "查询角色列表")
     @SaCheckPermission("system:role:list")
-    public CommonResult<PageResult<RoleRespVO>> getRolePage(RolePageReqVO reqVO) {
+    public CommonResult<PageResult<RoleRespVO>> getRolePage(@Valid RolePageReqVO reqVO) {
         PageResult<RoleDO> pageResult = roleService.getRolePage(reqVO);
         return success(RoleConvert.INSTANCE.convert(pageResult));
     }

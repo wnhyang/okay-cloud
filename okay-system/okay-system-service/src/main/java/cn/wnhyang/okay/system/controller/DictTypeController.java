@@ -67,7 +67,7 @@ public class DictTypeController {
     @DeleteMapping("/delete")
     @OperateLog(module = "后台-字典", name = "删除字典类型")
     @SaCheckPermission("system:dict:delete")
-    public CommonResult<Boolean> deleteDictType(Long id) {
+    public CommonResult<Boolean> deleteDictType(@RequestParam("id") Long id) {
         dictTypeService.deleteDictType(id);
         return success(true);
     }

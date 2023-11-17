@@ -11,6 +11,7 @@ import cn.wnhyang.okay.system.vo.menu.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
@@ -37,7 +38,7 @@ public class MenuController {
     @PostMapping("/create")
     @OperateLog(module = "后台-菜单", name = "创建菜单")
     @SaCheckPermission("system:menu:create")
-    public CommonResult<Long> createMenu(@RequestBody MenuCreateReqVO reqVO) {
+    public CommonResult<Long> createMenu(@Valid @RequestBody MenuCreateReqVO reqVO) {
         return success(menuService.createMenu(reqVO));
     }
 
@@ -50,7 +51,7 @@ public class MenuController {
     @PutMapping("/update")
     @OperateLog(module = "后台-菜单", name = "更新菜单")
     @SaCheckPermission("system:menu:update")
-    public CommonResult<Boolean> updateMenu(@RequestBody MenuUpdateReqVO reqVO) {
+    public CommonResult<Boolean> updateMenu(@Valid @RequestBody MenuUpdateReqVO reqVO) {
         menuService.updateMenu(reqVO);
         return success(true);
     }
@@ -78,7 +79,7 @@ public class MenuController {
     @GetMapping("/list")
     @OperateLog(module = "后台-菜单", name = "查询菜单列表")
     @SaCheckPermission("system:menu:list")
-    public CommonResult<List<MenuTreeRespVO>> getMenuList(MenuListReqVO reqVO) {
+    public CommonResult<List<MenuTreeRespVO>> getMenuList(@Valid MenuListReqVO reqVO) {
         return success(menuService.getMenuTreeList(reqVO));
     }
 

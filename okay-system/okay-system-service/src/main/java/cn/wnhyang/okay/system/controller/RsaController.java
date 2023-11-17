@@ -48,7 +48,7 @@ public class RsaController {
     @PostMapping("/create")
     @OperateLog(module = "后台-密钥", name = "创建密钥")
     @SaCheckPermission("system:rsa:create")
-    public CommonResult<Long> createRsa(@RequestBody RsaCreateReqVO reqVO) {
+    public CommonResult<Long> createRsa(@Valid @RequestBody RsaCreateReqVO reqVO) {
         return success(rsaService.createSecretKey(reqVO));
     }
 
@@ -61,7 +61,7 @@ public class RsaController {
     @PutMapping("/update")
     @OperateLog(module = "后台-密钥", name = "更新密钥")
     @SaCheckPermission("system:rsa:update")
-    public CommonResult<Boolean> updateRsa(@RequestBody RsaUpdateReqVO reqVO) {
+    public CommonResult<Boolean> updateRsa(@Valid @RequestBody RsaUpdateReqVO reqVO) {
         rsaService.updateRsa(reqVO);
         return success(true);
     }
@@ -75,7 +75,7 @@ public class RsaController {
     @DeleteMapping("/delete")
     @OperateLog(module = "后台-密钥", name = "删除密钥")
     @SaCheckPermission("system:rsa:delete")
-    public CommonResult<Boolean> deleteRsa(Long id) {
+    public CommonResult<Boolean> deleteRsa(@RequestParam("id") Long id) {
         rsaService.deleteRsa(id);
         return success(true);
     }

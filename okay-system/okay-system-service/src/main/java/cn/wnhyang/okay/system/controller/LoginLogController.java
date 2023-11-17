@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 /**
  * 登录日志
  *
@@ -36,7 +38,7 @@ public class LoginLogController {
     @GetMapping("/page")
     @OperateLog(module = "后台-登录日志", name = "分页查询登录日志")
     @SaCheckPermission("system:loginLog:query")
-    public CommonResult<PageResult<LoginLogRespVO>> getLoginLogPage(LoginLogPageReqVO reqVO) {
+    public CommonResult<PageResult<LoginLogRespVO>> getLoginLogPage(@Valid LoginLogPageReqVO reqVO) {
         PageResult<LoginLogDO> page = loginLogService.getLoginLogPage(reqVO);
         return CommonResult.success(LoginLogConvert.INSTANCE.convertPage(page));
     }
