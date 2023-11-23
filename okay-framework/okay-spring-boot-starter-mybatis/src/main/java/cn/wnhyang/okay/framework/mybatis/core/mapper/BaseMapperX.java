@@ -1,5 +1,6 @@
 package cn.wnhyang.okay.framework.mybatis.core.mapper;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.wnhyang.okay.framework.common.pojo.PageParam;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.mybatis.core.util.MyBatisUtils;
@@ -73,6 +74,20 @@ public interface BaseMapperX<T> extends BaseMapper<T> {
 
     default List<T> selectList(SFunction<T, ?> field, Object value) {
         return selectList(new LambdaQueryWrapper<T>().eq(field, value));
+    }
+
+    default List<T> selectList(String field, Collection<?> values) {
+        if (CollUtil.isEmpty(values)) {
+            return CollUtil.newArrayList();
+        }
+        return selectList(new QueryWrapper<T>().in(field, values));
+    }
+
+    default List<T> selectList(SFunction<T, ?> field, Collection<?> values) {
+        if (CollUtil.isEmpty(values)) {
+            return CollUtil.newArrayList();
+        }
+        return selectList(new LambdaQueryWrapper<T>().in(field, values));
     }
 
     /**
