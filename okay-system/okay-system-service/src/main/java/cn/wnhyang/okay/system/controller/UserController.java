@@ -22,6 +22,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
+import static cn.wnhyang.okay.framework.common.exception.enums.GlobalErrorCodeConstants.UNAUTHORIZED;
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 
 /**
@@ -149,7 +150,10 @@ public class UserController {
     @SaCheckLogin
     public CommonResult<UserInfoRespVO> getUserInfo() {
         LoginUser loginUser = LoginHelper.getLoginUser();
-        assert loginUser != null;
+
+        if (loginUser == null) {
+            return CommonResult.error(UNAUTHORIZED);
+        }
         Long id = loginUser.getId();
 
         UserDO user = userService.getUserById(id);

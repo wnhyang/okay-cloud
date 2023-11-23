@@ -1,5 +1,6 @@
 package cn.wnhyang.okay.system.service;
 
+import cn.wnhyang.okay.framework.common.enums.CommonStatusEnum;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.system.entity.RoleDO;
 import cn.wnhyang.okay.system.vo.role.RoleCreateReqVO;
@@ -83,4 +84,12 @@ public interface RoleService {
      * @return 角色列表
      */
     PageResult<RoleDO> getRolePage(RolePageReqVO reqVO);
+
+    /**
+     * 获取角色列表
+     *
+     * @param status 状态
+     * @return 角色列表
+     */
+    List<RoleDO> getRoleList(CommonStatusEnum status);
 }

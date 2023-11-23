@@ -109,6 +109,14 @@ public class RoleServiceImpl implements RoleService {
         return roleMapper.selectPage(reqVO);
     }
 
+    @Override
+    public List<RoleDO> getRoleList(CommonStatusEnum status) {
+        if (status == null) {
+            return roleMapper.selectList();
+        }
+        return roleMapper.selectList(RoleDO::getStatus, status);
+    }
+
     private void validateRoleForDelete(Long id) {
         validateRoleForUpdate(id);
         Long count = userRoleMapper.selectCountByRoleId(id);

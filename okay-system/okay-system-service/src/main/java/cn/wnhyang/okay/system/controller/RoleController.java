@@ -1,10 +1,13 @@
 package cn.wnhyang.okay.system.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.wnhyang.okay.framework.common.enums.CommonStatusEnum;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog;
 import cn.wnhyang.okay.system.convert.role.RoleConvert;
+import cn.wnhyang.okay.system.dto.user.RoleSimpleRespVO;
 import cn.wnhyang.okay.system.entity.RoleDO;
 import cn.wnhyang.okay.system.service.RoleService;
 import cn.wnhyang.okay.system.vo.role.*;
@@ -12,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 
@@ -109,5 +113,15 @@ public class RoleController {
     public CommonResult<PageResult<RoleRespVO>> getRolePage(@Valid RolePageReqVO reqVO) {
         PageResult<RoleDO> pageResult = roleService.getRolePage(reqVO);
         return success(RoleConvert.INSTANCE.convert(pageResult));
+    }
+
+    /**
+     * 查询简单角色列表
+     */
+    @GetMapping("/simpleList")
+    @OperateLog(module = "后台-角色", name = "查询简单角色列表")
+    @SaCheckLogin
+    public CommonResult<List<RoleSimpleRespVO>> getSimpleRoleList() {
+        return success(RoleConvert.INSTANCE.convert02(roleService.getRoleList(CommonStatusEnum.ENABLE)));
     }
 }
