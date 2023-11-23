@@ -9,6 +9,7 @@ import cn.wnhyang.okay.system.vo.user.UserInfoRespVO;
 import cn.wnhyang.okay.system.vo.user.UserRespVO;
 import cn.wnhyang.okay.system.vo.user.UserUpdateReqVO;
 import cn.wnhyang.okay.system.vo.userprofile.UserProfileRespVO;
+import cn.wnhyang.okay.system.vo.userprofile.UserProfileUpdateReqVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -35,4 +36,6 @@ public interface UserConvert {
     UserInfoRespVO.UserVO convert03(UserDO user);
 
     UserProfileRespVO convert04(UserDO user);
+
+    UserDO convert(UserProfileUpdateReqVO reqVO);
 }

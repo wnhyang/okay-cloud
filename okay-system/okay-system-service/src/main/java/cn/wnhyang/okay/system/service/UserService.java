@@ -10,6 +10,8 @@ import cn.wnhyang.okay.system.vo.user.UserCreateReqVO;
 import cn.wnhyang.okay.system.vo.user.UserPageReqVO;
 import cn.wnhyang.okay.system.vo.user.UserUpdatePasswordReqVO;
 import cn.wnhyang.okay.system.vo.user.UserUpdateReqVO;
+import cn.wnhyang.okay.system.vo.userprofile.UserProfileUpdatePasswordReqVO;
+import cn.wnhyang.okay.system.vo.userprofile.UserProfileUpdateReqVO;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -138,4 +140,20 @@ public interface UserService {
      * @return 用户列表
      */
     List<UserDO> getUserList(Collection<Long> ids);
+
+    /**
+     * 更新用户密码
+     *
+     * @param id 用户id
+     * @param reqVO  请求数据
+     */
+    void updateUserPassword(Long id, UserProfileUpdatePasswordReqVO reqVO);
+
+    /**
+     * 更新用户信息
+     *
+     * @param id 用户id
+     * @param reqVO  请求数据
+     */
+    void updateUserProfile(Long id, UserProfileUpdateReqVO reqVO);
 }

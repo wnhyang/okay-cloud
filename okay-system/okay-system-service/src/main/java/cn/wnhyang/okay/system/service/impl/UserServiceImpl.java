@@ -24,6 +24,9 @@ import cn.wnhyang.okay.system.vo.user.UserCreateReqVO;
 import cn.wnhyang.okay.system.vo.user.UserPageReqVO;
 import cn.wnhyang.okay.system.vo.user.UserUpdatePasswordReqVO;
 import cn.wnhyang.okay.system.vo.user.UserUpdateReqVO;
+import cn.wnhyang.okay.system.vo.userprofile.UserProfileUpdatePasswordReqVO;
+import cn.wnhyang.okay.system.vo.userprofile.UserProfileUpdateReqVO;
+import com.google.common.annotations.VisibleForTesting;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -160,6 +163,44 @@ public class UserServiceImpl implements UserService {
             return Collections.emptyList();
         }
         return userMapper.selectBatchIds(ids);
+    }
+
+    @Override
+    public void updateUserPassword(Long id, UserProfileUpdatePasswordReqVO reqVO) {
+        // 校验旧密码密码
+        validateOldPassword(id, reqVO.getOldPassword());
+        // 执行更新
+        UserDO updateObj = new UserDO().setId(id);
+        // 加密密码
+        updateObj.setPassword(BCrypt.hashpw(reqVO.getNewPassword()));
+        userMapper.updateById(updateObj);
+    }
+
+    @Override
+    public void updateUserProfile(Long id, UserProfileUpdateReqVO reqVO) {
+        // 校验正确性
+        validateUserExists(id);
+        validateEmailUnique(id, reqVO.getEmail());
+        validateMobileUnique(id, reqVO.getMobile());
+        // 执行更新
+        userMapper.updateById(UserConvert.INSTANCE.convert(reqVO).setId(id));
+    }
+
+    /**
+     * 校验旧密码
+     *
+     * @param id          用户 id
+     * @param oldPassword 旧密码
+     */
+    @VisibleForTesting
+    void validateOldPassword(Long id, String oldPassword) {
+        UserDO user = userMapper.selectById(id);
+        if (user == null) {
+            throw exception(USER_NOT_EXISTS);
+        }
+        if (!BCrypt.checkpw(oldPassword, user.getPassword())) {
+            throw exception(USER_PASSWORD_FAILED);
+        }
     }
 
     private LoginUser buildLoginUser(UserDO user) {

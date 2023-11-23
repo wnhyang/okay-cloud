@@ -12,6 +12,9 @@ import cn.wnhyang.okay.framework.common.enums.UserTypeEnum;
 import cn.wnhyang.okay.system.dto.LoginUser;
 import lombok.experimental.UtilityClass;
 
+import static cn.wnhyang.okay.framework.common.exception.enums.GlobalErrorCodeConstants.UNAUTHORIZED;
+import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
+
 /**
  * @author wnhyang
  * @date 2023/7/26
@@ -26,6 +29,11 @@ public class LoginHelper {
         login(loginUser, null);
     }
 
+    /**
+     * 登录
+     *
+     * @param loginUser 登录用户
+     */
     public static void login(LoginUser loginUser, DeviceTypeEnum deviceEnum) {
         SaStorage storage = SaHolder.getStorage();
         storage.set(LOGIN_USER_KEY, loginUser);
@@ -46,6 +54,11 @@ public class LoginHelper {
         StpUtil.getTokenSession().set(LOGIN_USER_KEY, loginUser);
     }
 
+    /**
+     * 获取当前登录用户
+     *
+     * @return 登录用户
+     */
     public static LoginUser getLoginUser() {
         LoginUser loginUser = (LoginUser) SaHolder.getStorage().get(LOGIN_USER_KEY);
         if (loginUser != null) {
@@ -61,6 +74,20 @@ public class LoginHelper {
         loginUser = (LoginUser) session.get(LOGIN_USER_KEY);
         SaHolder.getStorage().set(LOGIN_USER_KEY, loginUser);
         return loginUser;
+    }
+
+    /**
+     * 获取当前登录用户id
+     *
+     * @return 用户id
+     */
+    public static Long getUserId() {
+
+        LoginUser loginUser = getLoginUser();
+        if (loginUser == null) {
+            throw exception(UNAUTHORIZED);
+        }
+        return loginUser.getId();
     }
 
     public static boolean isAdministrator(Long userId) {
