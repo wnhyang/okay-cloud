@@ -1,0 +1,15 @@
+
+# 定时任务
+xxl:
+  job:
+    enabled: false
+    admin:
+      addresses: http://127.0.0.1:8083/xxl-job-admin
+    access-token: default_token
+    executor:
+      app-name: ${spring.application.name}
+      ip:
+      port: 9998
+      log-path: logs/xxl-job/jobhandler
+      log-retention-days: 30
+

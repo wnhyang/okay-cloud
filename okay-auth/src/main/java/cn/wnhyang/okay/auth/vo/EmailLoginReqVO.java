@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 /**
  * @author wnhyang
@@ -28,5 +29,6 @@ public class EmailLoginReqVO {
      * 验证码
      */
     @NotEmpty
+    @Size(min = 6, max = 6, message = "验证码长度为 6 位")
     private String code;
 }

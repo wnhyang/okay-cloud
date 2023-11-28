@@ -1,0 +1,33 @@
+spring:
+  cloud:
+    # 网关配置
+    gateway:
+      # 打印请求日志(自定义)
+      requestLog: true
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+          enabled: true
+      routes:
+        # 认证中心
+        - id: okay-auth
+          uri: lb://okay-auth
+          predicates:
+            - Path=/auth/**
+        # 系统模块
+        - id: okay-system
+          uri: lb://okay-system-service
+          predicates:
+            - Path=/system/**
+        # 短链接模块
+        - id: okay-shortlink
+          uri: lb://okay-shortlink-service
+          predicates:
+            - Path=/shortlink/**
+        # 资源服务
+        - id: okay-resource
+          uri: lb://okay-resource
+          predicates:
+            - Path=/resource/**
+          filters:
+            - StripPrefix=1
