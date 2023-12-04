@@ -3,6 +3,7 @@ package cn.wnhyang.okay.framework.operatelog.core.aop;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
@@ -21,6 +22,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.MDC;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
@@ -110,6 +112,10 @@ public class OperateLogAspect {
             // 补全请求信息
             fillRequestFields(operateLogObj, joinPoint, operateLog);
 
+            // 没有接入链路追踪，暂时使用uuid作为请求ID
+            String requestId = IdUtil.simpleUUID();
+            MDC.put("requestId", requestId);
+
             // 执行原有方法
             result = joinPoint.proceed();
 
@@ -134,6 +140,7 @@ public class OperateLogAspect {
             throw exception;
         } finally {
             clearThreadLocal();
+            MDC.clear();
         }
     }
 
