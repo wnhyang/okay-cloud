@@ -17,7 +17,7 @@ public interface UserConstants {
     Long ADMINISTRATOR_ROLE_ID = 1L;
 
     /**
-     * 管理员角色code
+     * 管理员角色value
      */
     String ADMINISTRATOR_VALUE = "administrator";
 }

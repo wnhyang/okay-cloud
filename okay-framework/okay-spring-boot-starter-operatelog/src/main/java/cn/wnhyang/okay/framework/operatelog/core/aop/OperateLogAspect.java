@@ -93,6 +93,10 @@ public class OperateLogAspect {
         Object result = null;
         OperateLogCreateReqDTO operateLogObj = null;
         try {
+            // 没有接入链路追踪，暂时使用uuid作为请求ID
+            String requestId = IdUtil.simpleUUID();
+            MDC.put("requestId", requestId);
+
             operateLogObj = new OperateLogCreateReqDTO();
             // 补全通用字段
             operateLogObj.setStartTime(startTime);
@@ -111,10 +115,6 @@ public class OperateLogAspect {
 
             // 补全请求信息
             fillRequestFields(operateLogObj, joinPoint, operateLog);
-
-            // 没有接入链路追踪，暂时使用uuid作为请求ID
-            String requestId = IdUtil.simpleUUID();
-            MDC.put("requestId", requestId);
 
             // 执行原有方法
             result = joinPoint.proceed();
