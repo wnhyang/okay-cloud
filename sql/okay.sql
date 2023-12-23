@@ -41,6 +41,45 @@ CREATE TABLE `sys_dict_type`
   DEFAULT CHARSET = utf8mb4 COMMENT ='字典类型表';
 
 
+-- okay.sys_field definition
+
+CREATE TABLE `sys_field`
+(
+    `id`           bigint(20)  NOT NULL AUTO_INCREMENT COMMENT '自增编号',
+    `displayName`  varchar(64) NOT NULL DEFAULT '' COMMENT '显示名',
+    `name`         varchar(64) NOT NULL DEFAULT '' COMMENT '字段名',
+    `group`        bigint(20)  NOT NULL COMMENT '字段分组',
+    `type`         tinyint(1)  NOT NULL DEFAULT '0' COMMENT '字段类型',
+    `description`  varchar(64)          DEFAULT '' COMMENT '描述',
+    `defaultValue` varchar(64) NOT NULL DEFAULT '0' COMMENT '默认值',
+    `creator`      varchar(64)          DEFAULT '' COMMENT '创建者',
+    `create_time`  datetime    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updater`      varchar(64)          DEFAULT '' COMMENT '更新者',
+    `update_time`  datetime    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted`      bit(1)      NOT NULL DEFAULT b'0' COMMENT '是否删除',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='系统字段表';
+
+
+-- okay.sys_field_group definition
+
+CREATE TABLE `sys_field_group`
+(
+    `id`          bigint(20)  NOT NULL AUTO_INCREMENT COMMENT '自增编号',
+    `displayName` varchar(64) NOT NULL DEFAULT '' COMMENT '显示分组名',
+    `name`        varchar(64) NOT NULL DEFAULT '' COMMENT '分组标识',
+    `description` varchar(64)          DEFAULT '' COMMENT '描述',
+    `creator`     varchar(64)          DEFAULT '' COMMENT '创建者',
+    `create_time` datetime    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updater`     varchar(64)          DEFAULT '' COMMENT '更新者',
+    `update_time` datetime    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted`     bit(1)      NOT NULL DEFAULT b'0' COMMENT '是否删除',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='系统字段分组表';
+
+
 -- okay.sys_login_log definition
 
 CREATE TABLE `sys_login_log`
@@ -60,7 +99,7 @@ CREATE TABLE `sys_login_log`
     `deleted`     bit(1)       NOT NULL DEFAULT b'0' COMMENT '是否删除',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 271
+  AUTO_INCREMENT = 286
   DEFAULT CHARSET = utf8mb4 COMMENT ='系统访问记录';
 
 
@@ -125,7 +164,7 @@ CREATE TABLE `sys_operate_log`
     `deleted`          bit(1)        NOT NULL DEFAULT b'0' COMMENT '是否删除',
     PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB
-  AUTO_INCREMENT = 8647
+  AUTO_INCREMENT = 8702
   DEFAULT CHARSET = utf8mb4 COMMENT ='操作日志记录';
 
 
@@ -258,31 +297,3 @@ CREATE TABLE `sys_user_role`
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户和角色关联表';
 
 
--- okay.system_menu definition
-
-CREATE TABLE `system_menu`
-(
-    `id`             bigint(20)                              NOT NULL AUTO_INCREMENT COMMENT '菜单ID',
-    `name`           varchar(50) COLLATE utf8mb4_unicode_ci  NOT NULL COMMENT '菜单名称',
-    `permission`     varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '权限标识',
-    `type`           tinyint(4)                              NOT NULL COMMENT '菜单类型',
-    `sort`           int(11)                                 NOT NULL DEFAULT '0' COMMENT '显示顺序',
-    `parent_id`      bigint(20)                              NOT NULL DEFAULT '0' COMMENT '父菜单ID',
-    `path`           varchar(200) COLLATE utf8mb4_unicode_ci          DEFAULT '' COMMENT '路由地址',
-    `icon`           varchar(100) COLLATE utf8mb4_unicode_ci          DEFAULT '#' COMMENT '菜单图标',
-    `component`      varchar(255) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '组件路径',
-    `component_name` varchar(255) COLLATE utf8mb4_unicode_ci          DEFAULT NULL COMMENT '组件名',
-    `status`         tinyint(4)                              NOT NULL DEFAULT '0' COMMENT '菜单状态',
-    `visible`        bit(1)                                  NOT NULL DEFAULT b'1' COMMENT '是否可见',
-    `keep_alive`     bit(1)                                  NOT NULL DEFAULT b'1' COMMENT '是否缓存',
-    `always_show`    bit(1)                                  NOT NULL DEFAULT b'1' COMMENT '是否总是显示',
-    `creator`        varchar(64) COLLATE utf8mb4_unicode_ci           DEFAULT '' COMMENT '创建者',
-    `create_time`    datetime                                NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updater`        varchar(64) COLLATE utf8mb4_unicode_ci           DEFAULT '' COMMENT '更新者',
-    `update_time`    datetime                                NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `deleted`        bit(1)                                  NOT NULL DEFAULT b'0' COMMENT '是否删除',
-    PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB
-  AUTO_INCREMENT = 2162
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT ='菜单权限表';
