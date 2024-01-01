@@ -11,6 +11,6 @@ COPY ${JAR_FILE} app.jar
 
 EXPOSE 9001
 
-ENV TZ=Asia/Shanghai JAVA_OPTS="-Xms128m -Xmx128m -Djava.security.egd=file:/dev/./urandom"
+ENV TZ=Asia/Shanghai JAVA_OPTS="-Xms64m -Xmx64m -Djava.security.egd=file:/dev/./urandom"
 
 ENTRYPOINT ["java","-jar","app.jar","$JAVA_OPTS"]
