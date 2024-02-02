@@ -18,18 +18,6 @@
             <artifactId>okay-common</artifactId>
         </dependency>
 
-        <!-- Spring 核心 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <optional>true</optional>
-        </dependency>
-
         <!-- Job 相关 -->
         <dependency>
             <groupId>com.xuxueli</groupId>

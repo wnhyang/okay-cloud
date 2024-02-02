@@ -2,7 +2,7 @@ package cn.wnhyang.okay.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
-import cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog;
+import cn.wnhyang.okay.framework.log.core.annotation.OperateLog;
 import cn.wnhyang.okay.system.service.PermissionService;
 import cn.wnhyang.okay.system.vo.permission.RoleMenuReqVO;
 import cn.wnhyang.okay.system.vo.permission.UserRoleReqVO;

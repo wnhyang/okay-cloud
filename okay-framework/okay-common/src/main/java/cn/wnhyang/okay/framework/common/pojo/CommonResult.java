@@ -16,6 +16,7 @@ import java.util.Objects;
  **/
 @Data
 public class CommonResult<T> implements Serializable {
+
     private static final long serialVersionUID = -5971498910000363384L;
 
     /**

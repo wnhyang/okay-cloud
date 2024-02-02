@@ -3,6 +3,7 @@ package cn.wnhyang.okay.framework.common.exception;
 import cn.wnhyang.okay.framework.common.exception.enums.ServiceErrorCodeRange;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 /**
  * 业务逻辑异常 Exception
@@ -19,6 +20,7 @@ public final class ServiceException extends RuntimeException {
      *
      * @see ServiceErrorCodeRange
      */
+    @Getter
     private Integer code;
     /**
      * 错误提示
@@ -39,10 +41,6 @@ public final class ServiceException extends RuntimeException {
     public ServiceException(Integer code, String message) {
         this.code = code;
         this.message = message;
-    }
-
-    public Integer getCode() {
-        return code;
     }
 
     public ServiceException setCode(Integer code) {

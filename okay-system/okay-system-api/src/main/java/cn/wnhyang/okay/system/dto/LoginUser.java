@@ -1,5 +1,6 @@
 package cn.wnhyang.okay.system.dto;
 
+import cn.wnhyang.okay.framework.common.core.Login;
 import cn.wnhyang.okay.framework.common.util.CollectionUtils;
 import cn.wnhyang.okay.system.dto.user.RoleSimpleRespVO;
 import lombok.Data;
@@ -11,13 +12,12 @@ import java.util.Set;
 
 /**
  * @author wnhyang
- * @date 2023/6/15
+ * @date 2024/1/5
  **/
 @Data
-public class LoginUser implements Serializable {
+public class LoginUser implements Login, Serializable {
 
-    private static final long serialVersionUID = -1621620881010359627L;
-
+    private static final long serialVersionUID = 7457433906219919160L;
     /**
      * 用户ID
      */
@@ -88,22 +88,38 @@ public class LoginUser implements Serializable {
      */
     private List<RoleSimpleRespVO> roles;
 
-    public Set<Long> getRoleIdList() {
-        return CollectionUtils.convertSet(roles, RoleSimpleRespVO::getId);
-    }
-
-    public Set<String> getRoleNameList() {
-        return CollectionUtils.convertSet(roles, RoleSimpleRespVO::getName);
-    }
-
-    public Set<String> getRoleValueList() {
-        return CollectionUtils.convertSet(roles, RoleSimpleRespVO::getValue);
-    }
-
-
     /**
      * 菜单权限
      */
     private Set<String> permissions;
 
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public Integer getType() {
+        return type;
+    }
+
+    @Override
+    public Set<Long> getRoleIds() {
+        return CollectionUtils.convertSet(roles, RoleSimpleRespVO::getId);
+    }
+
+    @Override
+    public Set<String> getRoleValues() {
+        return CollectionUtils.convertSet(roles, RoleSimpleRespVO::getValue);
+    }
+
+    @Override
+    public Set<String> getPermissions() {
+        return permissions;
+    }
 }

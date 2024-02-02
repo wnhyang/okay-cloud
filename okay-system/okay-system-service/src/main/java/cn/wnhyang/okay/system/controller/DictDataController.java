@@ -4,7 +4,7 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
-import cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog;
+import cn.wnhyang.okay.framework.log.core.annotation.OperateLog;
 import cn.wnhyang.okay.system.convert.dictdata.DictDataConvert;
 import cn.wnhyang.okay.system.entity.DictDataDO;
 import cn.wnhyang.okay.system.service.DictDataService;

@@ -64,11 +64,6 @@
             <artifactId>sa-token-reactor-spring-boot-starter</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>cn.wnhyang.cloud</groupId>
-            <artifactId>okay-spring-boot-starter-satoken</artifactId>
-        </dependency>
-
         <!--log4j2-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

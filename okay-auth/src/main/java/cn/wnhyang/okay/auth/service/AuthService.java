@@ -10,12 +10,13 @@ import cn.wnhyang.okay.auth.vo.EmailLoginReqVO;
 import cn.wnhyang.okay.auth.vo.LoginReqVO;
 import cn.wnhyang.okay.auth.vo.LoginRespVO;
 import cn.wnhyang.okay.auth.vo.RegisterReqVO;
+import cn.wnhyang.okay.framework.common.core.Login;
 import cn.wnhyang.okay.framework.common.enums.CommonStatusEnum;
 import cn.wnhyang.okay.framework.common.enums.DeviceTypeEnum;
 import cn.wnhyang.okay.framework.common.enums.UserTypeEnum;
 import cn.wnhyang.okay.framework.common.util.RegexUtils;
 import cn.wnhyang.okay.framework.common.util.ServletUtils;
-import cn.wnhyang.okay.framework.satoken.utils.LoginHelper;
+import cn.wnhyang.okay.framework.web.core.service.LoginService;
 import cn.wnhyang.okay.system.api.LoginLogApi;
 import cn.wnhyang.okay.system.api.UserApi;
 import cn.wnhyang.okay.system.dto.LoginUser;
@@ -43,6 +44,8 @@ public class AuthService {
     private final UserApi userApi;
 
     private final LoginLogApi loginLogApi;
+
+    private final LoginService loginService;
 
     private final ValueOperations<String, String> valueOperations;
 
@@ -75,7 +78,7 @@ public class AuthService {
         }
 
         // 创建 Token 令牌，记录登录日志
-        LoginHelper.login(user, DeviceTypeEnum.PC);
+        loginService.login(user, DeviceTypeEnum.PC);
         createLoginLog(user.getId(), account, loginTypeEnum, LoginResultEnum.SUCCESS);
         LoginRespVO loginRespVO = new LoginRespVO();
         loginRespVO.setUserId(user.getId());
@@ -107,7 +110,7 @@ public class AuthService {
         }
 
         // 创建 Token 令牌，记录登录日志
-        LoginHelper.login(user, DeviceTypeEnum.PC);
+        loginService.login(user, DeviceTypeEnum.PC);
         createLoginLog(user.getId(), email, loginTypeEnum, LoginResultEnum.SUCCESS);
         LoginRespVO loginRespVO = new LoginRespVO();
         loginRespVO.setUserId(user.getId());
@@ -120,7 +123,7 @@ public class AuthService {
     }
 
     public void logout() {
-        LoginUser loginUser = LoginHelper.getLoginUser();
+        Login loginUser = loginService.getLoginUser();
         if (loginUser != null) {
             StpUtil.logout();
             createLoginLog(loginUser.getId(), loginUser.getUsername(), LoginTypeEnum.LOGOUT_SELF, LoginResultEnum.SUCCESS);

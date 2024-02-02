@@ -1,7 +1,7 @@
 package cn.wnhyang.okay.framework.web.config;
 
 import cn.hutool.core.date.DatePattern;
-import cn.wnhyang.okay.framework.web.jackson.OkayJavaTimeModule;
+import cn.wnhyang.okay.framework.web.core.jackson.OkayJavaTimeModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;

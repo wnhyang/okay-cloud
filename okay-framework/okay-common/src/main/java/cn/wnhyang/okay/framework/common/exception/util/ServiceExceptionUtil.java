@@ -2,7 +2,6 @@ package cn.wnhyang.okay.framework.common.exception.util;
 
 import cn.wnhyang.okay.framework.common.exception.ErrorCode;
 import cn.wnhyang.okay.framework.common.exception.ServiceException;
-import com.google.common.annotations.VisibleForTesting;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -90,7 +89,6 @@ public class ServiceExceptionUtil {
      * @param params         参数
      * @return 格式化后的提示
      */
-    @VisibleForTesting
     public static String doFormat(int code, String messagePattern, Object... params) {
         StringBuilder sbuf = new StringBuilder(messagePattern.length() + 50);
         int i = 0;

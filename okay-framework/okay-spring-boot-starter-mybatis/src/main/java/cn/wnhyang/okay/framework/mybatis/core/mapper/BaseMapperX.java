@@ -98,4 +98,27 @@ public interface BaseMapperX<T> extends BaseMapper<T> {
     default void insertBatch(Collection<T> entities) {
         Db.saveBatch(entities);
     }
+
+    /**
+     * 批量插入，适合大量数据插入
+     *
+     * @param entities 实体们
+     * @param size     插入数量 Db.saveBatch 默认为 1000
+     */
+    default void insertBatch(Collection<T> entities, int size) {
+        Db.saveBatch(entities, size);
+    }
+
+    default void updateBatch(T update) {
+        update(update, new QueryWrapper<>());
+    }
+
+    default void updateBatch(Collection<T> entities) {
+        Db.updateBatchById(entities);
+    }
+
+    default void updateBatch(Collection<T> entities, int size) {
+        Db.updateBatchById(entities, size);
+    }
+
 }

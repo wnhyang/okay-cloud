@@ -2,13 +2,13 @@ package cn.wnhyang.okay.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.wnhyang.okay.framework.common.core.Login;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
-import cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog;
-import cn.wnhyang.okay.framework.satoken.utils.LoginHelper;
+import cn.wnhyang.okay.framework.log.core.annotation.OperateLog;
+import cn.wnhyang.okay.framework.web.core.service.LoginService;
 import cn.wnhyang.okay.system.convert.menu.MenuConvert;
 import cn.wnhyang.okay.system.convert.user.UserConvert;
-import cn.wnhyang.okay.system.dto.LoginUser;
 import cn.wnhyang.okay.system.entity.MenuDO;
 import cn.wnhyang.okay.system.entity.UserDO;
 import cn.wnhyang.okay.system.service.MenuService;
@@ -41,6 +41,8 @@ public class UserController {
     private final MenuService menuService;
 
     private final PermissionService permissionService;
+
+    private final LoginService loginService;
 
     /**
      * 创建用户
@@ -149,7 +151,7 @@ public class UserController {
     @OperateLog(module = "后台-用户", name = "查询用户信息")
     @SaCheckLogin
     public CommonResult<UserInfoRespVO> getUserInfo() {
-        LoginUser loginUser = LoginHelper.getLoginUser();
+        Login loginUser = loginService.getLoginUser();
 
         if (loginUser == null) {
             return CommonResult.error(UNAUTHORIZED);
@@ -160,14 +162,14 @@ public class UserController {
         UserInfoRespVO respVO = new UserInfoRespVO();
         UserInfoRespVO.UserVO userVO = UserConvert.INSTANCE.convert03(user);
         respVO.setUser(userVO);
-        respVO.setRoles(loginUser.getRoleValueList());
+        respVO.setRoles(loginUser.getRoleValues());
         respVO.setPermissions(loginUser.getPermissions());
 
         List<MenuDO> menus;
-        if (LoginHelper.isAdministrator(id)) {
+        if (loginService.isAdministrator(id)) {
             menus = menuService.getMenuList();
         } else {
-            Set<Long> menuIds = permissionService.getRoleMenuListByRoleId(loginUser.getRoleIdList());
+            Set<Long> menuIds = permissionService.getRoleMenuListByRoleId(loginUser.getRoleIds());
             menus = menuService.getMenuList(menuIds);
         }
         respVO.setMenus(MenuConvert.INSTANCE.buildMenuTree(menus));

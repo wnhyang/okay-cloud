@@ -13,31 +13,22 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>cn.wnhyang.cloud</groupId>
-            <artifactId>okay-spring-boot-starter-satoken</artifactId>
-        </dependency>
-
-        <!-- Sa-Token 权限认证, 在线文档：http://sa-token.dev33.cn/ -->
-        <dependency>
-            <groupId>cn.dev33</groupId>
-            <artifactId>sa-token-spring-boot-starter</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>cn.wnhyang.cloud</groupId>
             <artifactId>okay-spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- RPC 远程调用相关 -->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-redisson-jackson</artifactId>
         </dependency>
+
     </dependencies>
 
 </project>

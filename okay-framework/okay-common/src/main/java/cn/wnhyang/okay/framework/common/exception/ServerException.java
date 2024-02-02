@@ -3,6 +3,7 @@ package cn.wnhyang.okay.framework.common.exception;
 import cn.wnhyang.okay.framework.common.exception.enums.GlobalErrorCodeConstants;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 /**
  * 服务器异常 Exception
@@ -17,6 +18,7 @@ public final class ServerException extends RuntimeException {
      *
      * @see GlobalErrorCodeConstants
      */
+    @Getter
     private Integer code;
     /**
      * 错误提示
@@ -37,10 +39,6 @@ public final class ServerException extends RuntimeException {
     public ServerException(Integer code, String message) {
         this.code = code;
         this.message = message;
-    }
-
-    public Integer getCode() {
-        return code;
     }
 
     public ServerException setCode(Integer code) {

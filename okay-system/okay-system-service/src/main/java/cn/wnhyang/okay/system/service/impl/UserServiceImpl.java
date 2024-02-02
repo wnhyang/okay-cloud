@@ -7,7 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.common.util.CollectionUtils;
 import cn.wnhyang.okay.framework.mybatis.core.query.LambdaQueryWrapperX;
-import cn.wnhyang.okay.framework.satoken.utils.LoginHelper;
+import cn.wnhyang.okay.framework.web.core.service.LoginService;
 import cn.wnhyang.okay.system.convert.user.UserConvert;
 import cn.wnhyang.okay.system.dto.LoginUser;
 import cn.wnhyang.okay.system.dto.user.RoleSimpleRespVO;
@@ -55,6 +55,8 @@ public class UserServiceImpl implements UserService {
     private final UserRoleMapper userRoleMapper;
 
     private final RoleService roleService;
+
+    private final LoginService loginService;
 
     @Override
     public UserDO getUserByUsername(String username) {
@@ -214,7 +216,7 @@ public class UserServiceImpl implements UserService {
         }).collect(Collectors.toList());
         loginUser.setRoles(roleSimpleList);
         Set<String> perms = new HashSet<>();
-        if (LoginHelper.isAdministrator(loginUser.getId())) {
+        if (loginService.isAdministrator(loginUser.getId())) {
             perms.add("*:*:*");
         } else {
             perms.addAll(permissionService.getPermissionsByRoleIds(roleIds));

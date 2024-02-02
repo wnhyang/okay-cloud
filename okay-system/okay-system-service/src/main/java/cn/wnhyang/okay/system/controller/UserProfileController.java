@@ -2,8 +2,8 @@ package cn.wnhyang.okay.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
-import cn.wnhyang.okay.framework.operatelog.core.annotation.OperateLog;
-import cn.wnhyang.okay.framework.satoken.utils.LoginHelper;
+import cn.wnhyang.okay.framework.log.core.annotation.OperateLog;
+import cn.wnhyang.okay.framework.web.core.service.LoginService;
 import cn.wnhyang.okay.system.convert.user.UserConvert;
 import cn.wnhyang.okay.system.entity.UserDO;
 import cn.wnhyang.okay.system.service.UserService;
@@ -28,6 +28,8 @@ public class UserProfileController {
 
     private final UserService userService;
 
+    private final LoginService loginService;
+
     /**
      * 查询登录用户信息
      *
@@ -37,7 +39,7 @@ public class UserProfileController {
     @OperateLog(module = "后台-用户设置", name = "查询登录用户信息")
     @SaCheckLogin
     public CommonResult<UserProfileRespVO> getUserProfile() {
-        UserDO user = userService.getUserById(LoginHelper.getUserId());
+        UserDO user = userService.getUserById(loginService.getUserId());
 
         return CommonResult.success(UserConvert.INSTANCE.convert04(user));
     }
@@ -49,7 +51,7 @@ public class UserProfileController {
     @OperateLog(module = "后台-用户设置", name = "修改用户信息")
     @SaCheckLogin
     public CommonResult<Boolean> updateUserProfile(@Valid @RequestBody UserProfileUpdateReqVO reqVO) {
-        userService.updateUserProfile(LoginHelper.getUserId(), reqVO);
+        userService.updateUserProfile(loginService.getUserId(), reqVO);
         return CommonResult.success(true);
     }
 
@@ -63,7 +65,7 @@ public class UserProfileController {
     @OperateLog(module = "后台-用户设置", name = "修改用户密码")
     @SaCheckLogin
     public CommonResult<Boolean> updateUserPassword(@Valid @RequestBody UserProfileUpdatePasswordReqVO reqVO) {
-        userService.updateUserPassword(LoginHelper.getUserId(), reqVO);
+        userService.updateUserPassword(loginService.getUserId(), reqVO);
         return CommonResult.success(true);
     }
 
