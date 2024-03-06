@@ -16,6 +16,8 @@
 + 重要：项目还在完善中，期待我们共同成长！
 + 开源不易，点个star鼓励一下吧！
 
+感谢JetBrains公司支持，欢迎加入：[https://jb.gg/OpenSourceSupport](https://jb.gg/OpenSourceSupport).
+
 ## okay-cloud介绍
 
 okay取自日常用语ok，表示一切顺利。项目出发点是基于优秀开源项目，提供快速开发平台。
