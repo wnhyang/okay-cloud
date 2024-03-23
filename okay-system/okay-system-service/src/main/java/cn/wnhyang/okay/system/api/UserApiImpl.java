@@ -1,10 +1,10 @@
 package cn.wnhyang.okay.system.api;
 
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
-import cn.wnhyang.okay.system.convert.user.UserConvert;
-import cn.wnhyang.okay.system.dto.LoginUser;
-import cn.wnhyang.okay.system.dto.user.UserCreateReqDTO;
-import cn.wnhyang.okay.system.entity.UserDO;
+import cn.wnhyang.okay.system.convert.UserConvert;
+import cn.wnhyang.okay.system.dto.UserCreateDTO;
+import cn.wnhyang.okay.system.entity.UserPO;
+import cn.wnhyang.okay.system.login.LoginUser;
 import cn.wnhyang.okay.system.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -33,8 +33,8 @@ public class UserApiImpl implements UserApi {
      */
     @Override
     public CommonResult<LoginUser> getUserByUsername(String username) {
-        UserDO userDO = userService.getUserByUsername(username);
-        return success(UserConvert.INSTANCE.convert(userDO));
+        UserPO user = userService.getUserByUsername(username);
+        return success(UserConvert.INSTANCE.convert(user));
     }
 
     /**
@@ -52,7 +52,7 @@ public class UserApiImpl implements UserApi {
      * @param reqDTO 用户信息
      */
     @Override
-    public void registerUser(UserCreateReqDTO reqDTO) {
+    public void registerUser(UserCreateDTO reqDTO) {
         userService.registerUser(reqDTO);
     }
 

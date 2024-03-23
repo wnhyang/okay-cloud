@@ -1,7 +1,7 @@
 package cn.wnhyang.okay.system.service.impl;
 
 import cn.wnhyang.okay.system.service.MenuService;
-import cn.wnhyang.okay.system.vo.menu.MenuListReqVO;
+import cn.wnhyang.okay.system.vo.menu.MenuListVO;
 import cn.wnhyang.okay.system.vo.menu.MenuTreeRespVO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ class MenuServiceImplTest {
 
     @Test
     void getMenuTreeList() {
-        MenuListReqVO reqVO = new MenuListReqVO();
+        MenuListVO reqVO = new MenuListVO();
         reqVO.setTitle("管理");
         List<MenuTreeRespVO> menuTreeList = menuService.getMenuTreeList(reqVO);
         log.info("menuTreeList: {}", menuTreeList);

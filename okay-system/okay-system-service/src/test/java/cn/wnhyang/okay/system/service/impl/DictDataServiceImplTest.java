@@ -1,9 +1,9 @@
 package cn.wnhyang.okay.system.service.impl;
 
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
-import cn.wnhyang.okay.system.entity.DictDataDO;
+import cn.wnhyang.okay.system.entity.DictDataPO;
 import cn.wnhyang.okay.system.service.DictDataService;
-import cn.wnhyang.okay.system.vo.dictdata.DictDataPageReqVO;
+import cn.wnhyang.okay.system.vo.dictdata.DictDataPageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,9 +19,9 @@ class DictDataServiceImplTest {
 
     @Test
     void getDictDataPage() {
-        DictDataPageReqVO reqVO = new DictDataPageReqVO();
+        DictDataPageVO reqVO = new DictDataPageVO();
         reqVO.setPageNo(1).setPageSize(10);
-        PageResult<DictDataDO> dictDataPage = dictDataService.getDictDataPage(reqVO);
+        PageResult<DictDataPO> dictDataPage = dictDataService.getDictDataPage(reqVO);
         log.info(dictDataPage.toString());
     }
 }

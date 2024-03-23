@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class MenuTreeRespVO extends MenuBaseVO {
+public class MenuTreeRespVO extends MenuCreateVO {
 
     private Long id;
 

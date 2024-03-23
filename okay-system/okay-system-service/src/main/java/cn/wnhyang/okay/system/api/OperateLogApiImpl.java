@@ -1,9 +1,10 @@
 package cn.wnhyang.okay.system.api;
 
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
-import cn.wnhyang.okay.system.dto.operatelog.OperateLogCreateReqDTO;
+import cn.wnhyang.okay.system.dto.OperateLogCreateDTO;
 import cn.wnhyang.okay.system.service.OperateLogService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,7 +30,8 @@ public class OperateLogApiImpl implements OperateLogApi {
      * @return true/false
      */
     @Override
-    public CommonResult<Boolean> createOperateLog(OperateLogCreateReqDTO createReqDTO) {
+    @Async
+    public CommonResult<Boolean> createOperateLog(OperateLogCreateDTO createReqDTO) {
         operateLogService.createOperateLog(createReqDTO);
         return success(true);
     }

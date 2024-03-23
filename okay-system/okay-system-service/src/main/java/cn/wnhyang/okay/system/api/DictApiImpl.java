@@ -1,9 +1,9 @@
 package cn.wnhyang.okay.system.api;
 
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
-import cn.wnhyang.okay.system.convert.dictdata.DictDataConvert;
-import cn.wnhyang.okay.system.dto.dict.DictDataRespDTO;
-import cn.wnhyang.okay.system.entity.DictDataDO;
+import cn.wnhyang.okay.system.convert.DictDataConvert;
+import cn.wnhyang.okay.system.dto.DictDataDTO;
+import cn.wnhyang.okay.system.entity.DictDataPO;
 import cn.wnhyang.okay.system.service.DictDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -30,8 +30,8 @@ public class DictApiImpl implements DictApi {
      * @return 字典
      */
     @Override
-    public CommonResult<DictDataRespDTO> getDictData(String dictType, String value) {
-        DictDataDO dictData = dictDataService.getDictData(dictType, value);
+    public CommonResult<DictDataDTO> getDictData(String dictType, String value) {
+        DictDataPO dictData = dictDataService.getDictData(dictType, value);
         return success(DictDataConvert.INSTANCE.convert02(dictData));
     }
 }

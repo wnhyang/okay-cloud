@@ -19,10 +19,10 @@
         <!-- Web 相关 -->
         <servlet.versoin>2.5</servlet.versoin>
         <!-- DB 相关 -->
-        <mybatis-plus.version>3.5.4</mybatis-plus.version>
-        <mybatis-plus-generator.version>3.5.4</mybatis-plus-generator.version>
-        <dynamic-datasource.version>4.1.0</dynamic-datasource.version>
-        <redisson.version>3.18.0</redisson.version>
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <mybatis-plus-generator.version>3.5.5</mybatis-plus-generator.version>
+        <dynamic-datasource.version>4.2.0</dynamic-datasource.version>
+        <redisson.version>3.24.3</redisson.version>
         <!-- Job 定时任务相关 -->
         <xxl-job.version>2.3.1</xxl-job.version>
         <!-- 服务保障相关 -->
@@ -36,10 +36,10 @@
         <flowable.version>6.8.0</flowable.version>
         <!-- 工具类相关 -->
         <captcha-plus.version>1.0.2</captcha-plus.version>
-        <jsoup.version>1.15.3</jsoup.version>
+        <jsoup.version>1.17.2</jsoup.version>
         <lombok.version>1.18.24</lombok.version>
-        <mapstruct.version>1.5.3.Final</mapstruct.version>
-        <hutool.version>5.8.22</hutool.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <hutool.version>5.8.26</hutool.version>
         <easyexcel.verion>3.2.0</easyexcel.verion>
         <velocity.version>2.3</velocity.version>
         <screw.version>1.0.5</screw.version>
@@ -113,6 +113,12 @@
             <dependency>
                 <groupId>cn.wnhyang.cloud</groupId>
                 <artifactId>okay-spring-boot-starter-web</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.wnhyang.cloud</groupId>
+                <artifactId>okay-spring-boot-starter-satoken</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

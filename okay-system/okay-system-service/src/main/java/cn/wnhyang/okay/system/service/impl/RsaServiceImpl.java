@@ -2,16 +2,17 @@ package cn.wnhyang.okay.system.service.impl;
 
 import cn.hutool.crypto.asymmetric.RSA;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
-import cn.wnhyang.okay.system.convert.rsa.RsaConvert;
-import cn.wnhyang.okay.system.entity.RsaDO;
+import cn.wnhyang.okay.system.convert.RsaConvert;
+import cn.wnhyang.okay.system.entity.RsaPO;
 import cn.wnhyang.okay.system.mapper.RsaMapper;
 import cn.wnhyang.okay.system.service.RsaService;
-import cn.wnhyang.okay.system.vo.rsa.RsaCreateReqVO;
-import cn.wnhyang.okay.system.vo.rsa.RsaPageReqVO;
-import cn.wnhyang.okay.system.vo.rsa.RsaPairRespVO;
-import cn.wnhyang.okay.system.vo.rsa.RsaUpdateReqVO;
+import cn.wnhyang.okay.system.vo.rsa.RsaCreateVO;
+import cn.wnhyang.okay.system.vo.rsa.RsaPageVO;
+import cn.wnhyang.okay.system.vo.rsa.RsaPairVO;
+import cn.wnhyang.okay.system.vo.rsa.RsaUpdateVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 密钥表 服务实现类
@@ -26,40 +27,43 @@ public class RsaServiceImpl implements RsaService {
     private final RsaMapper rsaMapper;
 
     @Override
-    public RsaPairRespVO generateKeyPair() {
+    public RsaPairVO generateKeyPair() {
         RSA rsa = new RSA();
         String publicKey = rsa.getPublicKeyBase64();
         String privateKey = rsa.getPrivateKeyBase64();
-        RsaPairRespVO respVO = new RsaPairRespVO();
+        RsaPairVO respVO = new RsaPairVO();
         respVO.setPublicKey(publicKey).setPrivateKey(privateKey);
         return respVO;
     }
 
     @Override
-    public Long createSecretKey(RsaCreateReqVO reqVO) {
-        RsaDO rsaDO = RsaConvert.INSTANCE.convert(reqVO);
-        rsaMapper.insert(rsaDO);
-        return rsaDO.getId();
+    @Transactional(rollbackFor = Exception.class)
+    public Long createSecretKey(RsaCreateVO reqVO) {
+        RsaPO rsaPO = RsaConvert.INSTANCE.convert(reqVO);
+        rsaMapper.insert(rsaPO);
+        return rsaPO.getId();
     }
 
     @Override
-    public void updateRsa(RsaUpdateReqVO reqVO) {
-        RsaDO rsaDO = RsaConvert.INSTANCE.convert(reqVO);
-        rsaMapper.updateById(rsaDO);
+    @Transactional(rollbackFor = Exception.class)
+    public void updateRsa(RsaUpdateVO reqVO) {
+        RsaPO rsaPO = RsaConvert.INSTANCE.convert(reqVO);
+        rsaMapper.updateById(rsaPO);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteRsa(Long id) {
         rsaMapper.deleteById(id);
     }
 
     @Override
-    public PageResult<RsaDO> getRsaPage(RsaPageReqVO reqVO) {
+    public PageResult<RsaPO> getRsaPage(RsaPageVO reqVO) {
         return rsaMapper.selectPage(reqVO, null);
     }
 
     @Override
-    public RsaDO getRsa(Long id) {
+    public RsaPO getRsa(Long id) {
         return rsaMapper.selectById(id);
     }
 }

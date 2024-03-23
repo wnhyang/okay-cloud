@@ -20,4 +20,9 @@ public interface UserConstants {
      * 管理员角色value
      */
     String ADMINISTRATOR_VALUE = "administrator";
+
+    /**
+     * 初始密码
+     */
+    String DEFAULT_PASSWORD = "Okay@123456";
 }

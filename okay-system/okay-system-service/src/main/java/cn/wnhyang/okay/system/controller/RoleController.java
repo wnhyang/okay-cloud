@@ -2,13 +2,13 @@ package cn.wnhyang.okay.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.wnhyang.okay.framework.common.enums.CommonStatusEnum;
+import cn.wnhyang.okay.framework.common.enums.CommonStatus;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.log.core.annotation.OperateLog;
-import cn.wnhyang.okay.system.convert.role.RoleConvert;
-import cn.wnhyang.okay.system.dto.user.RoleSimpleRespVO;
-import cn.wnhyang.okay.system.entity.RoleDO;
+import cn.wnhyang.okay.system.convert.RoleConvert;
+import cn.wnhyang.okay.system.dto.RoleSimpleVO;
+import cn.wnhyang.okay.system.entity.RolePO;
 import cn.wnhyang.okay.system.service.RoleService;
 import cn.wnhyang.okay.system.vo.role.*;
 import lombok.RequiredArgsConstructor;
@@ -38,10 +38,10 @@ public class RoleController {
      * @param reqVO 角色信息
      * @return id
      */
-    @PostMapping("/create")
+    @PostMapping
     @OperateLog(module = "后台-角色", name = "创建角色")
     @SaCheckPermission("system:role:create")
-    public CommonResult<Long> createRole(@Valid @RequestBody RoleCreateReqVO reqVO) {
+    public CommonResult<Long> createRole(@Valid @RequestBody RoleCreateVO reqVO) {
         return success(roleService.createRole(reqVO));
     }
 
@@ -51,10 +51,10 @@ public class RoleController {
      * @param reqVO 角色信息
      * @return 结果
      */
-    @PutMapping("/update")
+    @PutMapping
     @OperateLog(module = "后台-角色", name = "更新角色")
     @SaCheckPermission("system:role:update")
-    public CommonResult<Boolean> updateRole(@Valid @RequestBody RoleUpdateReqVO reqVO) {
+    public CommonResult<Boolean> updateRole(@Valid @RequestBody RoleUpdateVO reqVO) {
         roleService.updateRole(reqVO);
         return success(true);
     }
@@ -68,7 +68,7 @@ public class RoleController {
     @PutMapping("/updateStatus")
     @OperateLog(module = "后台-角色", name = "更新角色状态")
     @SaCheckPermission("system:role:update")
-    public CommonResult<Boolean> updateRoleStatus(@Valid @RequestBody RoleUpdateStatusReqVO reqVO) {
+    public CommonResult<Boolean> updateRoleStatus(@Valid @RequestBody RoleUpdateStatusVO reqVO) {
         roleService.updateRoleStatus(reqVO.getId(), reqVO.getStatus());
         return success(true);
     }
@@ -79,7 +79,7 @@ public class RoleController {
      * @param id 角色id
      * @return 结果
      */
-    @DeleteMapping("/delete")
+    @DeleteMapping
     @OperateLog(module = "后台-角色", name = "删除角色")
     @SaCheckPermission("system:role:delete")
     public CommonResult<Boolean> deleteRole(@RequestParam("id") Long id) {
@@ -93,11 +93,11 @@ public class RoleController {
      * @param id id
      * @return 角色信息
      */
-    @GetMapping("/get")
+    @GetMapping
     @OperateLog(module = "后台-角色", name = "查询角色")
     @SaCheckPermission("system:role:query")
     public CommonResult<RoleRespVO> getRole(@RequestParam("id") Long id) {
-        RoleDO role = roleService.getRole(id);
+        RolePO role = roleService.getRole(id);
         return success(RoleConvert.INSTANCE.convert(role));
     }
 
@@ -110,8 +110,8 @@ public class RoleController {
     @GetMapping("/page")
     @OperateLog(module = "后台-角色", name = "查询角色列表")
     @SaCheckPermission("system:role:list")
-    public CommonResult<PageResult<RoleRespVO>> getRolePage(@Valid RolePageReqVO reqVO) {
-        PageResult<RoleDO> pageResult = roleService.getRolePage(reqVO);
+    public CommonResult<PageResult<RoleRespVO>> getRolePage(@Valid RolePageVO reqVO) {
+        PageResult<RolePO> pageResult = roleService.getRolePage(reqVO);
         return success(RoleConvert.INSTANCE.convert(pageResult));
     }
 
@@ -121,7 +121,7 @@ public class RoleController {
     @GetMapping("/simpleList")
     @OperateLog(module = "后台-角色", name = "查询简单角色列表")
     @SaCheckLogin
-    public CommonResult<List<RoleSimpleRespVO>> getSimpleRoleList() {
-        return success(RoleConvert.INSTANCE.convert02(roleService.getRoleList(CommonStatusEnum.ENABLE)));
+    public CommonResult<List<RoleSimpleVO>> getSimpleRoleList() {
+        return success(RoleConvert.INSTANCE.convert02(roleService.getRoleList(CommonStatus.ON)));
     }
 }

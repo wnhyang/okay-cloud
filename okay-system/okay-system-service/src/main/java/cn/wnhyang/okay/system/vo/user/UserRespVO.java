@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * @author wnhyang
@@ -15,11 +16,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class UserRespVO extends UserBaseVO {
+public class UserRespVO extends UserCreateVO {
 
     private Long id;
 
-    private Integer status;
+    private Set<String> roles;
+
+    private Boolean status;
 
     private String loginIp;
 

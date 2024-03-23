@@ -1,19 +1,19 @@
 package cn.wnhyang.okay.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.wnhyang.okay.framework.common.enums.CommonStatusEnum;
+import cn.wnhyang.okay.framework.common.enums.CommonStatus;
 import cn.wnhyang.okay.framework.common.enums.UserConstants;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
-import cn.wnhyang.okay.system.convert.role.RoleConvert;
-import cn.wnhyang.okay.system.entity.RoleDO;
+import cn.wnhyang.okay.system.convert.RoleConvert;
+import cn.wnhyang.okay.system.entity.RolePO;
 import cn.wnhyang.okay.system.mapper.RoleMapper;
 import cn.wnhyang.okay.system.mapper.UserRoleMapper;
-import cn.wnhyang.okay.system.redis.RedisKeyConstants;
+import cn.wnhyang.okay.system.redis.RedisKey;
 import cn.wnhyang.okay.system.service.PermissionService;
 import cn.wnhyang.okay.system.service.RoleService;
-import cn.wnhyang.okay.system.vo.role.RoleCreateReqVO;
-import cn.wnhyang.okay.system.vo.role.RolePageReqVO;
-import cn.wnhyang.okay.system.vo.role.RoleUpdateReqVO;
+import cn.wnhyang.okay.system.vo.role.RoleCreateVO;
+import cn.wnhyang.okay.system.vo.role.RolePageVO;
+import cn.wnhyang.okay.system.vo.role.RoleUpdateVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
+import static cn.wnhyang.okay.system.enums.ErrorCodes.*;
+
 
 /**
  * 角色
@@ -44,7 +45,7 @@ public class RoleServiceImpl implements RoleService {
     private final PermissionService permissionService;
 
     @Override
-    public List<RoleDO> getRoleList(Collection<Long> ids) {
+    public List<RolePO> getRoleList(Collection<Long> ids) {
         if (CollectionUtil.isEmpty(ids)) {
             return Collections.emptyList();
         }
@@ -53,42 +54,42 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long createRole(RoleCreateReqVO reqVO) {
+    public Long createRole(RoleCreateVO reqVO) {
         validateRoleForCreateOrUpdate(null, reqVO.getName(), reqVO.getValue());
-        RoleDO role = RoleConvert.INSTANCE.convert(reqVO);
-        role.setStatus(CommonStatusEnum.ENABLE.getStatus());
+        RolePO role = RoleConvert.INSTANCE.convert(reqVO);
+        role.setStatus(CommonStatus.ON);
         roleMapper.insert(role);
         return role.getId();
     }
 
     @Override
-    @CacheEvict(value = RedisKeyConstants.ROLE, key = "#reqVO.id")
+    @CacheEvict(value = RedisKey.ROLE, key = "#reqVO.id")
     @Transactional(rollbackFor = Exception.class)
-    public void updateRole(RoleUpdateReqVO reqVO) {
+    public void updateRole(RoleUpdateVO reqVO) {
         // 校验是否可以更新
         validateRoleForUpdate(reqVO.getId());
         // 校验角色的唯一字段是否重复
         validateRoleForCreateOrUpdate(reqVO.getId(), reqVO.getName(), reqVO.getValue());
 
         // 更新到数据库
-        RoleDO role = RoleConvert.INSTANCE.convert(reqVO);
+        RolePO role = RoleConvert.INSTANCE.convert(reqVO);
         roleMapper.updateById(role);
     }
 
     @Override
-    @CacheEvict(value = RedisKeyConstants.ROLE, key = "#id")
+    @CacheEvict(value = RedisKey.ROLE, key = "#id")
     @Transactional(rollbackFor = Exception.class)
-    public void updateRoleStatus(Long id, Integer status) {
+    public void updateRoleStatus(Long id, Boolean status) {
         // 校验是否可以更新
         validateRoleForUpdate(id);
 
         // 更新状态
-        RoleDO role = new RoleDO().setId(id).setStatus(status);
+        RolePO role = new RolePO().setId(id).setStatus(status);
         roleMapper.updateById(role);
     }
 
     @Override
-    @CacheEvict(value = RedisKeyConstants.ROLE, key = "#id")
+    @CacheEvict(value = RedisKey.ROLE, key = "#id")
     @Transactional(rollbackFor = Exception.class)
     public void deleteRole(Long id) {
         // 校验是否可以删除
@@ -100,21 +101,21 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleDO getRole(Long id) {
+    public RolePO getRole(Long id) {
         return roleMapper.selectById(id);
     }
 
     @Override
-    public PageResult<RoleDO> getRolePage(RolePageReqVO reqVO) {
+    public PageResult<RolePO> getRolePage(RolePageVO reqVO) {
         return roleMapper.selectPage(reqVO);
     }
 
     @Override
-    public List<RoleDO> getRoleList(CommonStatusEnum status) {
+    public List<RolePO> getRoleList(Boolean status) {
         if (status == null) {
             return roleMapper.selectList();
         }
-        return roleMapper.selectList(RoleDO::getStatus, status);
+        return roleMapper.selectList(RolePO::getStatus, status);
     }
 
     private void validateRoleForDelete(Long id) {
@@ -126,12 +127,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private void validateRoleForUpdate(Long id) {
-        RoleDO roleDO = roleMapper.selectById(id);
-        if (roleDO == null) {
+        RolePO rolePO = roleMapper.selectById(id);
+        if (rolePO == null) {
             throw exception(ROLE_NOT_EXISTS);
         }
         // 内置角色，不允许删除
-        if (UserConstants.ADMINISTRATOR_VALUE.equals(roleDO.getValue())) {
+        if (UserConstants.ADMINISTRATOR_VALUE.equals(rolePO.getValue())) {
             throw exception(ROLE_CAN_NOT_UPDATE_SYSTEM_TYPE_ROLE);
         }
     }
@@ -142,7 +143,7 @@ public class RoleServiceImpl implements RoleService {
             throw exception(ROLE_ADMIN_CODE_ERROR, value);
         }
         // 1. 该 name 名字被其它角色所使用
-        RoleDO role = roleMapper.selectByName(name);
+        RolePO role = roleMapper.selectByName(name);
         if (role != null && !role.getId().equals(id)) {
             throw exception(ROLE_NAME_DUPLICATE, name);
         }

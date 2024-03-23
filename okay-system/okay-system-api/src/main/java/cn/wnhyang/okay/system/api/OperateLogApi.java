@@ -2,7 +2,7 @@ package cn.wnhyang.okay.system.api;
 
 import cn.wnhyang.okay.framework.common.enums.ApiConstants;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
-import cn.wnhyang.okay.system.dto.operatelog.OperateLogCreateReqDTO;
+import cn.wnhyang.okay.system.dto.OperateLogCreateDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +25,6 @@ public interface OperateLogApi {
      * @return true/false
      */
     @PostMapping(PREFIX + "/create")
-    CommonResult<Boolean> createOperateLog(@Valid @RequestBody OperateLogCreateReqDTO createReqDTO);
+    CommonResult<Boolean> createOperateLog(@Valid @RequestBody OperateLogCreateDTO createReqDTO);
 
 }

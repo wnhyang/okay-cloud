@@ -1,7 +1,8 @@
 package cn.wnhyang.okay.system.mapper;
 
+
 import cn.wnhyang.okay.framework.mybatis.core.mapper.BaseMapperX;
-import cn.wnhyang.okay.system.entity.UserRoleDO;
+import cn.wnhyang.okay.system.entity.UserRolePO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.apache.ibatis.annotations.Mapper;
@@ -16,27 +17,27 @@ import java.util.List;
  * @since 2023/05/14
  */
 @Mapper
-public interface UserRoleMapper extends BaseMapperX<UserRoleDO> {
+public interface UserRoleMapper extends BaseMapperX<UserRolePO> {
 
     default void deleteByUserId(Long userId) {
-        delete(Wrappers.lambdaUpdate(UserRoleDO.class).eq(UserRoleDO::getUserId, userId));
+        delete(Wrappers.lambdaUpdate(UserRolePO.class).eq(UserRolePO::getUserId, userId));
     }
 
-    default List<UserRoleDO> selectListByUserId(Long userId) {
-        return selectList(UserRoleDO::getUserId, userId);
+    default List<UserRolePO> selectListByUserId(Long userId) {
+        return selectList(UserRolePO::getUserId, userId);
     }
 
     default void deleteListByUserIdAndRoleIdIds(Long userId, Collection<Long> roleIds) {
-        delete(new LambdaQueryWrapper<UserRoleDO>()
-                .eq(UserRoleDO::getUserId, userId)
-                .in(UserRoleDO::getRoleId, roleIds));
+        delete(new LambdaQueryWrapper<UserRolePO>()
+                .eq(UserRolePO::getUserId, userId)
+                .in(UserRolePO::getRoleId, roleIds));
     }
 
     default void deleteByRoleId(Long roleId) {
-        delete(new LambdaQueryWrapper<UserRoleDO>().eq(UserRoleDO::getRoleId, roleId));
+        delete(new LambdaQueryWrapper<UserRolePO>().eq(UserRolePO::getRoleId, roleId));
     }
 
     default Long selectCountByRoleId(Long roleId) {
-        return selectCount(UserRoleDO::getRoleId, roleId);
+        return selectCount(UserRolePO::getRoleId, roleId);
     }
 }

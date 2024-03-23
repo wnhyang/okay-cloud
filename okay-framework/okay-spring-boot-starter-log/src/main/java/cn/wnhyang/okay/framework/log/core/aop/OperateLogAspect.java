@@ -9,11 +9,10 @@ import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.common.util.JsonUtils;
 import cn.wnhyang.okay.framework.common.util.ServletUtils;
 import cn.wnhyang.okay.framework.log.core.annotation.OperateLog;
-import cn.wnhyang.okay.framework.log.core.dto.LogCreateReqDTO;
-import cn.wnhyang.okay.framework.log.core.enums.OperateTypeEnum;
-import cn.wnhyang.okay.framework.web.core.service.LoginService;
-import cn.wnhyang.okay.system.api.OperateLogApi;
-import cn.wnhyang.okay.system.dto.operatelog.OperateLogCreateReqDTO;
+import cn.wnhyang.okay.framework.log.core.dto.LogCreateDTO;
+import cn.wnhyang.okay.framework.log.core.enums.OperateType;
+import cn.wnhyang.okay.framework.log.core.service.LogService;
+import cn.wnhyang.okay.framework.satoken.core.util.LoginUtil;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -38,8 +37,8 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
-import static cn.wnhyang.okay.framework.common.exception.enums.GlobalErrorCodeConstants.INTERNAL_SERVER_ERROR;
-import static cn.wnhyang.okay.framework.common.exception.enums.GlobalErrorCodeConstants.SUCCESS;
+import static cn.wnhyang.okay.framework.common.exception.GlobalErrorCode.INTERNAL_SERVER_ERROR;
+import static cn.wnhyang.okay.framework.common.exception.GlobalErrorCode.SUCCESS;
 
 
 /**
@@ -60,19 +59,17 @@ public class OperateLogAspect {
     /**
      * 用于记录操作内容的上下文
      *
-     * @see LogCreateReqDTO#getContent()
+     * @see LogCreateDTO#getContent()
      */
     private static final ThreadLocal<String> CONTENT = new ThreadLocal<>();
     /**
      * 用于记录拓展字段的上下文
      *
-     * @see LogCreateReqDTO#getExts()
+     * @see LogCreateDTO#getExts()
      */
     private static final ThreadLocal<Map<String, Object>> EXTS = new ThreadLocal<>();
 
-    private OperateLogApi operateLogApi;
-
-    private LoginService loginService;
+    private LogService logService;
 
     @Around("@annotation(operateLog) && @within(org.springframework.web.bind.annotation.RestController)")
     public Object around(ProceedingJoinPoint joinPoint, OperateLog operateLog) throws Throwable {
@@ -89,18 +86,18 @@ public class OperateLogAspect {
         // 记录开始时间
         LocalDateTime startTime = LocalDateTime.now();
         Object result = null;
-        OperateLogCreateReqDTO operateLogObj = null;
+        LogCreateDTO operateLogObj = null;
         try {
             // 没有接入链路追踪，暂时使用uuid作为请求ID
-            String requestId = IdUtil.simpleUUID();
-            MDC.put("requestId", requestId);
+            String traceId = IdUtil.simpleUUID();
+            MDC.put("traceId", traceId);
 
-            operateLogObj = new OperateLogCreateReqDTO();
+            operateLogObj = new LogCreateDTO();
             // 补全通用字段
             operateLogObj.setStartTime(startTime);
             // 补充用户信息
             try {
-                Long userId = loginService.getUserId();
+                Long userId = LoginUtil.getUserId();
                 operateLogObj.setUserId(userId);
             } catch (Exception e) {
                 operateLogObj.setUserId(0L);
@@ -129,7 +126,7 @@ public class OperateLogAspect {
             // 目前，只有管理员，才记录操作日志！所以非管理员，直接调用，不进行记录
 
             // 异步记录日志
-            operateLogApi.createOperateLog(operateLogObj);
+            logService.createLog(operateLogObj);
 
             return result;
         } catch (Throwable exception) {
@@ -160,7 +157,7 @@ public class OperateLogAspect {
         EXTS.remove();
     }
 
-    private static void fillModuleFields(OperateLogCreateReqDTO operateLogObj,
+    private static void fillModuleFields(LogCreateDTO operateLogObj,
                                          ProceedingJoinPoint joinPoint, OperateLog operateLog) {
         // module 属性
         if (operateLog != null) {
@@ -176,7 +173,7 @@ public class OperateLogAspect {
         }
         if (operateLogObj.getType() == null) {
             RequestMethod requestMethod = obtainFirstMatchRequestMethod(obtainRequestMethod(joinPoint));
-            OperateTypeEnum operateLogType = convertOperateLogType(requestMethod);
+            OperateType operateLogType = convertOperateLogType(requestMethod);
             operateLogObj.setType(operateLogType != null ? operateLogType.getType() : null);
         }
         // content 和 exts 属性
@@ -184,7 +181,7 @@ public class OperateLogAspect {
         operateLogObj.setExts(EXTS.get());
     }
 
-    private static void fillRequestFields(OperateLogCreateReqDTO operateLogObj, ProceedingJoinPoint joinPoint,
+    private static void fillRequestFields(LogCreateDTO operateLogObj, ProceedingJoinPoint joinPoint,
                                           OperateLog operateLog) {
         // 获得 Request 对象
         HttpServletRequest request = ServletUtils.getRequest();
@@ -207,7 +204,7 @@ public class OperateLogAspect {
         }
     }
 
-    private static void fillResultFields(OperateLogCreateReqDTO operateLogObj,
+    private static void fillResultFields(LogCreateDTO operateLogObj,
                                          OperateLog operateLog,
                                          LocalDateTime startTime, Object result, Throwable exception) {
         operateLogObj.setDuration((int) (LocalDateTimeUtil.between(startTime, LocalDateTime.now()).toMillis()));
@@ -266,21 +263,21 @@ public class OperateLogAspect {
         return requestMethods[0];
     }
 
-    private static OperateTypeEnum convertOperateLogType(RequestMethod requestMethod) {
+    private static OperateType convertOperateLogType(RequestMethod requestMethod) {
         if (requestMethod == null) {
             return null;
         }
         switch (requestMethod) {
             case GET:
-                return OperateTypeEnum.GET;
+                return OperateType.GET;
             case POST:
-                return OperateTypeEnum.CREATE;
+                return OperateType.CREATE;
             case PUT:
-                return OperateTypeEnum.UPDATE;
+                return OperateType.UPDATE;
             case DELETE:
-                return OperateTypeEnum.DELETE;
+                return OperateType.DELETE;
             default:
-                return OperateTypeEnum.OTHER;
+                return OperateType.OTHER;
         }
     }
 

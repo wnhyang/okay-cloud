@@ -1,6 +1,7 @@
 package cn.wnhyang.okay.system.service;
 
-import cn.wnhyang.okay.system.entity.MenuDO;
+
+import cn.wnhyang.okay.system.entity.MenuPO;
 import cn.wnhyang.okay.system.vo.menu.*;
 
 import java.util.List;
@@ -20,14 +21,14 @@ public interface MenuService {
      * @param reqVO 菜单信息
      * @return 菜单id
      */
-    Long createMenu(MenuCreateReqVO reqVO);
+    Long createMenu(MenuCreateVO reqVO);
 
     /**
      * 更新菜单
      *
      * @param reqVO 菜单信息
      */
-    void updateMenu(MenuUpdateReqVO reqVO);
+    void updateMenu(MenuUpdateVO reqVO);
 
     /**
      * 删除菜单
@@ -42,7 +43,7 @@ public interface MenuService {
      * @param reqVO 菜单
      * @return 菜单列表
      */
-    List<MenuDO> getMenuList(MenuListReqVO reqVO);
+    List<MenuPO> getMenuList(MenuListVO reqVO);
 
     /**
      * 查询菜单
@@ -50,7 +51,7 @@ public interface MenuService {
      * @param id 菜单id
      * @return 菜单
      */
-    MenuDO getMenu(Long id);
+    MenuPO getMenu(Long id);
 
     /**
      * 根据菜单ids查询菜单
@@ -58,14 +59,14 @@ public interface MenuService {
      * @param ids 菜单ids
      * @return 菜单
      */
-    List<MenuDO> getMenuList(Set<Long> ids);
+    List<MenuPO> getMenuList(Set<Long> ids);
 
     /**
      * 获取所有菜单列表
      *
      * @return 菜单列表
      */
-    List<MenuDO> getMenuList();
+    List<MenuPO> getMenuList();
 
     /**
      * 获取树形菜单列表
@@ -73,19 +74,19 @@ public interface MenuService {
      * @param reqVO 树形菜单请求
      * @return 树形菜单列表
      */
-    List<MenuTreeRespVO> getMenuTreeList(MenuListReqVO reqVO);
+    List<MenuTreeRespVO> getMenuTreeList(MenuListVO reqVO);
 
     /**
      * 获取简单树形菜单不带根节点
      *
      * @return 树形菜单
      */
-    List<MenuSimpleTreeRespVO> getMenuSimpleTreeList();
+    List<MenuSimpleTreeVO> getMenuSimpleTreeList();
 
     /**
      * 获取简单树形菜单带根节点
      *
      * @return 树形菜单
      */
-    List<MenuSimpleTreeRespVO> getMenuSimpleTreeListA();
+    List<MenuSimpleTreeVO> getMenuSimpleTreeListA();
 }

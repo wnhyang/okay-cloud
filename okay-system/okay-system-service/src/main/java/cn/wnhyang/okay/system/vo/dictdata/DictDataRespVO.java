@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class DictDataRespVO extends DictDataBaseVO {
+public class DictDataRespVO extends DictDataCreateVO {
 
     private Long id;
 

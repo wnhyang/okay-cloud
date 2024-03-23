@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class MenuRespVO extends MenuBaseVO {
+public class MenuRespVO extends MenuCreateVO {
 
     private Long id;
 

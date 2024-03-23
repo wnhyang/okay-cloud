@@ -2,21 +2,23 @@ package cn.wnhyang.okay.system.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
-import cn.wnhyang.okay.system.convert.dicttype.DictTypeConvert;
-import cn.wnhyang.okay.system.entity.DictTypeDO;
+import cn.wnhyang.okay.system.convert.DictTypeConvert;
+import cn.wnhyang.okay.system.entity.DictDataPO;
+import cn.wnhyang.okay.system.entity.DictTypePO;
 import cn.wnhyang.okay.system.mapper.DictDataMapper;
 import cn.wnhyang.okay.system.mapper.DictTypeMapper;
 import cn.wnhyang.okay.system.service.DictTypeService;
-import cn.wnhyang.okay.system.vo.dicttype.DictTypeCreateReqVO;
-import cn.wnhyang.okay.system.vo.dicttype.DictTypePageReqVO;
-import cn.wnhyang.okay.system.vo.dicttype.DictTypeUpdateReqVO;
+import cn.wnhyang.okay.system.vo.dicttype.DictTypeCreateVO;
+import cn.wnhyang.okay.system.vo.dicttype.DictTypePageVO;
+import cn.wnhyang.okay.system.vo.dicttype.DictTypeUpdateVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
+import static cn.wnhyang.okay.system.enums.ErrorCodes.*;
 
 /**
  * 字典类型
@@ -33,30 +35,43 @@ public class DictTypeServiceImpl implements DictTypeService {
     private final DictDataMapper dictDataMapper;
 
     @Override
-    public Long createDictType(DictTypeCreateReqVO reqVO) {
+    @Transactional(rollbackFor = Exception.class)
+    public Long createDictType(DictTypeCreateVO reqVO) {
         // 校验正确性
         validateDictTypeForCreateOrUpdate(null, reqVO.getName(), reqVO.getType());
 
         // 插入字典类型
-        DictTypeDO dictType = DictTypeConvert.INSTANCE.convert(reqVO);
+        DictTypePO dictType = DictTypeConvert.INSTANCE.convert(reqVO);
         dictTypeMapper.insert(dictType);
         return dictType.getId();
     }
 
     @Override
-    public void updateDictType(DictTypeUpdateReqVO reqVO) {
+    @Transactional(rollbackFor = Exception.class)
+    public void updateDictType(DictTypeUpdateVO reqVO) {
         // 校验正确性
         validateDictTypeForCreateOrUpdate(reqVO.getId(), reqVO.getName(), null);
 
+        DictTypePO oldDictType = dictTypeMapper.selectById(reqVO.getId());
         // 更新字典类型
-        DictTypeDO updateObj = DictTypeConvert.INSTANCE.convert(reqVO);
-        dictTypeMapper.updateById(updateObj);
+        DictTypePO dictType = DictTypeConvert.INSTANCE.convert(reqVO);
+        dictTypeMapper.updateById(dictType);
+        // 字典类型更新时同时更新关联的字段数据
+        if (StrUtil.isNotBlank(dictType.getType())) {
+            List<DictDataPO> dictDataList = dictDataMapper.selectListByDictType(oldDictType.getType());
+            for (DictDataPO dictData : dictDataList) {
+                dictData.setDictType(dictType.getType());
+            }
+            dictDataMapper.updateBatch(dictDataList);
+        }
+
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteDictType(Long id) {
         // 校验是否存在
-        DictTypeDO dictType = validateDictTypeExists(id);
+        DictTypePO dictType = validateDictTypeExists(id);
         // 校验是否有字典数据
         if (dictDataMapper.selectCountByDictType(dictType.getType()) > 0) {
             throw exception(DICT_TYPE_HAS_CHILDREN);
@@ -66,17 +81,17 @@ public class DictTypeServiceImpl implements DictTypeService {
     }
 
     @Override
-    public PageResult<DictTypeDO> getDictTypePage(DictTypePageReqVO reqVO) {
+    public PageResult<DictTypePO> getDictTypePage(DictTypePageVO reqVO) {
         return dictTypeMapper.selectPage(reqVO);
     }
 
     @Override
-    public DictTypeDO getDictType(Long id) {
+    public DictTypePO getDictType(Long id) {
         return dictTypeMapper.selectById(id);
     }
 
     @Override
-    public List<DictTypeDO> getDictTypeList() {
+    public List<DictTypePO> getDictTypeList() {
         return dictTypeMapper.selectList();
     }
 
@@ -90,7 +105,7 @@ public class DictTypeServiceImpl implements DictTypeService {
     }
 
     void validateDictTypeNameUnique(Long id, String name) {
-        DictTypeDO dictType = dictTypeMapper.selectByName(name);
+        DictTypePO dictType = dictTypeMapper.selectByName(name);
         if (dictType == null) {
             return;
         }
@@ -107,7 +122,7 @@ public class DictTypeServiceImpl implements DictTypeService {
         if (StrUtil.isEmpty(type)) {
             return;
         }
-        DictTypeDO dictType = dictTypeMapper.selectByType(type);
+        DictTypePO dictType = dictTypeMapper.selectByType(type);
         if (dictType == null) {
             return;
         }
@@ -120,13 +135,16 @@ public class DictTypeServiceImpl implements DictTypeService {
         }
     }
 
-    DictTypeDO validateDictTypeExists(Long id) {
+    DictTypePO validateDictTypeExists(Long id) {
         if (id == null) {
             return null;
         }
-        DictTypeDO dictType = dictTypeMapper.selectById(id);
+        DictTypePO dictType = dictTypeMapper.selectById(id);
         if (dictType == null) {
             throw exception(DICT_TYPE_NOT_EXISTS);
+        }
+        if (dictType.getStandard()) {
+            throw exception(DICT_TYPE_IS_STANDARD);
         }
         return dictType;
     }

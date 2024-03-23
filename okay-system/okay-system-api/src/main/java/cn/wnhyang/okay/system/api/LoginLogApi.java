@@ -1,7 +1,7 @@
 package cn.wnhyang.okay.system.api;
 
 import cn.wnhyang.okay.framework.common.enums.ApiConstants;
-import cn.wnhyang.okay.system.dto.loginlog.LoginLogCreateReqDTO;
+import cn.wnhyang.okay.system.dto.LoginLogCreateDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,5 +23,5 @@ public interface LoginLogApi {
      * @param reqDTO 日志信息
      */
     @PostMapping(PREFIX + "/create")
-    void createLoginLog(@Valid @RequestBody LoginLogCreateReqDTO reqDTO);
+    void createLoginLog(@Valid @RequestBody LoginLogCreateDTO reqDTO);
 }

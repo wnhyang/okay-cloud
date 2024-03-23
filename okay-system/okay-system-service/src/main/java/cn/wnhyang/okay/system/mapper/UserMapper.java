@@ -1,10 +1,11 @@
 package cn.wnhyang.okay.system.mapper;
 
+
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.mybatis.core.mapper.BaseMapperX;
 import cn.wnhyang.okay.framework.mybatis.core.query.LambdaQueryWrapperX;
-import cn.wnhyang.okay.system.entity.UserDO;
-import cn.wnhyang.okay.system.vo.user.UserPageReqVO;
+import cn.wnhyang.okay.system.entity.UserPO;
+import cn.wnhyang.okay.system.vo.user.UserPageVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -16,30 +17,30 @@ import java.util.List;
  * @since 2023/05/14
  */
 @Mapper
-public interface UserMapper extends BaseMapperX<UserDO> {
+public interface UserMapper extends BaseMapperX<UserPO> {
 
-    default UserDO selectByUsername(String username) {
-        return selectOne(UserDO::getUsername, username);
+    default UserPO selectByUsername(String username) {
+        return selectOne(UserPO::getUsername, username);
     }
 
-    default PageResult<UserDO> selectPage(UserPageReqVO reqVO) {
-        return selectPage(reqVO, new LambdaQueryWrapperX<UserDO>()
-                .likeIfPresent(UserDO::getUsername, reqVO.getUsername())
-                .likeIfPresent(UserDO::getMobile, reqVO.getMobile())
-                .eqIfPresent(UserDO::getStatus, reqVO.getStatus())
-                .betweenIfPresent(UserDO::getCreateTime, reqVO.getStartTime(), reqVO.getEndTime())
-                .orderByDesc(UserDO::getId));
+    default PageResult<UserPO> selectPage(UserPageVO reqVO) {
+        return selectPage(reqVO, new LambdaQueryWrapperX<UserPO>()
+                .likeIfPresent(UserPO::getUsername, reqVO.getUsername())
+                .likeIfPresent(UserPO::getMobile, reqVO.getMobile())
+                .eqIfPresent(UserPO::getStatus, reqVO.getStatus())
+                .betweenIfPresent(UserPO::getCreateTime, reqVO.getStartTime(), reqVO.getEndTime())
+                .orderByDesc(UserPO::getId));
     }
 
-    default UserDO selectByMobile(String mobile) {
-        return selectOne(UserDO::getMobile, mobile);
+    default UserPO selectByMobile(String mobile) {
+        return selectOne(UserPO::getMobile, mobile);
     }
 
-    default UserDO selectByEmail(String email) {
-        return selectOne(UserDO::getEmail, email);
+    default UserPO selectByEmail(String email) {
+        return selectOne(UserPO::getEmail, email);
     }
 
-    default List<UserDO> selectListByNickname(String nickname) {
-        return selectList(new LambdaQueryWrapperX<UserDO>().like(UserDO::getNickname, nickname));
+    default List<UserPO> selectListByNickname(String nickname) {
+        return selectList(new LambdaQueryWrapperX<UserPO>().like(UserPO::getNickname, nickname));
     }
 }

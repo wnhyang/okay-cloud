@@ -3,9 +3,9 @@ package cn.wnhyang.okay.system.mapper;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.mybatis.core.mapper.BaseMapperX;
 import cn.wnhyang.okay.framework.mybatis.core.query.LambdaQueryWrapperX;
-import cn.wnhyang.okay.system.entity.LoginLogDO;
-import cn.wnhyang.okay.system.enums.login.LoginResultEnum;
-import cn.wnhyang.okay.system.vo.loginlog.LoginLogPageReqVO;
+import cn.wnhyang.okay.system.entity.LoginLogPO;
+import cn.wnhyang.okay.system.enums.login.LoginResult;
+import cn.wnhyang.okay.system.vo.loginlog.LoginLogPageVO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -15,20 +15,20 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2023/07/25
  */
 @Mapper
-public interface LoginLogMapper extends BaseMapperX<LoginLogDO> {
+public interface LoginLogMapper extends BaseMapperX<LoginLogPO> {
 
-    default PageResult<LoginLogDO> selectPage(LoginLogPageReqVO reqVO) {
-        LambdaQueryWrapperX<LoginLogDO> query = new LambdaQueryWrapperX<LoginLogDO>()
-                .likeIfPresent(LoginLogDO::getUserIp, reqVO.getUserIp())
-                .likeIfPresent(LoginLogDO::getAccount, reqVO.getAccount())
-                .betweenIfPresent(LoginLogDO::getCreateTime, reqVO.getStartTime(), reqVO.getEndTime());
+    default PageResult<LoginLogPO> selectPage(LoginLogPageVO reqVO) {
+        LambdaQueryWrapperX<LoginLogPO> query = new LambdaQueryWrapperX<LoginLogPO>()
+                .likeIfPresent(LoginLogPO::getUserIp, reqVO.getUserIp())
+                .likeIfPresent(LoginLogPO::getAccount, reqVO.getAccount())
+                .betweenIfPresent(LoginLogPO::getCreateTime, reqVO.getStartTime(), reqVO.getEndTime());
         if (Boolean.TRUE.equals(reqVO.getResult())) {
-            query.eq(LoginLogDO::getResult, LoginResultEnum.SUCCESS.getResult());
+            query.eq(LoginLogPO::getResult, LoginResult.SUCCESS.getResult());
         } else if (Boolean.FALSE.equals(reqVO.getResult())) {
-            query.gt(LoginLogDO::getResult, LoginResultEnum.SUCCESS.getResult());
+            query.gt(LoginLogPO::getResult, LoginResult.SUCCESS.getResult());
         }
         // 降序
-        query.orderByDesc(LoginLogDO::getId);
+        query.orderByDesc(LoginLogPO::getId);
         return selectPage(reqVO, query);
     }
 }

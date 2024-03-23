@@ -1,14 +1,16 @@
 package cn.wnhyang.okay.framework.web.config;
 
 import cn.hutool.core.date.DatePattern;
-import cn.wnhyang.okay.framework.web.core.jackson.OkayJavaTimeModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -30,7 +32,8 @@ public class JacksonAutoConfiguration {
             builder.timeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
             builder.simpleDateFormat(DatePattern.NORM_DATETIME_PATTERN);
             builder.serializerByType(Long.class, ToStringSerializer.instance);
-            builder.modules(new OkayJavaTimeModule());
+            builder.serializerByType(LocalDateTime.class, new LocalDateTimeSerializer(DatePattern.NORM_DATETIME_FORMATTER));
+            builder.deserializerByType(LocalDateTime.class, new LocalDateTimeDeserializer(DatePattern.NORM_DATETIME_FORMATTER));
         };
     }
 

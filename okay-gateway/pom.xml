@@ -22,7 +22,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
             <exclusions>
-                <!-- 排除自带的logback依赖 -->
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-logging</artifactId>
@@ -30,20 +29,15 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>cn.wnhyang.cloud</groupId>
+            <artifactId>okay-spring-boot-starter-satoken</artifactId>
+        </dependency>
+
         <!-- Gateway 网关相关 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
-        </dependency>
-
-        <!-- RPC 远程调用相关 -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
         <!-- Registry 注册中心相关 -->
@@ -62,6 +56,11 @@
         <dependency>
             <groupId>cn.dev33</groupId>
             <artifactId>sa-token-reactor-spring-boot-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-redisson-jackson</artifactId>
         </dependency>
 
         <!--log4j2-->

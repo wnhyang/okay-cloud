@@ -9,6 +9,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @date 2023/6/8
  **/
 @AutoConfiguration
-@EnableFeignClients(clients = OperateLogApi.class) // 主要是引入相关的 API 服务
+@EnableFeignClients(clients = {OperateLogApi.class}) // 主要是引入相关的 API 服务
 public class OkayOperateLogRpcAutoConfiguration {
 }

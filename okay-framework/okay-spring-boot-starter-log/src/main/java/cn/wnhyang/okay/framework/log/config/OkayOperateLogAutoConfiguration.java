@@ -1,7 +1,8 @@
 package cn.wnhyang.okay.framework.log.config;
 
 import cn.wnhyang.okay.framework.log.core.aop.OperateLogAspect;
-import cn.wnhyang.okay.framework.web.core.service.LoginService;
+import cn.wnhyang.okay.framework.log.core.service.LogService;
+import cn.wnhyang.okay.framework.log.core.service.OperateLogService;
 import cn.wnhyang.okay.system.api.OperateLogApi;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -14,10 +15,14 @@ import org.springframework.context.annotation.Bean;
 public class OkayOperateLogAutoConfiguration {
 
     @Bean
-    public OperateLogAspect operateLogAspect(OperateLogApi operateLogApi, LoginService loginService) {
+    public LogService logService(OperateLogApi operateLogApi) {
+        return new OperateLogService(operateLogApi);
+    }
+
+    @Bean
+    public OperateLogAspect operateLogAspect(LogService logService) {
         OperateLogAspect operateLogAspect = new OperateLogAspect();
-        operateLogAspect.setOperateLogApi(operateLogApi);
-        operateLogAspect.setLoginService(loginService);
+        operateLogAspect.setLogService(logService);
         return operateLogAspect;
     }
 

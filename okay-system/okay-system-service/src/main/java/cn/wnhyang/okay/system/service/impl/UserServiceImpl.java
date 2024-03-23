@@ -4,29 +4,29 @@ import cn.dev33.satoken.secure.BCrypt;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.wnhyang.okay.framework.common.enums.UserConstants;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.common.util.CollectionUtils;
 import cn.wnhyang.okay.framework.mybatis.core.query.LambdaQueryWrapperX;
-import cn.wnhyang.okay.framework.web.core.service.LoginService;
-import cn.wnhyang.okay.system.convert.user.UserConvert;
-import cn.wnhyang.okay.system.dto.LoginUser;
-import cn.wnhyang.okay.system.dto.user.RoleSimpleRespVO;
-import cn.wnhyang.okay.system.dto.user.UserCreateReqDTO;
-import cn.wnhyang.okay.system.entity.RoleDO;
-import cn.wnhyang.okay.system.entity.UserDO;
-import cn.wnhyang.okay.system.entity.UserRoleDO;
+import cn.wnhyang.okay.framework.satoken.core.util.LoginUtil;
+import cn.wnhyang.okay.system.convert.UserConvert;
+import cn.wnhyang.okay.system.dto.RoleSimpleVO;
+import cn.wnhyang.okay.system.dto.UserCreateDTO;
+import cn.wnhyang.okay.system.entity.RolePO;
+import cn.wnhyang.okay.system.entity.UserPO;
+import cn.wnhyang.okay.system.entity.UserRolePO;
+import cn.wnhyang.okay.system.login.LoginUser;
 import cn.wnhyang.okay.system.mapper.UserMapper;
 import cn.wnhyang.okay.system.mapper.UserRoleMapper;
 import cn.wnhyang.okay.system.service.PermissionService;
 import cn.wnhyang.okay.system.service.RoleService;
 import cn.wnhyang.okay.system.service.UserService;
-import cn.wnhyang.okay.system.vo.user.UserCreateReqVO;
-import cn.wnhyang.okay.system.vo.user.UserPageReqVO;
-import cn.wnhyang.okay.system.vo.user.UserUpdatePasswordReqVO;
-import cn.wnhyang.okay.system.vo.user.UserUpdateReqVO;
-import cn.wnhyang.okay.system.vo.userprofile.UserProfileUpdatePasswordReqVO;
-import cn.wnhyang.okay.system.vo.userprofile.UserProfileUpdateReqVO;
-import com.google.common.annotations.VisibleForTesting;
+import cn.wnhyang.okay.system.vo.user.UserCreateVO;
+import cn.wnhyang.okay.system.vo.user.UserPageVO;
+import cn.wnhyang.okay.system.vo.user.UserUpdatePasswordVO;
+import cn.wnhyang.okay.system.vo.user.UserUpdateVO;
+import cn.wnhyang.okay.system.vo.userprofile.UserProfileUpdatePasswordVO;
+import cn.wnhyang.okay.system.vo.userprofile.UserProfileUpdateVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +36,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
+import static cn.wnhyang.okay.system.enums.ErrorCodes.*;
+
 
 /**
  * 用户
@@ -56,49 +57,48 @@ public class UserServiceImpl implements UserService {
 
     private final RoleService roleService;
 
-    private final LoginService loginService;
-
     @Override
-    public UserDO getUserByUsername(String username) {
+    public UserPO getUserByUsername(String username) {
         return userMapper.selectByUsername(username);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateUserLogin(Long userId, String loginIp) {
-        userMapper.updateById(new UserDO().setId(userId).setLoginIp(loginIp).setLoginDate(LocalDateTime.now()));
+        userMapper.updateById(new UserPO().setId(userId).setLoginIp(loginIp).setLoginDate(LocalDateTime.now()));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void registerUser(UserCreateReqDTO reqDTO) {
+    public void registerUser(UserCreateDTO reqDTO) {
         validateUserForCreateOrUpdate(null, reqDTO.getUsername(), reqDTO.getMobile(), reqDTO.getEmail());
         userMapper.insert(UserConvert.INSTANCE.convert(reqDTO));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Long createUser(UserCreateReqVO reqVO) {
+    public Long createUser(UserCreateVO reqVO) {
         validateUserForCreateOrUpdate(null, reqVO.getUsername(), reqVO.getMobile(), reqVO.getEmail());
-        UserDO user = UserConvert.INSTANCE.convert(reqVO);
-        user.setPassword(BCrypt.hashpw(reqVO.getPassword()));
+        UserPO user = UserConvert.INSTANCE.convert(reqVO);
+        // TODO，新建用户，初始密码默认或者通过邮箱发送
+        user.setPassword(BCrypt.hashpw(UserConstants.DEFAULT_PASSWORD));
         userMapper.insert(user);
         if (CollectionUtil.isNotEmpty(reqVO.getRoleIds())) {
             userRoleMapper.insertBatch(CollectionUtils.convertList(reqVO.getRoleIds(),
-                    roleId -> new UserRoleDO().setUserId(user.getId()).setRoleId(roleId)));
+                    roleId -> new UserRolePO().setUserId(user.getId()).setRoleId(roleId)));
         }
         return user.getId();
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateUser(UserUpdateReqVO reqVO) {
+    public void updateUser(UserUpdateVO reqVO) {
         validateUserForCreateOrUpdate(reqVO.getId(), reqVO.getUsername(), reqVO.getMobile(), reqVO.getEmail());
-        UserDO user = UserConvert.INSTANCE.convert(reqVO);
+        UserPO user = UserConvert.INSTANCE.convert(reqVO);
         userRoleMapper.deleteByUserId(user.getId());
         if (CollectionUtil.isNotEmpty(reqVO.getRoleIds())) {
             userRoleMapper.insertBatch(CollectionUtils.convertList(reqVO.getRoleIds(),
-                    roleId -> new UserRoleDO().setUserId(user.getId()).setRoleId(roleId)));
+                    roleId -> new UserRolePO().setUserId(user.getId()).setRoleId(roleId)));
         }
         userMapper.updateById(user);
     }
@@ -113,31 +113,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateUserPassword(UserUpdatePasswordReqVO reqVO) {
+    public void updateUserPassword(UserUpdatePasswordVO reqVO) {
         validateUserExists(reqVO.getId());
-        UserDO user = new UserDO().setId(reqVO.getId()).setPassword(reqVO.getPassword());
+        UserPO user = new UserPO().setId(reqVO.getId()).setPassword(reqVO.getPassword());
         userMapper.updateById(user);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateUserStatus(Long id, Integer status) {
+    public void updateUserStatus(Long id, Boolean status) {
         validateUserExists(id);
-        UserDO user = new UserDO().setId(id).setStatus(status);
+        UserPO user = new UserPO().setId(id).setStatus(status);
         userMapper.updateById(user);
     }
 
     @Override
     public LoginUser getUserInfo(String username, String mobile, String email) {
-        LambdaQueryWrapperX<UserDO> wrapperX = new LambdaQueryWrapperX<>();
-        wrapperX.eqIfPresent(UserDO::getUsername, username);
+        LambdaQueryWrapperX<UserPO> wrapperX = new LambdaQueryWrapperX<>();
+        wrapperX.eqIfPresent(UserPO::getUsername, username);
         if (StrUtil.isNotEmpty(mobile)) {
-            wrapperX.or().eq(UserDO::getMobile, mobile);
+            wrapperX.or().eq(UserPO::getMobile, mobile);
         }
         if (StrUtil.isNotEmpty(email)) {
-            wrapperX.or().eq(UserDO::getEmail, email);
+            wrapperX.or().eq(UserPO::getEmail, email);
         }
-        UserDO user = userMapper.selectOne(wrapperX);
+        UserPO user = userMapper.selectOne(wrapperX);
         if (user == null) {
             throw exception(USER_BAD_CREDENTIALS);
         }
@@ -145,22 +145,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDO getUserById(Long id) {
+    public UserPO getUserById(Long id) {
         return userMapper.selectById(id);
     }
 
     @Override
-    public PageResult<UserDO> getUserPage(UserPageReqVO reqVO) {
+    public PageResult<UserPO> getUserPage(UserPageVO reqVO) {
         return userMapper.selectPage(reqVO);
     }
 
     @Override
-    public List<UserDO> getUserListByNickname(String nickname) {
+    public List<UserPO> getUserListByNickname(String nickname) {
         return userMapper.selectListByNickname(nickname);
     }
 
     @Override
-    public List<UserDO> getUserList(Collection<Long> ids) {
+    public List<UserPO> getUserList(Collection<Long> ids) {
         if (CollUtil.isEmpty(ids)) {
             return Collections.emptyList();
         }
@@ -168,18 +168,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserPassword(Long id, UserProfileUpdatePasswordReqVO reqVO) {
+    public void updateUserPassword(Long id, UserProfileUpdatePasswordVO reqVO) {
         // 校验旧密码密码
         validateOldPassword(id, reqVO.getOldPassword());
         // 执行更新
-        UserDO updateObj = new UserDO().setId(id);
+        UserPO updateObj = new UserPO().setId(id);
         // 加密密码
         updateObj.setPassword(BCrypt.hashpw(reqVO.getNewPassword()));
         userMapper.updateById(updateObj);
     }
 
     @Override
-    public void updateUserProfile(Long id, UserProfileUpdateReqVO reqVO) {
+    public void updateUserProfile(Long id, UserProfileUpdateVO reqVO) {
         // 校验正确性
         validateUserExists(id);
         validateEmailUnique(id, reqVO.getEmail());
@@ -194,9 +194,8 @@ public class UserServiceImpl implements UserService {
      * @param id          用户 id
      * @param oldPassword 旧密码
      */
-    @VisibleForTesting
     void validateOldPassword(Long id, String oldPassword) {
-        UserDO user = userMapper.selectById(id);
+        UserPO user = userMapper.selectById(id);
         if (user == null) {
             throw exception(USER_NOT_EXISTS);
         }
@@ -205,18 +204,18 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private LoginUser buildLoginUser(UserDO user) {
+    private LoginUser buildLoginUser(UserPO user) {
         LoginUser loginUser = UserConvert.INSTANCE.convert(user);
         Set<Long> roleIds = permissionService.getUserRoleIdListByUserId(loginUser.getId());
-        List<RoleDO> roleList = roleService.getRoleList(roleIds);
-        List<RoleSimpleRespVO> roleSimpleList = roleList.stream().map(item -> {
-            RoleSimpleRespVO respVO = new RoleSimpleRespVO();
+        List<RolePO> roleList = roleService.getRoleList(roleIds);
+        List<RoleSimpleVO> roleSimpleList = roleList.stream().map(item -> {
+            RoleSimpleVO respVO = new RoleSimpleVO();
             respVO.setId(item.getId()).setName(item.getName()).setValue(item.getValue());
             return respVO;
         }).collect(Collectors.toList());
         loginUser.setRoles(roleSimpleList);
         Set<String> perms = new HashSet<>();
-        if (loginService.isAdministrator(loginUser.getId())) {
+        if (LoginUtil.isAdministrator(loginUser.getId())) {
             perms.add("*:*:*");
         } else {
             perms.addAll(permissionService.getPermissionsByRoleIds(roleIds));
@@ -241,7 +240,7 @@ public class UserServiceImpl implements UserService {
         if (id == null) {
             return;
         }
-        UserDO user = userMapper.selectById(id);
+        UserPO user = userMapper.selectById(id);
         if (user == null) {
             throw exception(USER_NOT_EXISTS);
         }
@@ -251,7 +250,7 @@ public class UserServiceImpl implements UserService {
         if (StrUtil.isBlank(username)) {
             return;
         }
-        UserDO user = userMapper.selectByUsername(username);
+        UserPO user = userMapper.selectByUsername(username);
         if (user == null) {
             return;
         }
@@ -268,7 +267,7 @@ public class UserServiceImpl implements UserService {
         if (StrUtil.isBlank(mobile)) {
             return;
         }
-        UserDO user = userMapper.selectByMobile(mobile);
+        UserPO user = userMapper.selectByMobile(mobile);
         if (user == null) {
             return;
         }
@@ -285,7 +284,7 @@ public class UserServiceImpl implements UserService {
         if (StrUtil.isBlank(email)) {
             return;
         }
-        UserDO user = userMapper.selectByEmail(email);
+        UserPO user = userMapper.selectByEmail(email);
         if (user == null) {
             return;
         }

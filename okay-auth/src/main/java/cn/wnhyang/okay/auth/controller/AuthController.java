@@ -1,10 +1,11 @@
 package cn.wnhyang.okay.auth.controller;
 
+import cn.dev33.satoken.annotation.SaIgnore;
 import cn.wnhyang.okay.auth.service.AuthService;
-import cn.wnhyang.okay.auth.vo.EmailLoginReqVO;
-import cn.wnhyang.okay.auth.vo.LoginReqVO;
+import cn.wnhyang.okay.auth.vo.EmailLoginVO;
 import cn.wnhyang.okay.auth.vo.LoginRespVO;
-import cn.wnhyang.okay.auth.vo.RegisterReqVO;
+import cn.wnhyang.okay.auth.vo.LoginVO;
+import cn.wnhyang.okay.auth.vo.RegisterVO;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +25,7 @@ import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 @RequiredArgsConstructor
 @Validated
 @RequestMapping("/auth")
+@SaIgnore
 public class AuthController {
 
     private final AuthService authService;
@@ -35,7 +37,7 @@ public class AuthController {
      * @return token
      */
     @PostMapping("/login")
-    public CommonResult<LoginRespVO> login(@RequestBody @Valid LoginReqVO reqVO) {
+    public CommonResult<LoginRespVO> login(@RequestBody @Valid LoginVO reqVO) {
         return success(authService.login(reqVO));
     }
 
@@ -46,7 +48,7 @@ public class AuthController {
      * @return token
      */
     @PostMapping("/loginByEmail")
-    public CommonResult<LoginRespVO> login(@RequestBody @Valid EmailLoginReqVO reqVO) {
+    public CommonResult<LoginRespVO> login(@RequestBody @Valid EmailLoginVO reqVO) {
         return success(authService.login(reqVO));
     }
 
@@ -55,7 +57,7 @@ public class AuthController {
      *
      * @return true
      */
-    @PostMapping("/generate/EmailCode")
+    @PostMapping("/generate/emailCode")
     public CommonResult<Boolean> generateCode(@RequestParam("account") String account) {
         authService.generateEmailCode(account);
         return success(true);
@@ -74,7 +76,7 @@ public class AuthController {
      * @return 加密数据
      */
     @GetMapping("/register")
-    public CommonResult<Boolean> register(RegisterReqVO reqVO) {
+    public CommonResult<Boolean> register(RegisterVO reqVO) {
         authService.register(reqVO);
         return success(true);
     }

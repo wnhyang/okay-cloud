@@ -4,11 +4,11 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.log.core.annotation.OperateLog;
-import cn.wnhyang.okay.system.convert.loginlog.LoginLogConvert;
-import cn.wnhyang.okay.system.entity.LoginLogDO;
+import cn.wnhyang.okay.system.convert.LoginLogConvert;
+import cn.wnhyang.okay.system.entity.LoginLogPO;
 import cn.wnhyang.okay.system.service.LoginLogService;
-import cn.wnhyang.okay.system.vo.loginlog.LoginLogPageReqVO;
-import cn.wnhyang.okay.system.vo.loginlog.LoginLogRespVO;
+import cn.wnhyang.okay.system.vo.loginlog.LoginLogPageVO;
+import cn.wnhyang.okay.system.vo.loginlog.LoginLogVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,8 +38,8 @@ public class LoginLogController {
     @GetMapping("/page")
     @OperateLog(module = "后台-登录日志", name = "分页查询登录日志")
     @SaCheckPermission("system:loginLog:query")
-    public CommonResult<PageResult<LoginLogRespVO>> getLoginLogPage(@Valid LoginLogPageReqVO reqVO) {
-        PageResult<LoginLogDO> page = loginLogService.getLoginLogPage(reqVO);
+    public CommonResult<PageResult<LoginLogVO>> getLoginLogPage(@Valid LoginLogPageVO reqVO) {
+        PageResult<LoginLogPO> page = loginLogService.getLoginLogPage(reqVO);
         return CommonResult.success(LoginLogConvert.INSTANCE.convertPage(page));
     }
 }

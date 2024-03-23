@@ -1,6 +1,5 @@
 package cn.wnhyang.okay.framework.common.exception;
 
-import cn.wnhyang.okay.framework.common.exception.enums.GlobalErrorCodeConstants;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,7 +15,7 @@ public final class ServerException extends RuntimeException {
     /**
      * 全局错误码
      *
-     * @see GlobalErrorCodeConstants
+     * @see GlobalErrorCode
      */
     @Getter
     private Integer code;

@@ -2,8 +2,8 @@ package cn.wnhyang.okay.system.api;
 
 import cn.wnhyang.okay.framework.common.enums.ApiConstants;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
-import cn.wnhyang.okay.system.dto.LoginUser;
-import cn.wnhyang.okay.system.dto.user.UserCreateReqDTO;
+import cn.wnhyang.okay.system.dto.UserCreateDTO;
+import cn.wnhyang.okay.system.login.LoginUser;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +45,7 @@ public interface UserApi {
      * @param reqDTO 用户信息
      */
     @PostMapping(PREFIX + "/register")
-    void registerUser(UserCreateReqDTO reqDTO);
+    void registerUser(UserCreateDTO reqDTO);
 
     /**
      * 根据用户名/手机号/邮箱获取用户信息

@@ -1,6 +1,6 @@
 package cn.wnhyang.okay.system.api;
 
-import cn.wnhyang.okay.system.dto.loginlog.LoginLogCreateReqDTO;
+import cn.wnhyang.okay.system.dto.LoginLogCreateDTO;
 import cn.wnhyang.okay.system.service.LoginLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -25,7 +25,7 @@ public class LoginLogApiImpl implements LoginLogApi {
      * @param reqDTO 日志信息
      */
     @Override
-    public void createLoginLog(LoginLogCreateReqDTO reqDTO) {
+    public void createLoginLog(LoginLogCreateDTO reqDTO) {
         loginLogService.createLoginLog(reqDTO);
     }
 }

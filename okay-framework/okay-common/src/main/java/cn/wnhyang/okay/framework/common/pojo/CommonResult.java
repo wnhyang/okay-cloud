@@ -1,8 +1,8 @@
 package cn.wnhyang.okay.framework.common.pojo;
 
 import cn.wnhyang.okay.framework.common.exception.ErrorCode;
+import cn.wnhyang.okay.framework.common.exception.GlobalErrorCode;
 import cn.wnhyang.okay.framework.common.exception.ServiceException;
-import cn.wnhyang.okay.framework.common.exception.enums.GlobalErrorCodeConstants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.util.Assert;
@@ -52,7 +52,7 @@ public class CommonResult<T> implements Serializable {
     }
 
     public static <T> CommonResult<T> error(Integer code, String message) {
-        Assert.isTrue(!GlobalErrorCodeConstants.SUCCESS.getCode().equals(code), "code 必须是错误的！");
+        Assert.isTrue(!GlobalErrorCode.SUCCESS.getCode().equals(code), "code 必须是错误的！");
         CommonResult<T> result = new CommonResult<>();
         result.code = code;
         result.msg = message;
@@ -65,14 +65,14 @@ public class CommonResult<T> implements Serializable {
 
     public static <T> CommonResult<T> success(T data) {
         CommonResult<T> result = new CommonResult<>();
-        result.code = GlobalErrorCodeConstants.SUCCESS.getCode();
+        result.code = GlobalErrorCode.SUCCESS.getCode();
         result.data = data;
         result.msg = "";
         return result;
     }
 
     public static boolean isSuccess(Integer code) {
-        return Objects.equals(code, GlobalErrorCodeConstants.SUCCESS.getCode());
+        return Objects.equals(code, GlobalErrorCode.SUCCESS.getCode());
     }
 
     @JsonIgnore // 避免 jackson 序列化

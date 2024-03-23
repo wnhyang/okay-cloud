@@ -2,7 +2,7 @@ package cn.wnhyang.okay.system.api;
 
 import cn.wnhyang.okay.framework.common.enums.ApiConstants;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
-import cn.wnhyang.okay.system.dto.dict.DictDataRespDTO;
+import cn.wnhyang.okay.system.dto.DictDataDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +22,6 @@ public interface DictApi {
      * @return 字典
      */
     @GetMapping(PREFIX + "/getDictData")
-    CommonResult<DictDataRespDTO> getDictData(@RequestParam("dictType") String dictType,
-                                              @RequestParam("value") String value);
+    CommonResult<DictDataDTO> getDictData(@RequestParam("dictType") String dictType,
+                                          @RequestParam("value") String value);
 }

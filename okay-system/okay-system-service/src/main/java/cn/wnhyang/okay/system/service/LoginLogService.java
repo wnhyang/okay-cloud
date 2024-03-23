@@ -1,9 +1,10 @@
 package cn.wnhyang.okay.system.service;
 
+
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
-import cn.wnhyang.okay.system.dto.loginlog.LoginLogCreateReqDTO;
-import cn.wnhyang.okay.system.entity.LoginLogDO;
-import cn.wnhyang.okay.system.vo.loginlog.LoginLogPageReqVO;
+import cn.wnhyang.okay.system.dto.LoginLogCreateDTO;
+import cn.wnhyang.okay.system.entity.LoginLogPO;
+import cn.wnhyang.okay.system.vo.loginlog.LoginLogPageVO;
 
 import javax.validation.Valid;
 
@@ -20,7 +21,7 @@ public interface LoginLogService {
      *
      * @param reqDTO 日志信息
      */
-    void createLoginLog(@Valid LoginLogCreateReqDTO reqDTO);
+    void createLoginLog(@Valid LoginLogCreateDTO reqDTO);
 
     /**
      * 分页查询登录日志
@@ -28,5 +29,5 @@ public interface LoginLogService {
      * @param reqVO 分页请求
      * @return 登录日志分页
      */
-    PageResult<LoginLogDO> getLoginLogPage(LoginLogPageReqVO reqVO);
+    PageResult<LoginLogPO> getLoginLogPage(LoginLogPageVO reqVO);
 }

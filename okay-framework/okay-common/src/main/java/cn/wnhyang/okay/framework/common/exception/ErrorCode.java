@@ -1,15 +1,13 @@
 package cn.wnhyang.okay.framework.common.exception;
 
 
-import cn.wnhyang.okay.framework.common.exception.enums.GlobalErrorCodeConstants;
-import cn.wnhyang.okay.framework.common.exception.enums.ServiceErrorCodeRange;
 import lombok.Data;
 
 /**
  * 错误码对象
  * <p>
- * 全局错误码，占用 [0, 999], 参见 {@link GlobalErrorCodeConstants}
- * 业务异常错误码，占用 [1 000 000 000, +∞)，参见 {@link ServiceErrorCodeRange}
+ * 全局错误码，占用 [0, 999], 参见 {@link GlobalErrorCode}
+ * 业务异常错误码，占用 [1 000 000 000, +∞)，参见 {@link }
  * <p>
  * TODO 错误码设计成对象的原因，为未来的 i18 国际化做准备
  *

@@ -1,10 +1,11 @@
 package cn.wnhyang.okay.system.service;
 
+
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
-import cn.wnhyang.okay.system.entity.DictTypeDO;
-import cn.wnhyang.okay.system.vo.dicttype.DictTypeCreateReqVO;
-import cn.wnhyang.okay.system.vo.dicttype.DictTypePageReqVO;
-import cn.wnhyang.okay.system.vo.dicttype.DictTypeUpdateReqVO;
+import cn.wnhyang.okay.system.entity.DictTypePO;
+import cn.wnhyang.okay.system.vo.dicttype.DictTypeCreateVO;
+import cn.wnhyang.okay.system.vo.dicttype.DictTypePageVO;
+import cn.wnhyang.okay.system.vo.dicttype.DictTypeUpdateVO;
 
 import java.util.List;
 
@@ -22,14 +23,14 @@ public interface DictTypeService {
      * @param reqVO 字典类型
      * @return 字典类型id
      */
-    Long createDictType(DictTypeCreateReqVO reqVO);
+    Long createDictType(DictTypeCreateVO reqVO);
 
     /**
      * 更新字典类型
      *
      * @param reqVO 字典类型
      */
-    void updateDictType(DictTypeUpdateReqVO reqVO);
+    void updateDictType(DictTypeUpdateVO reqVO);
 
     /**
      * 删除字典类型
@@ -44,7 +45,7 @@ public interface DictTypeService {
      * @param reqVO 分页请求
      * @return 分页结果
      */
-    PageResult<DictTypeDO> getDictTypePage(DictTypePageReqVO reqVO);
+    PageResult<DictTypePO> getDictTypePage(DictTypePageVO reqVO);
 
     /**
      * 字典类型
@@ -52,12 +53,12 @@ public interface DictTypeService {
      * @param id 字典类型id
      * @return 字典类型
      */
-    DictTypeDO getDictType(Long id);
+    DictTypePO getDictType(Long id);
 
     /**
      * 获取简单字典类型
      *
      * @return 字典类型列表
      */
-    List<DictTypeDO> getDictTypeList();
+    List<DictTypePO> getDictTypeList();
 }

@@ -1,9 +1,9 @@
 package cn.wnhyang.okay.framework.common.exception;
 
-import cn.wnhyang.okay.framework.common.exception.enums.ServiceErrorCodeRange;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+
 
 /**
  * 业务逻辑异常 Exception
@@ -14,11 +14,10 @@ import lombok.Getter;
 @EqualsAndHashCode(callSuper = true)
 public final class ServiceException extends RuntimeException {
 
-    private static final long serialVersionUID = -8211028105215331009L;
+    private static final long serialVersionUID = 7088760165004275908L;
+
     /**
      * 业务错误码
-     *
-     * @see ServiceErrorCodeRange
      */
     @Getter
     private Integer code;

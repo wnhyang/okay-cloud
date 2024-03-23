@@ -1,9 +1,10 @@
 package cn.wnhyang.okay.system.service;
 
+
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
-import cn.wnhyang.okay.system.dto.operatelog.OperateLogCreateReqDTO;
-import cn.wnhyang.okay.system.entity.OperateLogDO;
-import cn.wnhyang.okay.system.vo.operatelog.OperateLogPageReqVO;
+import cn.wnhyang.okay.system.dto.OperateLogCreateDTO;
+import cn.wnhyang.okay.system.entity.OperateLogPO;
+import cn.wnhyang.okay.system.vo.operatelog.OperateLogPageVO;
 
 /**
  * 操作日志记录
@@ -18,7 +19,7 @@ public interface OperateLogService {
      *
      * @param createReqDTO 操作日志请求
      */
-    void createOperateLog(OperateLogCreateReqDTO createReqDTO);
+    void createOperateLog(OperateLogCreateDTO createReqDTO);
 
     /**
      * 分页查询操作日志
@@ -26,5 +27,5 @@ public interface OperateLogService {
      * @param reqVO 分页请求
      * @return 分页操作日志
      */
-    PageResult<OperateLogDO> getOperateLogPage(OperateLogPageReqVO reqVO);
+    PageResult<OperateLogPO> getOperateLogPage(OperateLogPageVO reqVO);
 }

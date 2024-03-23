@@ -3,13 +3,13 @@ package cn.wnhyang.okay.framework.mybatis.core.mapper;
 import cn.hutool.core.collection.CollUtil;
 import cn.wnhyang.okay.framework.common.pojo.PageParam;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
-import cn.wnhyang.okay.framework.mybatis.core.util.MyBatisUtils;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,7 +30,7 @@ public interface BaseMapperX<T> extends BaseMapper<T> {
      */
     default PageResult<T> selectPage(PageParam pageParam, @Param("ew") Wrapper<T> queryWrapper) {
         // MyBatis Plus 查询
-        IPage<T> mpPage = MyBatisUtils.buildPage(pageParam);
+        IPage<T> mpPage = Page.of(pageParam.getPageNo(), pageParam.getPageSize());
         selectPage(mpPage, queryWrapper);
         // 转换返回
         return new PageResult<>(mpPage.getRecords(), mpPage.getTotal());

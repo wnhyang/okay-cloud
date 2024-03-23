@@ -11,17 +11,12 @@ import java.time.LocalDateTime;
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RsaRespVO extends RsaBaseVO {
+public class RsaRespVO extends RsaCreateVO {
 
     /**
      * 密钥主键
      */
     private Long id;
-
-    /**
-     * 备注
-     */
-    private String remark;
 
     private LocalDateTime createTime;
 }

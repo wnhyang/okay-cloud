@@ -2,8 +2,8 @@ package cn.wnhyang.okay.framework.mybatis.core.handler;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.wnhyang.okay.framework.common.core.Login;
-import cn.wnhyang.okay.framework.mybatis.core.base.BaseDO;
-import cn.wnhyang.okay.framework.web.core.service.LoginService;
+import cn.wnhyang.okay.framework.mybatis.core.base.BasePO;
+import cn.wnhyang.okay.framework.satoken.core.util.LoginUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,31 +22,29 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
     private Boolean login;
 
-    private LoginService loginService;
-
     @Override
     public void insertFill(MetaObject metaObject) {
-        if (Objects.nonNull(metaObject) && metaObject.getOriginalObject() instanceof BaseDO) {
-            BaseDO baseDO = (BaseDO) metaObject.getOriginalObject();
+        if (Objects.nonNull(metaObject) && metaObject.getOriginalObject() instanceof BasePO) {
+            BasePO basePO = (BasePO) metaObject.getOriginalObject();
 
             LocalDateTime current = LocalDateTime.now();
             // 创建时间为空，则以当前时间为插入时间
-            if (Objects.isNull(baseDO.getCreateTime())) {
-                baseDO.setCreateTime(current);
+            if (Objects.isNull(basePO.getCreateTime())) {
+                basePO.setCreateTime(current);
             }
             // 更新时间为空，则以当前时间为更新时间
-            if (Objects.isNull(baseDO.getUpdateTime())) {
-                baseDO.setUpdateTime(current);
+            if (Objects.isNull(basePO.getUpdateTime())) {
+                basePO.setUpdateTime(current);
             }
             if (login) {
                 String username = getLoginUsername();
                 // 当前登录用户不为空，创建人为空，则当前登录用户为创建人
-                if (Objects.nonNull(username) && Objects.isNull(baseDO.getCreator())) {
-                    baseDO.setCreator(username);
+                if (Objects.nonNull(username) && Objects.isNull(basePO.getCreator())) {
+                    basePO.setCreator(username);
                 }
                 // 当前登录用户不为空，更新人为空，则当前登录用户为更新人
-                if (Objects.nonNull(username) && Objects.isNull(baseDO.getUpdater())) {
-                    baseDO.setUpdater(username);
+                if (Objects.nonNull(username) && Objects.isNull(basePO.getUpdater())) {
+                    basePO.setUpdater(username);
                 }
             }
         }
@@ -76,7 +74,7 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
     private String getLoginUsername() {
         Login loginUser;
         try {
-            loginUser = loginService.getLoginUser();
+            loginUser = LoginUtil.getLoginUser();
         } catch (Exception e) {
             log.warn("自动注入警告 => 用户未登录");
             return null;

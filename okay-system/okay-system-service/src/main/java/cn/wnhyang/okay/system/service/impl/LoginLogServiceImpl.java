@@ -1,14 +1,15 @@
 package cn.wnhyang.okay.system.service.impl;
 
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
-import cn.wnhyang.okay.system.convert.loginlog.LoginLogConvert;
-import cn.wnhyang.okay.system.dto.loginlog.LoginLogCreateReqDTO;
-import cn.wnhyang.okay.system.entity.LoginLogDO;
+import cn.wnhyang.okay.system.convert.LoginLogConvert;
+import cn.wnhyang.okay.system.dto.LoginLogCreateDTO;
+import cn.wnhyang.okay.system.entity.LoginLogPO;
 import cn.wnhyang.okay.system.mapper.LoginLogMapper;
 import cn.wnhyang.okay.system.service.LoginLogService;
-import cn.wnhyang.okay.system.vo.loginlog.LoginLogPageReqVO;
+import cn.wnhyang.okay.system.vo.loginlog.LoginLogPageVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 登录日志
@@ -23,13 +24,14 @@ public class LoginLogServiceImpl implements LoginLogService {
     private final LoginLogMapper loginLogMapper;
 
     @Override
-    public void createLoginLog(LoginLogCreateReqDTO reqDTO) {
-        LoginLogDO loginLog = LoginLogConvert.INSTANCE.convert(reqDTO);
+    @Transactional(rollbackFor = Exception.class)
+    public void createLoginLog(LoginLogCreateDTO reqDTO) {
+        LoginLogPO loginLog = LoginLogConvert.INSTANCE.convert(reqDTO);
         loginLogMapper.insert(loginLog);
     }
 
     @Override
-    public PageResult<LoginLogDO> getLoginLogPage(LoginLogPageReqVO reqVO) {
+    public PageResult<LoginLogPO> getLoginLogPage(LoginLogPageVO reqVO) {
         return loginLogMapper.selectPage(reqVO);
     }
 }

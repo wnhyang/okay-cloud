@@ -27,7 +27,7 @@ public class OkayWebAutoConfiguration implements WebMvcConfigurer {
     /**
      * 跨域配置
      */
-    @Bean
+    //@Bean
     public CorsFilter corsFilter() {
         log.info("[CorsFilter][初始化corsFilter配置]");
         CorsConfiguration config = new CorsConfiguration();

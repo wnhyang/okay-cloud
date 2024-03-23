@@ -14,6 +14,11 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>cn.wnhyang.cloud</groupId>
+            <artifactId>okay-spring-boot-starter-satoken</artifactId>
+        </dependency>
+
         <!-- Web 相关 -->
         <dependency>
             <groupId>cn.wnhyang.cloud</groupId>

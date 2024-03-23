@@ -1,11 +1,12 @@
 package cn.wnhyang.okay.system.service;
 
+
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
-import cn.wnhyang.okay.system.entity.RsaDO;
-import cn.wnhyang.okay.system.vo.rsa.RsaCreateReqVO;
-import cn.wnhyang.okay.system.vo.rsa.RsaPageReqVO;
-import cn.wnhyang.okay.system.vo.rsa.RsaPairRespVO;
-import cn.wnhyang.okay.system.vo.rsa.RsaUpdateReqVO;
+import cn.wnhyang.okay.system.entity.RsaPO;
+import cn.wnhyang.okay.system.vo.rsa.RsaCreateVO;
+import cn.wnhyang.okay.system.vo.rsa.RsaPageVO;
+import cn.wnhyang.okay.system.vo.rsa.RsaPairVO;
+import cn.wnhyang.okay.system.vo.rsa.RsaUpdateVO;
 
 /**
  * 密钥表 服务类
@@ -21,7 +22,7 @@ public interface RsaService {
      *
      * @return 密钥对
      */
-    RsaPairRespVO generateKeyPair();
+    RsaPairVO generateKeyPair();
 
     /**
      * 新建密钥
@@ -29,14 +30,14 @@ public interface RsaService {
      * @param reqVO 密钥
      * @return id
      */
-    Long createSecretKey(RsaCreateReqVO reqVO);
+    Long createSecretKey(RsaCreateVO reqVO);
 
     /**
      * 更新密钥
      *
      * @param reqVO 更新密钥
      */
-    void updateRsa(RsaUpdateReqVO reqVO);
+    void updateRsa(RsaUpdateVO reqVO);
 
     /**
      * 删除密钥
@@ -51,7 +52,7 @@ public interface RsaService {
      * @param reqVO 分页
      * @return 密钥集合
      */
-    PageResult<RsaDO> getRsaPage(RsaPageReqVO reqVO);
+    PageResult<RsaPO> getRsaPage(RsaPageVO reqVO);
 
     /**
      * 详细密钥
@@ -59,5 +60,5 @@ public interface RsaService {
      * @param id 密钥id
      * @return 密钥
      */
-    RsaDO getRsa(Long id);
+    RsaPO getRsa(Long id);
 }

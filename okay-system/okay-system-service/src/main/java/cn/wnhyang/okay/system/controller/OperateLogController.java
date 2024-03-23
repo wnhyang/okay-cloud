@@ -5,13 +5,13 @@ import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.common.util.CollectionUtils;
 import cn.wnhyang.okay.framework.log.core.annotation.OperateLog;
-import cn.wnhyang.okay.system.convert.operatelog.OperateLogConvert;
-import cn.wnhyang.okay.system.entity.OperateLogDO;
-import cn.wnhyang.okay.system.entity.UserDO;
+import cn.wnhyang.okay.system.convert.OperateLogConvert;
+import cn.wnhyang.okay.system.entity.OperateLogPO;
+import cn.wnhyang.okay.system.entity.UserPO;
 import cn.wnhyang.okay.system.service.OperateLogService;
 import cn.wnhyang.okay.system.service.UserService;
-import cn.wnhyang.okay.system.vo.operatelog.OperateLogPageReqVO;
-import cn.wnhyang.okay.system.vo.operatelog.OperateLogRespVO;
+import cn.wnhyang.okay.system.vo.operatelog.OperateLogPageVO;
+import cn.wnhyang.okay.system.vo.operatelog.OperateLogVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,16 +47,16 @@ public class OperateLogController {
     @GetMapping("/page")
     @OperateLog(module = "后台-操作日志", name = "分页查询操作日志")
     @SaCheckPermission("system:operateLog:query")
-    public CommonResult<PageResult<OperateLogRespVO>> getOperateLogPage(@Valid OperateLogPageReqVO reqVO) {
-        PageResult<OperateLogDO> pageResult = operateLogService.getOperateLogPage(reqVO);
+    public CommonResult<PageResult<OperateLogVO>> getOperateLogPage(@Valid OperateLogPageVO reqVO) {
+        PageResult<OperateLogPO> pageResult = operateLogService.getOperateLogPage(reqVO);
 
         // 获得拼接需要的数据
-        Collection<Long> userIds = CollectionUtils.convertList(pageResult.getList(), OperateLogDO::getUserId);
-        Map<Long, UserDO> userMap = userService.getUserMap(userIds);
+        Collection<Long> userIds = CollectionUtils.convertList(pageResult.getList(), OperateLogPO::getUserId);
+        Map<Long, UserPO> userMap = userService.getUserMap(userIds);
         // 拼接数据
-        List<OperateLogRespVO> list = new ArrayList<>(pageResult.getList().size());
+        List<OperateLogVO> list = new ArrayList<>(pageResult.getList().size());
         pageResult.getList().forEach(operateLog -> {
-            OperateLogRespVO respVO = OperateLogConvert.INSTANCE.convert(operateLog);
+            OperateLogVO respVO = OperateLogConvert.INSTANCE.convert(operateLog);
             respVO.setUserNickname(userMap.get(operateLog.getUserId()).getNickname());
             list.add(respVO);
         });

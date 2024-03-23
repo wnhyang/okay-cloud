@@ -1,7 +1,7 @@
 package cn.wnhyang.okay.framework.log.core.annotation;
 
 
-import cn.wnhyang.okay.framework.log.core.enums.OperateTypeEnum;
+import cn.wnhyang.okay.framework.log.core.enums.OperateType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -34,7 +34,7 @@ public @interface OperateLog {
      * <p>
      * 实际并不是数组，因为枚举不能设置 null 作为默认值
      */
-    OperateTypeEnum[] type() default {};
+    OperateType[] type() default {};
 
     // ========== 开关字段 ==========
 

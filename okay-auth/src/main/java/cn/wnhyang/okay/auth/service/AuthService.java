@@ -5,25 +5,25 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.wnhyang.okay.auth.redis.RedisKeyConstants;
-import cn.wnhyang.okay.auth.vo.EmailLoginReqVO;
-import cn.wnhyang.okay.auth.vo.LoginReqVO;
+import cn.wnhyang.okay.auth.redis.RedisKey;
+import cn.wnhyang.okay.auth.vo.EmailLoginVO;
 import cn.wnhyang.okay.auth.vo.LoginRespVO;
-import cn.wnhyang.okay.auth.vo.RegisterReqVO;
+import cn.wnhyang.okay.auth.vo.LoginVO;
+import cn.wnhyang.okay.auth.vo.RegisterVO;
 import cn.wnhyang.okay.framework.common.core.Login;
-import cn.wnhyang.okay.framework.common.enums.CommonStatusEnum;
-import cn.wnhyang.okay.framework.common.enums.DeviceTypeEnum;
-import cn.wnhyang.okay.framework.common.enums.UserTypeEnum;
+import cn.wnhyang.okay.framework.common.enums.CommonStatus;
+import cn.wnhyang.okay.framework.common.enums.DeviceType;
+import cn.wnhyang.okay.framework.common.enums.UserType;
 import cn.wnhyang.okay.framework.common.util.RegexUtils;
 import cn.wnhyang.okay.framework.common.util.ServletUtils;
-import cn.wnhyang.okay.framework.web.core.service.LoginService;
+import cn.wnhyang.okay.framework.satoken.core.util.LoginUtil;
 import cn.wnhyang.okay.system.api.LoginLogApi;
 import cn.wnhyang.okay.system.api.UserApi;
-import cn.wnhyang.okay.system.dto.LoginUser;
-import cn.wnhyang.okay.system.dto.loginlog.LoginLogCreateReqDTO;
-import cn.wnhyang.okay.system.dto.user.UserCreateReqDTO;
-import cn.wnhyang.okay.system.enums.login.LoginResultEnum;
-import cn.wnhyang.okay.system.enums.login.LoginTypeEnum;
+import cn.wnhyang.okay.system.dto.LoginLogCreateDTO;
+import cn.wnhyang.okay.system.dto.UserCreateDTO;
+import cn.wnhyang.okay.system.enums.login.LoginResult;
+import cn.wnhyang.okay.system.enums.login.LoginType;
+import cn.wnhyang.okay.system.login.LoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,8 @@ import org.springframework.stereotype.Service;
 import java.util.Objects;
 
 import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static cn.wnhyang.okay.system.enums.ErrorCodeConstants.*;
+import static cn.wnhyang.okay.system.enums.ErrorCodes.*;
+
 
 /**
  * @author wnhyang
@@ -45,41 +46,39 @@ public class AuthService {
 
     private final LoginLogApi loginLogApi;
 
-    private final LoginService loginService;
-
     private final ValueOperations<String, String> valueOperations;
 
-    public LoginRespVO login(LoginReqVO reqVO) {
+    public LoginRespVO login(LoginVO reqVO) {
         String account = reqVO.getAccount();
         LoginUser user;
-        LoginTypeEnum loginTypeEnum;
+        LoginType loginType;
         if (StrUtil.isNotEmpty(account)) {
             if (ReUtil.isMatch(RegexUtils.MOBILE, account)) {
                 user = userApi.getUserInfo(account, account, "").getCheckedData();
-                loginTypeEnum = LoginTypeEnum.LOGIN_MOBILE;
+                loginType = LoginType.LOGIN_MOBILE;
             } else if (ReUtil.isMatch(RegexUtils.EMAIL, account)) {
                 user = userApi.getUserInfo(account, "", account).getCheckedData();
-                loginTypeEnum = LoginTypeEnum.LOGIN_EMAIL;
+                loginType = LoginType.LOGIN_EMAIL;
             } else {
                 user = userApi.getUserInfo(account, "", "").getCheckedData();
-                loginTypeEnum = LoginTypeEnum.LOGIN_USERNAME;
+                loginType = LoginType.LOGIN_USERNAME;
             }
         } else {
             throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
         }
         if (!BCrypt.checkpw(reqVO.getPassword(), user.getPassword())) {
-            createLoginLog(user.getId(), account, loginTypeEnum, LoginResultEnum.BAD_CREDENTIALS);
+            createLoginLog(user.getId(), account, loginType, LoginResult.BAD_CREDENTIALS);
             throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
         }
         // 校验是否禁用
-        if (ObjectUtil.notEqual(user.getStatus(), CommonStatusEnum.ENABLE.getStatus())) {
-            createLoginLog(user.getId(), account, loginTypeEnum, LoginResultEnum.USER_DISABLED);
+        if (ObjectUtil.notEqual(user.getStatus(), CommonStatus.ON)) {
+            createLoginLog(user.getId(), account, loginType, LoginResult.USER_DISABLED);
             throw exception(AUTH_LOGIN_USER_DISABLED);
         }
 
         // 创建 Token 令牌，记录登录日志
-        loginService.login(user, DeviceTypeEnum.PC);
-        createLoginLog(user.getId(), account, loginTypeEnum, LoginResultEnum.SUCCESS);
+        LoginUtil.login(user, DeviceType.PC);
+        createLoginLog(user.getId(), account, loginType, LoginResult.SUCCESS);
         LoginRespVO loginRespVO = new LoginRespVO();
         loginRespVO.setUserId(user.getId());
         loginRespVO.setToken(StpUtil.getTokenValue());
@@ -87,31 +86,31 @@ public class AuthService {
         return loginRespVO;
     }
 
-    public LoginRespVO login(EmailLoginReqVO reqVO) {
+    public LoginRespVO login(EmailLoginVO reqVO) {
         String email = reqVO.getEmail();
         String code = reqVO.getCode();
         LoginUser user;
-        LoginTypeEnum loginTypeEnum;
+        LoginType loginType;
         if (StrUtil.isNotEmpty(email) && ReUtil.isMatch(RegexUtils.EMAIL, email)) {
             user = userApi.getUserInfo("", "", email).getCheckedData();
-            loginTypeEnum = LoginTypeEnum.LOGIN_EMAIL_CODE;
+            loginType = LoginType.LOGIN_EMAIL_CODE;
         } else {
             throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
         }
-        String emailCode = valueOperations.get(RedisKeyConstants.EMAIL_CODE);
+        String emailCode = valueOperations.get(RedisKey.EMAIL_CODE);
         if (!code.equals(emailCode)) {
-            createLoginLog(user.getId(), email, loginTypeEnum, LoginResultEnum.BAD_EMAIL_CODE);
+            createLoginLog(user.getId(), email, loginType, LoginResult.BAD_EMAIL_CODE);
             throw exception(AUTH_LOGIN_BAD_EMAIL_CODE);
         }
         // 校验是否禁用
-        if (ObjectUtil.notEqual(user.getStatus(), CommonStatusEnum.ENABLE.getStatus())) {
-            createLoginLog(user.getId(), email, loginTypeEnum, LoginResultEnum.USER_DISABLED);
+        if (ObjectUtil.notEqual(user.getStatus(), CommonStatus.ON)) {
+            createLoginLog(user.getId(), email, loginType, LoginResult.USER_DISABLED);
             throw exception(AUTH_LOGIN_USER_DISABLED);
         }
 
         // 创建 Token 令牌，记录登录日志
-        loginService.login(user, DeviceTypeEnum.PC);
-        createLoginLog(user.getId(), email, loginTypeEnum, LoginResultEnum.SUCCESS);
+        LoginUtil.login(user, DeviceType.PC);
+        createLoginLog(user.getId(), email, loginType, LoginResult.SUCCESS);
         LoginRespVO loginRespVO = new LoginRespVO();
         loginRespVO.setUserId(user.getId());
         loginRespVO.setToken(StpUtil.getTokenValue());
@@ -123,18 +122,18 @@ public class AuthService {
     }
 
     public void logout() {
-        Login loginUser = loginService.getLoginUser();
+        Login loginUser = LoginUtil.getLoginUser();
         if (loginUser != null) {
             StpUtil.logout();
-            createLoginLog(loginUser.getId(), loginUser.getUsername(), LoginTypeEnum.LOGOUT_SELF, LoginResultEnum.SUCCESS);
+            createLoginLog(loginUser.getId(), loginUser.getUsername(), LoginType.LOGOUT_SELF, LoginResult.SUCCESS);
         }
     }
 
-    public void register(RegisterReqVO reqVO) {
+    public void register(RegisterVO reqVO) {
         String username = reqVO.getUsername();
         String password = reqVO.getPassword();
-        Integer userType = UserTypeEnum.valueOf(reqVO.getUserType()).getType();
-        UserCreateReqDTO reqDTO = new UserCreateReqDTO();
+        Integer userType = UserType.valueOf(reqVO.getUserType()).getType();
+        UserCreateDTO reqDTO = new UserCreateDTO();
         reqDTO.setUsername(username);
         reqDTO.setNickname(username);
         reqDTO.setPassword(BCrypt.hashpw(password));
@@ -142,19 +141,19 @@ public class AuthService {
         userApi.registerUser(reqDTO);
     }
 
-    private void createLoginLog(Long userId, String account, LoginTypeEnum loginTypeEnum, LoginResultEnum loginResultEnum) {
+    private void createLoginLog(Long userId, String account, LoginType loginType, LoginResult loginResult) {
         // 插入登录日志
-        LoginLogCreateReqDTO reqDTO = new LoginLogCreateReqDTO();
-        reqDTO.setLoginType(loginTypeEnum.getType());
+        LoginLogCreateDTO reqDTO = new LoginLogCreateDTO();
+        reqDTO.setLoginType(loginType.getType());
         reqDTO.setUserId(userId);
-        reqDTO.setUserType(UserTypeEnum.PC.getType());
+        reqDTO.setUserType(UserType.PC.getType());
         reqDTO.setAccount(account);
         reqDTO.setUserAgent(ServletUtils.getUserAgent());
         reqDTO.setUserIp(ServletUtils.getClientIP());
-        reqDTO.setResult(loginResultEnum.getResult());
+        reqDTO.setResult(loginResult.getResult());
         loginLogApi.createLoginLog(reqDTO);
         // 更新最后登录时间
-        if (userId != null && Objects.equals(LoginResultEnum.SUCCESS.getResult(), loginResultEnum.getResult())) {
+        if (userId != null && Objects.equals(LoginResult.SUCCESS.getResult(), loginResult.getResult())) {
             userApi.updateUserLogin(userId, ServletUtils.getClientIP());
         }
     }

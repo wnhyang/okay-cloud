@@ -1,3 +1,2 @@
-cn.wnhyang.okay.framework.security.core.handler.GlobalExceptionHandler
+cn.wnhyang.okay.framework.security.handler.GlobalExceptionHandler
 cn.wnhyang.okay.framework.security.config.SecurityConfiguration
-cn.wnhyang.okay.framework.security.config.SaTokenConfiguration

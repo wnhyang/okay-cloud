@@ -4,15 +4,16 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.wnhyang.okay.framework.common.enums.UserConstants;
 import cn.wnhyang.okay.framework.common.util.CollectionUtils;
-import cn.wnhyang.okay.system.entity.MenuDO;
-import cn.wnhyang.okay.system.entity.RoleMenuDO;
-import cn.wnhyang.okay.system.entity.UserRoleDO;
+import cn.wnhyang.okay.system.entity.MenuPO;
+import cn.wnhyang.okay.system.entity.RoleMenuPO;
+import cn.wnhyang.okay.system.entity.UserRolePO;
 import cn.wnhyang.okay.system.mapper.MenuMapper;
 import cn.wnhyang.okay.system.mapper.RoleMenuMapper;
 import cn.wnhyang.okay.system.mapper.UserRoleMapper;
 import cn.wnhyang.okay.system.service.PermissionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,7 +39,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public Set<Long> getUserRoleIdListByUserId(Long userId) {
-        return convertSet(userRoleMapper.selectListByUserId(userId), UserRoleDO::getRoleId);
+        return convertSet(userRoleMapper.selectListByUserId(userId), UserRolePO::getRoleId);
     }
 
     @Override
@@ -48,10 +49,10 @@ public class PermissionServiceImpl implements PermissionService {
         }
         // 如果是管理员的情况下，获取全部菜单编号
         if (hasAnyAdministrator(roleIds)) {
-            return convertSet(menuMapper.selectList(), MenuDO::getId);
+            return convertSet(menuMapper.selectList(), MenuPO::getId);
         }
         // 如果是非管理员的情况下，获得拥有的菜单编号
-        return convertSet(roleMenuMapper.selectListByRoleId(roleIds), RoleMenuDO::getMenuId);
+        return convertSet(roleMenuMapper.selectListByRoleId(roleIds), RoleMenuPO::getMenuId);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class PermissionServiceImpl implements PermissionService {
         }
         // 如果是非管理员的情况下，获得拥有的菜单编号
         Set<Long> menuIds = getRoleMenuListByRoleId(roleIds);
-        return convertSet(menuMapper.selectBatchIds(menuIds), MenuDO::getPermission);
+        return convertSet(menuMapper.selectBatchIds(menuIds), MenuPO::getPermission);
     }
 
     private boolean hasAnyAdministrator(Collection<Long> ids) {
@@ -76,21 +77,23 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteRoleById(Long roleId) {
         roleMenuMapper.deleteByRoleId(roleId);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void roleMenu(Long roleId, Set<Long> menuIds) {
         // 获得角色拥有菜单编号
-        Set<Long> dbMenuIds = convertSet(roleMenuMapper.selectListByRoleId(roleId), RoleMenuDO::getMenuId);
+        Set<Long> dbMenuIds = convertSet(roleMenuMapper.selectListByRoleId(roleId), RoleMenuPO::getMenuId);
         // 计算新增和删除的菜单编号
         Collection<Long> createMenuIds = CollUtil.subtract(menuIds, dbMenuIds);
         Collection<Long> deleteMenuIds = CollUtil.subtract(dbMenuIds, menuIds);
         // 执行新增和删除。对于已经授权的菜单，不用做任何处理
         if (CollUtil.isNotEmpty(createMenuIds)) {
             roleMenuMapper.insertBatch(CollectionUtils.convertList(createMenuIds, menuId -> {
-                RoleMenuDO entity = new RoleMenuDO();
+                RoleMenuPO entity = new RoleMenuPO();
                 entity.setRoleId(roleId);
                 entity.setMenuId(menuId);
                 return entity;
@@ -102,17 +105,18 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void userRole(Long userId, Set<Long> roleIds) {
         // 获得角色拥有角色编号
         Set<Long> dbRoleIds = convertSet(userRoleMapper.selectListByUserId(userId),
-                UserRoleDO::getRoleId);
+                UserRolePO::getRoleId);
         // 计算新增和删除的角色编号
         Collection<Long> createRoleIds = CollUtil.subtract(roleIds, dbRoleIds);
         Collection<Long> deleteMenuIds = CollUtil.subtract(dbRoleIds, roleIds);
         // 执行新增和删除。对于已经授权的角色，不用做任何处理
         if (!CollectionUtil.isEmpty(createRoleIds)) {
             userRoleMapper.insertBatch(CollectionUtils.convertList(createRoleIds, roleId -> {
-                UserRoleDO entity = new UserRoleDO();
+                UserRolePO entity = new UserRolePO();
                 entity.setUserId(userId);
                 entity.setRoleId(roleId);
                 return entity;
