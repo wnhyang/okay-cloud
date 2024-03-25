@@ -4,7 +4,6 @@ import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.mybatis.core.mapper.BaseMapperX;
 import cn.wnhyang.okay.framework.mybatis.core.query.LambdaQueryWrapperX;
 import cn.wnhyang.okay.system.entity.LoginLogPO;
-import cn.wnhyang.okay.system.enums.login.LoginResult;
 import cn.wnhyang.okay.system.vo.loginlog.LoginLogPageVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -21,12 +20,8 @@ public interface LoginLogMapper extends BaseMapperX<LoginLogPO> {
         LambdaQueryWrapperX<LoginLogPO> query = new LambdaQueryWrapperX<LoginLogPO>()
                 .likeIfPresent(LoginLogPO::getUserIp, reqVO.getUserIp())
                 .likeIfPresent(LoginLogPO::getAccount, reqVO.getAccount())
-                .betweenIfPresent(LoginLogPO::getCreateTime, reqVO.getStartTime(), reqVO.getEndTime());
-        if (Boolean.TRUE.equals(reqVO.getResult())) {
-            query.eq(LoginLogPO::getResult, LoginResult.SUCCESS.getResult());
-        } else if (Boolean.FALSE.equals(reqVO.getResult())) {
-            query.gt(LoginLogPO::getResult, LoginResult.SUCCESS.getResult());
-        }
+                .betweenIfPresent(LoginLogPO::getCreateTime, reqVO.getStartTime(), reqVO.getEndTime())
+                .eqIfPresent(LoginLogPO::getResult, reqVO.getResult());
         // 降序
         query.orderByDesc(LoginLogPO::getId);
         return selectPage(reqVO, query);

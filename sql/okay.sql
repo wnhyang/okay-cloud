@@ -214,44 +214,6 @@ VALUES ('通用状态', 'common_status', 0, 0, '通用状态'),
        ('登录类型', 'system_login_type', 0, 0, NULL),
        ('登录结果', 'system_login_result', 0, 0, NULL),
        ('操作类型', 'system_operate_type', 0, 0, NULL);
-INSERT INTO okay.sys_menu (name, permission, `type`, order_no, parent_id, `path`, icon, component, hide_breadcrumb,
-                           current_active_menu, keepalive, title, redirect, status, is_show, is_ext)
-VALUES ('System', NULL, 0, 0, 0, '/system', 'ant-design:audit-outlined', NULL, 0, NULL, 0, '系统管理', '/system/user',
-        0, 0, 0),
-       ('User', 'system:user:list', 1, 0, 1, 'user', 'ant-design:user-outlined', 'system/user/index', 0, NULL, 0,
-        '用户管理', NULL, 0, 0, 0),
-       ('Role', 'system:role:list', 1, 1, 1, 'role', 'ant-design:crown-outlined', 'system/role/index', 0, NULL, 0,
-        '角色管理', NULL, 0, 0, 0),
-       ('Menu', 'system:menu:list', 1, 2, 1, 'menu', 'ant-design:menu-fold-outlined', 'system/menu/index', 0, NULL, 0,
-        '菜单管理', NULL, 0, 0, 0),
-       ('Password', NULL, 1, 97, 1, 'password', 'ant-design:unlock-outlined', 'system/password/index', 0, NULL, 0,
-        '修改密码', NULL, 0, 0, 0),
-       ('Log', NULL, 0, 99, 1, 'log', 'ant-design:ordered-list-outlined', NULL, 0, NULL, 0, '日志管理',
-        '/system/log/loginlog', 0, 0, 0),
-       ('Dict', NULL, 0, 4, 1, 'dict', 'ant-design:medicine-box-outlined', NULL, 0, NULL, 0, '字典管理',
-        '/system/dict/dicttype', 0, 0, 0),
-       ('Loginlog', NULL, 1, 0, 104, 'loginlog', 'ant-design:login-outlined', 'system/loginLog/index', 0, NULL, 0,
-        '登录日志', NULL, 0, 0, 0),
-       ('Operatelog', NULL, 1, 0, 104, 'operatelog', 'ant-design:logout-outlined', 'system/operateLog/index', 0, NULL,
-        0, '操作日志', NULL, 0, 0, 0),
-       (NULL, 'system:user:create', 2, 0, 100, '', '', '', 0, NULL, 0, '用户新增', NULL, 0, 0, 0),
-       (NULL, 'system:user:update', 2, 0, 100, '', '', '', 0, NULL, 0, '用户更新', NULL, 0, 0, 0),
-       (NULL, 'system:user:delete', 2, 0, 100, '', '', '', 0, NULL, 0, '用户删除', NULL, 0, 0, 0),
-       (NULL, 'system:user:query', 2, 0, 100, '', '', '', 0, NULL, 0, '用户查询', NULL, 0, 0, 0),
-       (NULL, 'system:menu:create', 2, 0, 102, '', '', '', 0, NULL, 0, '菜单新增', NULL, 0, 0, 0),
-       (NULL, 'system:menu:update', 2, 0, 102, '', '', '', 0, NULL, 0, '菜单更新', NULL, 0, 0, 0),
-       (NULL, 'system:menu:delete', 2, 0, 102, '', '', '', 0, NULL, 0, '菜单删除', NULL, 0, 0, 0),
-       (NULL, 'system:menu:query', 2, 0, 102, '', '', '', 0, NULL, 0, '菜单查询', NULL, 0, 0, 0),
-       (NULL, 'system:role:create', 2, 0, 101, '', '', '', 0, NULL, 0, '角色新增', NULL, 0, 0, 0),
-       (NULL, 'system:role:update', 2, 0, 101, '', '', '', 0, NULL, 0, '角色更新', NULL, 0, 0, 0),
-       (NULL, 'system:role:delete', 2, 0, 101, '', '', '', 0, NULL, 0, '角色删除', NULL, 0, 0, 0),
-       (NULL, 'system:role:query', 2, 0, 101, '', '', '', 0, NULL, 0, '角色查询', NULL, 0, 0, 0),
-       ('DictType', NULL, 1, 0, 105, 'dicttype', 'ant-design:book-outlined', 'system/dictType/index', 0, NULL, 0,
-        '字典类型', NULL, 0, 0, 0),
-       ('DictData', NULL, 1, 0, 105, 'dictdata', 'ant-design:behance-outlined', 'system/dictData/index', 0, NULL, 0,
-        '字典数据', NULL, 0, 0, 0),
-       ('UserDetail', NULL, 1, 0, 1, 'userDetail/:id', 'ant-design:carry-out-twotone', 'system/user/UserDetail', 0,
-        '/system/user', 0, '用户详情', NULL, 0, 1, 0);
 
 INSERT INTO okay.sys_user (id, username, password, nickname, `type`, remark, email, mobile, sex, avatar, status)
 VALUES (1, 'admin', '$2a$10$FjEJ6Kg6NTPEU8yBjQQcR.IN4q/UNDseTs4GqwyO8gi9I2bJQ.ZZi', 'admin', 0, NULL, 'wnhyang@qq.com',
@@ -261,3 +223,43 @@ VALUES (1, '超级管理员', 'administrator', 0, 0, NULL);
 INSERT INTO okay.sys_user_role (user_id, role_id)
 VALUES (1, 1);
 
+INSERT INTO okay.sys_menu (id, name, permission, type, order_no, parent_id, path, icon, component, hide_breadcrumb,
+                           current_active_menu, keepalive, title, redirect, is_show)
+VALUES (1, 'System', null, 0, 0, 0, '/system', 'ant-design:audit-outlined', null, false, null, false, '系统管理',
+        '/system/user', false)
+     , (1041, 'Loginlog', null, 1, 0, 104, 'loginlog', 'ant-design:login-outlined', 'system/loginLog/index', false,
+        null,
+        false, '登录日志', null, false)
+     , (1042, 'Operatelog', null, 1, 0, 104, 'operatelog', 'ant-design:logout-outlined', 'system/operateLog/index',
+        false,
+        null, false, '操作日志', null, false)
+     , (100, 'User', 'system:user:list', 1, 0, 1, 'user', 'ant-design:user-outlined', 'system/user/index', false, null,
+        false, '用户管理', null, false)
+     , (101, 'Role', 'system:role:list', 1, 1, 1, 'role', 'ant-design:crown-outlined', 'system/role/index', false, null,
+        false, '角色管理', null, false)
+     , (102, 'Menu', 'system:menu:list', 1, 2, 1, 'menu', 'ant-design:menu-fold-outlined', 'system/menu/index', false,
+        null, false, '菜单管理', null, false)
+     , (103, 'Password', null, 1, 97, 1, 'password', 'ant-design:unlock-outlined', 'system/password/index', false, null,
+        false, '修改密码', null, false)
+     , (104, 'Log', null, 0, 99, 1, 'log', 'ant-design:ordered-list-outlined', null, false, null, false, '日志管理',
+        '/system/log/loginlog', false)
+     , (105, 'Dict', null, 0, 4, 1, 'dict', 'ant-design:medicine-box-outlined', null, false, null, false, '字典管理',
+        '/system/dict/dicttype', false)
+     , (106, 'UserDetail', null, 1, 0, 1, 'userDetail/:id', 'ant-design:carry-out-twotone', 'system/user/UserDetail',
+        false, '/system/user', false, '用户详情', null, true)
+     , (1001, null, 'system:user:create', 2, 0, 100, '', '', '', false, null, false, '用户新增', null, false)
+     , (1002, null, 'system:user:update', 2, 0, 100, '', '', '', false, null, false, '用户更新', null, false)
+     , (1003, null, 'system:user:delete', 2, 0, 100, '', '', '', false, null, false, '用户删除', null, false)
+     , (1004, null, 'system:user:query', 2, 0, 100, '', '', '', false, null, false, '用户查询', null, false)
+     , (1011, null, 'system:role:create', 2, 0, 101, '', '', '', false, null, false, '角色新增', null, false)
+     , (1012, null, 'system:role:update', 2, 0, 101, '', '', '', false, null, false, '角色更新', null, false)
+     , (1013, null, 'system:role:delete', 2, 0, 101, '', '', '', false, null, false, '角色删除', null, false)
+     , (1014, null, 'system:role:query', 2, 0, 101, '', '', '', false, null, false, '角色查询', null, false)
+     , (1021, null, 'system:menu:create', 2, 0, 102, '', '', '', false, null, false, '菜单新增', null, false)
+     , (1022, null, 'system:menu:update', 2, 0, 102, '', '', '', false, null, false, '菜单更新', null, false)
+     , (1023, null, 'system:menu:delete', 2, 0, 102, '', '', '', false, null, false, '菜单删除', null, false)
+     , (1024, null, 'system:menu:query', 2, 0, 102, '', '', '', false, null, false, '菜单查询', null, false)
+     , (1051, 'DictType', null, 1, 0, 105, 'dicttype', 'ant-design:book-outlined', 'system/dictType/index', false, null,
+        false, '字典类型', null, false)
+     , (1052, 'DictData', null, 1, 0, 105, 'dictdata', 'ant-design:behance-outlined', 'system/dictData/index', false,
+        null, false, '字典数据', null, false);

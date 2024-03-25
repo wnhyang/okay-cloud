@@ -22,7 +22,7 @@ public class OperateLogPageVO extends PageParam {
 
     private Integer type;
 
-    private Boolean success;
+    private Integer resultCode;
 
     @DateTimeFormat(pattern = DatePattern.NORM_DATETIME_PATTERN)
     private LocalDateTime startTime;

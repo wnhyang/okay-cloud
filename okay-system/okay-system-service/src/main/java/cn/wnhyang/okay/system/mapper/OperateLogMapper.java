@@ -1,6 +1,5 @@
 package cn.wnhyang.okay.system.mapper;
 
-import cn.wnhyang.okay.framework.common.exception.GlobalErrorCode;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.mybatis.core.mapper.BaseMapperX;
 import cn.wnhyang.okay.framework.mybatis.core.query.LambdaQueryWrapperX;
@@ -24,12 +23,8 @@ public interface OperateLogMapper extends BaseMapperX<OperateLogPO> {
                 .likeIfPresent(OperateLogPO::getModule, reqVO.getModule())
                 .inIfPresent(OperateLogPO::getUserId, userIds)
                 .eqIfPresent(OperateLogPO::getType, reqVO.getType())
-                .betweenIfPresent(OperateLogPO::getStartTime, reqVO.getStartTime(), reqVO.getEndTime());
-        if (Boolean.TRUE.equals(reqVO.getSuccess())) {
-            query.eq(OperateLogPO::getResultCode, GlobalErrorCode.SUCCESS.getCode());
-        } else if (Boolean.FALSE.equals(reqVO.getSuccess())) {
-            query.gt(OperateLogPO::getResultCode, GlobalErrorCode.SUCCESS.getCode());
-        }
+                .betweenIfPresent(OperateLogPO::getStartTime, reqVO.getStartTime(), reqVO.getEndTime())
+                .eqIfPresent(OperateLogPO::getResultCode, reqVO.getResultCode());
         // 降序
         query.orderByDesc(OperateLogPO::getId);
         return selectPage(reqVO, query);
