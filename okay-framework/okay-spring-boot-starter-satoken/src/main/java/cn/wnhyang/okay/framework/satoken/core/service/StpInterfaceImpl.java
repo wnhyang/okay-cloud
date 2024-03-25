@@ -4,7 +4,6 @@ import cn.dev33.satoken.stp.StpInterface;
 import cn.wnhyang.okay.framework.common.core.Login;
 import cn.wnhyang.okay.framework.common.enums.UserType;
 import cn.wnhyang.okay.framework.satoken.core.util.LoginUtil;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.List;
  * @author wnhyang
  * @date 2023/7/28
  **/
-@Setter
 public class StpInterfaceImpl implements StpInterface {
 
     /**
