@@ -18,6 +18,8 @@ public class LoginLogPageVO extends PageParam {
 
     private static final long serialVersionUID = -3755641368582812482L;
 
+    private Integer loginType;
+
     private String userIp;
 
     private String account;

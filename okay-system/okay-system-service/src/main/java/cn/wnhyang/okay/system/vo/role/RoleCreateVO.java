@@ -3,8 +3,8 @@ package cn.wnhyang.okay.system.vo.role;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Set;
 
 /**
  * @author wnhyang
@@ -21,10 +21,14 @@ public class RoleCreateVO {
     @Size(max = 100, message = "角色标志长度不能超过100个字符")
     private String value;
 
-    @NotNull(message = "显示顺序不能为空")
     private Integer sort;
 
     private Boolean status;
 
     private String remark;
+
+    /**
+     * 菜单ids
+     */
+    private Set<Long> menuIds;
 }

@@ -78,7 +78,6 @@ public class DictDataController {
      * @return 菜单列表
      */
     @GetMapping("/simpleList")
-    @OperateLog(module = "后台-字典", name = "查询简单菜单数据")
     @SaIgnore
     public CommonResult<List<DictDataSimpleVO>> getSimpleDictDataList() {
         List<DictDataPO> list = dictDataService.getDictDataList();
@@ -118,7 +117,6 @@ public class DictDataController {
      * @return 字典数据
      */
     @GetMapping("/byType")
-    @OperateLog(module = "后台-字典", name = "根据字典类型查询字典数据")
     @SaIgnore
     public CommonResult<List<DictDataSimpleVO>> getDictDataListByType(@RequestParam("type") String type) {
         List<DictDataPO> list = dictDataService.getDictDataListByDictType(type);

@@ -18,6 +18,7 @@ public interface LoginLogMapper extends BaseMapperX<LoginLogPO> {
 
     default PageResult<LoginLogPO> selectPage(LoginLogPageVO reqVO) {
         LambdaQueryWrapperX<LoginLogPO> query = new LambdaQueryWrapperX<LoginLogPO>()
+                .eqIfPresent(LoginLogPO::getLoginType,reqVO.getLoginType())
                 .likeIfPresent(LoginLogPO::getUserIp, reqVO.getUserIp())
                 .likeIfPresent(LoginLogPO::getAccount, reqVO.getAccount())
                 .betweenIfPresent(LoginLogPO::getCreateTime, reqVO.getStartTime(), reqVO.getEndTime())

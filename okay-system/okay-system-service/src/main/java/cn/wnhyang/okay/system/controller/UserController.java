@@ -130,8 +130,8 @@ public class UserController {
         UserPO user = userService.getUserById(id);
         Set<Long> roleIds = permissionService.getUserRoleIdListByUserId(user.getId());
 
-        List<RolePO> userRoleList = roleService.getRoleList(roleIds);
-        UserRespVO respVO = UserConvert.INSTANCE.convert(user, userRoleList);
+        List<RolePO> roleList = roleService.getRoleList(roleIds);
+        UserRespVO respVO = UserConvert.INSTANCE.convert(user, roleList);
         respVO.setRoleIds(roleIds);
 
         return success(respVO);
@@ -151,8 +151,8 @@ public class UserController {
 
         List<UserRespVO> userRespVOList = pageResult.getList().stream().map(user -> {
             Set<Long> roleIds = permissionService.getUserRoleIdListByUserId(user.getId());
-            List<RolePO> userRoleList = roleService.getRoleList(roleIds);
-            UserRespVO respVO = UserConvert.INSTANCE.convert(user, userRoleList);
+            List<RolePO> roleList = roleService.getRoleList(roleIds);
+            UserRespVO respVO = UserConvert.INSTANCE.convert(user, roleList);
             respVO.setRoleIds(roleIds);
             return respVO;
         }).collect(Collectors.toList());

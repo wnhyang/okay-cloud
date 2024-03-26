@@ -1,12 +1,14 @@
 package cn.wnhyang.okay.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.wnhyang.okay.framework.common.enums.CommonStatus;
 import cn.wnhyang.okay.framework.common.enums.UserConstants;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
+import cn.wnhyang.okay.framework.common.util.CollectionUtils;
 import cn.wnhyang.okay.system.convert.RoleConvert;
+import cn.wnhyang.okay.system.entity.RoleMenuPO;
 import cn.wnhyang.okay.system.entity.RolePO;
 import cn.wnhyang.okay.system.mapper.RoleMapper;
+import cn.wnhyang.okay.system.mapper.RoleMenuMapper;
 import cn.wnhyang.okay.system.mapper.UserRoleMapper;
 import cn.wnhyang.okay.system.redis.RedisKey;
 import cn.wnhyang.okay.system.service.PermissionService;
@@ -40,6 +42,8 @@ public class RoleServiceImpl implements RoleService {
 
     private final RoleMapper roleMapper;
 
+    private final RoleMenuMapper roleMenuMapper;
+
     private final UserRoleMapper userRoleMapper;
 
     private final PermissionService permissionService;
@@ -57,8 +61,11 @@ public class RoleServiceImpl implements RoleService {
     public Long createRole(RoleCreateVO reqVO) {
         validateRoleForCreateOrUpdate(null, reqVO.getName(), reqVO.getValue());
         RolePO role = RoleConvert.INSTANCE.convert(reqVO);
-        role.setStatus(CommonStatus.ON);
         roleMapper.insert(role);
+        if (CollectionUtil.isNotEmpty(reqVO.getMenuIds())) {
+            roleMenuMapper.insertBatch(CollectionUtils.convertList(reqVO.getMenuIds(),
+                    menuId -> new RoleMenuPO().setRoleId(role.getId()).setMenuId(menuId)));
+        }
         return role.getId();
     }
 
@@ -73,6 +80,11 @@ public class RoleServiceImpl implements RoleService {
 
         // 更新到数据库
         RolePO role = RoleConvert.INSTANCE.convert(reqVO);
+        roleMenuMapper.deleteByRoleId(role.getId());
+        if (CollectionUtil.isNotEmpty(reqVO.getMenuIds())) {
+            roleMenuMapper.insertBatch(CollectionUtils.convertList(reqVO.getMenuIds(),
+                    menuId -> new RoleMenuPO().setRoleId(role.getId()).setMenuId(menuId)));
+        }
         roleMapper.updateById(role);
     }
 

@@ -9,6 +9,8 @@ import cn.wnhyang.okay.framework.log.core.annotation.OperateLog;
 import cn.wnhyang.okay.system.convert.RoleConvert;
 import cn.wnhyang.okay.system.dto.RoleSimpleVO;
 import cn.wnhyang.okay.system.entity.RolePO;
+import cn.wnhyang.okay.system.service.MenuService;
+import cn.wnhyang.okay.system.service.PermissionService;
 import cn.wnhyang.okay.system.service.RoleService;
 import cn.wnhyang.okay.system.vo.role.*;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 
@@ -31,6 +35,10 @@ import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 public class RoleController {
 
     private final RoleService roleService;
+
+    private final MenuService menuService;
+
+    private final PermissionService permissionService;
 
     /**
      * 创建角色
@@ -98,7 +106,10 @@ public class RoleController {
     @SaCheckPermission("system:role:query")
     public CommonResult<RoleRespVO> getRole(@RequestParam("id") Long id) {
         RolePO role = roleService.getRole(id);
-        return success(RoleConvert.INSTANCE.convert(role));
+        Set<Long> menuIds = permissionService.getRoleMenuListByRoleId(role.getId());
+        RoleRespVO respVO = RoleConvert.INSTANCE.convert(role);
+        respVO.setMenuIds(menuIds);
+        return success(respVO);
     }
 
     /**
@@ -112,7 +123,14 @@ public class RoleController {
     @SaCheckPermission("system:role:list")
     public CommonResult<PageResult<RoleRespVO>> getRolePage(@Valid RolePageVO reqVO) {
         PageResult<RolePO> pageResult = roleService.getRolePage(reqVO);
-        return success(RoleConvert.INSTANCE.convert(pageResult));
+        List<RoleRespVO> roleRespVOList = pageResult.getList().stream().map(role -> {
+            Set<Long> menuIds = permissionService.getRoleMenuListByRoleId(role.getId());
+            RoleRespVO respVO = RoleConvert.INSTANCE.convert(role);
+            respVO.setMenuIds(menuIds);
+            return respVO;
+        }).collect(Collectors.toList());
+
+        return success(new PageResult<>(roleRespVOList, pageResult.getTotal()));
     }
 
     /**
