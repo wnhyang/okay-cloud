@@ -20,8 +20,6 @@ public class UserProfileVO extends UserCreateVO {
 
     private Long id;
 
-    private Boolean status;
-
     private String loginIp;
 
     private LocalDateTime loginDate;

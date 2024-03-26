@@ -22,8 +22,6 @@ public class UserRespVO extends UserCreateVO {
 
     private Set<String> roles;
 
-    private Boolean status;
-
     private String loginIp;
 
     private LocalDateTime loginDate;

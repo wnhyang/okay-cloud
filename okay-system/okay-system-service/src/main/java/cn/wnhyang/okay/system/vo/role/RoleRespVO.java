@@ -19,7 +19,5 @@ public class RoleRespVO extends RoleCreateVO {
 
     private Long id;
 
-    private Boolean status;
-
     private LocalDateTime createTime;
 }

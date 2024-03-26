@@ -24,5 +24,7 @@ public class RoleCreateVO {
     @NotNull(message = "显示顺序不能为空")
     private Integer sort;
 
+    private Boolean status;
+
     private String remark;
 }

@@ -63,9 +63,13 @@ public class UserCreateVO {
     private String avatar;
 
     /**
+     * 状态
+     */
+    private Boolean status;
+
+    /**
      * 角色集合
      */
     private Set<Long> roleIds;
-
 
 }
