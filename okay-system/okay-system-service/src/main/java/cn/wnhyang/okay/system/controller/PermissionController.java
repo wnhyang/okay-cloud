@@ -49,7 +49,7 @@ public class PermissionController {
     @OperateLog(module = "后台-权限", name = "查询角色菜单列表")
     @SaCheckPermission("system:permission:roleMenuList")
     public CommonResult<Set<Long>> getRoleMenuList(@RequestParam("roleId") Long roleId) {
-        return CommonResult.success(permissionService.getRoleMenuListByRoleId(roleId));
+        return CommonResult.success(permissionService.getMenuIdListByRoleId(roleId));
     }
 
     /**
@@ -76,7 +76,7 @@ public class PermissionController {
     @OperateLog(module = "后台-权限", name = "查询用户角色列表")
     @SaCheckPermission("system:permission:userRoleList")
     public CommonResult<Set<Long>> getUserRoleList(@RequestParam("userId") Long userId) {
-        return CommonResult.success(permissionService.getUserRoleIdListByUserId(userId));
+        return CommonResult.success(permissionService.getRoleIdListByUserId(userId));
     }
 
 

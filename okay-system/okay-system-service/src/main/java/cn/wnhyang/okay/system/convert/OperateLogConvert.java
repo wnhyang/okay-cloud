@@ -14,6 +14,7 @@ import org.mapstruct.factory.Mappers;
  **/
 @Mapper
 public interface OperateLogConvert {
+
     OperateLogConvert INSTANCE = Mappers.getMapper(OperateLogConvert.class);
 
     OperateLogPO convert(OperateLogCreateDTO reqDTO);

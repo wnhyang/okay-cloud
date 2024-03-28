@@ -1,21 +1,28 @@
 package cn.wnhyang.okay.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.wnhyang.okay.framework.common.core.Login;
+import cn.wnhyang.okay.framework.satoken.core.util.LoginUtil;
 import cn.wnhyang.okay.system.convert.MenuConvert;
 import cn.wnhyang.okay.system.entity.MenuPO;
+import cn.wnhyang.okay.system.entity.RoleMenuPO;
 import cn.wnhyang.okay.system.enums.permission.MenuType;
 import cn.wnhyang.okay.system.mapper.MenuMapper;
 import cn.wnhyang.okay.system.mapper.RoleMenuMapper;
 import cn.wnhyang.okay.system.service.MenuService;
 import cn.wnhyang.okay.system.vo.menu.*;
+import cn.wnhyang.okay.system.vo.user.UserInfoVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static cn.wnhyang.okay.framework.common.exception.GlobalErrorCode.UNAUTHORIZED;
 import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
+import static cn.wnhyang.okay.framework.common.util.CollectionUtils.convertSet;
 import static cn.wnhyang.okay.system.entity.MenuPO.ID_ROOT;
 import static cn.wnhyang.okay.system.enums.ErrorCodes.*;
 
@@ -26,6 +33,7 @@ import static cn.wnhyang.okay.system.enums.ErrorCodes.*;
  * @author wnhyang
  * @since 2023/05/14
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MenuServiceImpl implements MenuService {
@@ -115,66 +123,206 @@ public class MenuServiceImpl implements MenuService {
         // 1、查询所有菜单
         List<MenuPO> all = menuMapper.selectList();
 
-        // 1、查询满足条件的菜单
+        // 2、查询满足条件的菜单
         List<MenuPO> menus = menuMapper.selectList(reqVO);
-
         Set<Long> menuIds = menus.stream().map(MenuPO::getId).collect(Collectors.toSet());
 
-        // 2、查询满足条件的的菜单的所有父菜单、父祖菜单的id set，直到父菜单的parentId等于0
-        Set<Long> parentIds = getParentIds(menus, all);
+        Set<MenuPO> menuSet = findMenusWithParentsOrChildrenByIds(all, menuIds, true, true);
 
-        Set<Long> childrenIds = getChildrenIds(menus, all);
-
-        menuIds.addAll(parentIds);
-        menuIds.addAll(childrenIds);
-
-        List<MenuTreeRespVO> allMenus = all.stream().filter(menu -> menuIds.contains(menu.getId()))
-                .map(MenuConvert.INSTANCE::convert01).collect(Collectors.toList());
-
-        // 2、形成树形结合
-        return allMenus.stream().filter((menu) ->
-                menu.getParentId().equals(ID_ROOT)
-        ).peek((menu) ->
-                menu.setChildren(getChildren01(menu.getId(), allMenus))
-        ).sorted(
-                Comparator.comparingInt(MenuTreeRespVO::getOrderNo)
-        ).collect(Collectors.toList());
+        // 3、形成树形结合
+        return buildMenuTree(new ArrayList<>(menuSet), false);
     }
 
-    private Set<Long> getChildrenIds(List<MenuPO> menus, List<MenuPO> all) {
-        // 获取menus在all中的子菜单id集合
-        return menus.stream().map(MenuPO::getId).map(id ->
-                all.stream().filter(menu ->
-                        menu.getParentId().equals(id)
-                ).map(MenuPO::getId).collect(Collectors.toSet())
-        ).flatMap(Collection::stream).collect(Collectors.toSet());
+    @Override
+    public List<UserInfoVO.MenuVO> getLoginUserMenuTreeList(boolean removeButton) {
+        Login loginUser = LoginUtil.getLoginUser();
+
+        if (loginUser == null) {
+            throw exception(UNAUTHORIZED);
+        }
+        Long id = loginUser.getId();
+
+        List<MenuPO> all = menuMapper.selectList();
+        if (LoginUtil.isAdministrator(id)) {
+            return buildUserMenuTree(all, removeButton);
+        }
+        Set<Long> menuIds = convertSet(roleMenuMapper.selectListByRoleId(loginUser.getRoleIds()), RoleMenuPO::getMenuId);
+        Set<MenuPO> menuSet = findMenusWithParentsOrChildrenByIds(all, menuIds, true, false);
+
+        return buildUserMenuTree(new ArrayList<>(menuSet), removeButton);
+    }
+
+    public List<MenuTreeRespVO> buildMenuTree(List<MenuPO> menuList, boolean removeButton) {
+
+        if (removeButton) {
+            // 移除按钮
+            menuList.removeIf(menu -> menu.getType().equals(MenuType.BUTTON.getType()));
+        }
+
+        List<MenuTreeRespVO> convert = MenuConvert.INSTANCE.convert2TreeRespList(menuList);
+
+        Map<Long, MenuTreeRespVO> menuTreeMap = new HashMap<>();
+        for (MenuTreeRespVO menu : convert) {
+            menuTreeMap.put(menu.getId(), menu);
+        }
+
+        menuTreeMap.values().stream().filter(menu -> !ID_ROOT.equals(menu.getParentId())).forEach(childMenu -> {
+                    MenuTreeRespVO parentMenu = menuTreeMap.get(childMenu.getParentId());
+                    if (parentMenu == null) {
+                        log.info("id:{} 找不到父菜单 parentId:{}", childMenu.getId(), childMenu.getParentId());
+                        return;
+                    }
+                    // 将自己添加到父节点中
+                    if (parentMenu.getChildren() == null) {
+                        parentMenu.setChildren(new ArrayList<>());
+                    }
+                    parentMenu.getChildren().add(childMenu);
+                }
+
+        );
+
+        return menuTreeMap.values().stream().filter(menu -> ID_ROOT.equals(menu.getParentId())).collect(Collectors.toList());
+    }
+
+    public List<UserInfoVO.MenuVO> buildUserMenuTree(List<MenuPO> menuList, boolean removeButton) {
+
+        if (removeButton) {
+            // 移除按钮
+            menuList.removeIf(menu -> menu.getType().equals(MenuType.BUTTON.getType()));
+        }
+        List<UserInfoVO.MenuVO> convert = MenuConvert.INSTANCE.convert2UserMenuVOList(menuList);
+
+        Map<Long, UserInfoVO.MenuVO> menuTreeMap = new HashMap<>();
+        for (UserInfoVO.MenuVO menu : convert) {
+            menuTreeMap.put(menu.getId(), menu);
+        }
+
+        menuTreeMap.values().stream().filter(menu -> !ID_ROOT.equals(menu.getParentId())).forEach(childMenu -> {
+                    UserInfoVO.MenuVO parentMenu = menuTreeMap.get(childMenu.getParentId());
+                    if (parentMenu == null) {
+                        log.info("id:{} 找不到父菜单 parentId:{}", childMenu.getId(), childMenu.getParentId());
+                        return;
+                    }
+                    // 将自己添加到父节点中
+                    if (parentMenu.getChildren() == null) {
+                        parentMenu.setChildren(new ArrayList<>());
+                    }
+                    parentMenu.getChildren().add(childMenu);
+                }
+
+        );
+
+        return menuTreeMap.values().stream().filter(menu -> ID_ROOT.equals(menu.getParentId())).collect(Collectors.toList());
+    }
+
+    public List<MenuSimpleTreeVO> buildMenuSimpleTree(List<MenuPO> menuList, boolean removeButton) {
+
+        if (removeButton) {
+            // 移除按钮
+            menuList.removeIf(menu -> menu.getType().equals(MenuType.BUTTON.getType()));
+        }
+
+        List<MenuSimpleTreeVO> convert = MenuConvert.INSTANCE.convert02(menuList);
+
+        Map<Long, MenuSimpleTreeVO> menuTreeMap = new HashMap<>();
+        for (MenuSimpleTreeVO menu : convert) {
+            menuTreeMap.put(menu.getId(), menu);
+        }
+
+        menuTreeMap.values().stream().filter(menu -> !ID_ROOT.equals(menu.getParentId())).forEach(childMenu -> {
+                    MenuSimpleTreeVO parentMenu = menuTreeMap.get(childMenu.getParentId());
+                    if (parentMenu == null) {
+                        log.info("id:{} 找不到父菜单 parentId:{}", childMenu.getId(), childMenu.getParentId());
+                        return;
+                    }
+                    // 将自己添加到父节点中
+                    if (parentMenu.getChildren() == null) {
+                        parentMenu.setChildren(new ArrayList<>());
+                    }
+                    parentMenu.getChildren().add(childMenu);
+                }
+
+        );
+
+        return menuTreeMap.values().stream().filter(menu -> ID_ROOT.equals(menu.getParentId())).collect(Collectors.toList());
     }
 
     /**
-     * 获取所有父菜单的id
+     * 查找菜单的父/子菜单集合
+     *
+     * @param all          所有菜单
+     * @param menuIds      需要的菜单集合
+     * @param withParent   是否包含父菜单
+     * @param withChildren 是否包含子菜单
+     * @return 结果
      */
-    private Set<Long> getParentIds(List<MenuPO> menus, List<MenuPO> all) {
-
-        // 当menus的parentId不为0，取parentId的set集合
-        Set<Long> parentIds = menus.stream().map(MenuPO::getParentId).filter(parentId ->
-                !parentId.equals(ID_ROOT)
-        ).collect(Collectors.toSet());
-
-        if (parentIds.isEmpty()) {
-            return Collections.emptySet();
+    private Set<MenuPO> findMenusWithParentsOrChildrenByIds(List<MenuPO> all, Set<Long> menuIds, boolean withParent, boolean withChildren) {
+        Map<Long, MenuPO> menuMap = new HashMap<>();
+        for (MenuPO menu : all) {
+            menuMap.put(menu.getId(), menu);
         }
 
-        Set<Long> result = new HashSet<>(parentIds);
-
-        // 从所有菜单all中查询id等于parentIds的set集合中任意的菜单，直到顶级菜单，顶级菜单的parentId等于0
-        for (MenuPO menu : all) {
-            if (parentIds.contains(menu.getId())) {
-                result.addAll(getParentIds(Collections.singletonList(menu), all));
+        // 使用LinkedHashSet保持插入顺序
+        Set<MenuPO> result = new LinkedHashSet<>();
+        // 存储已处理过的菜单ID
+        Set<Long> processedIds = new HashSet<>();
+        for (Long menuId : menuIds) {
+            if (withParent) {
+                collectMenuParents(result, menuMap, menuId, processedIds);
+            }
+            if (withChildren) {
+                collectMenuChildren(result, menuMap, menuId);
             }
         }
+
         return result;
     }
 
+    /**
+     * 递归查找当前菜单的所有父菜单
+     *
+     * @param resultSet    结果
+     * @param menuMap      menuMap
+     * @param menuId       需要的菜单id
+     * @param processedIds 存储已处理过的菜单id
+     */
+    private void collectMenuParents(Set<MenuPO> resultSet, Map<Long, MenuPO> menuMap, Long menuId, Set<Long> processedIds) {
+        if (processedIds.contains(menuId)) {
+            return; // 如果已经处理过此菜单，则不再处理
+        }
+
+        processedIds.add(menuId);
+        MenuPO menu = menuMap.get(menuId);
+        if (menu != null) {
+            resultSet.add(menu);
+
+            // 如果当前菜单不是根节点（即parentId不为0），继续查找其父菜单
+            if (menu.getParentId() != 0L && !processedIds.contains(menu.getParentId())) {
+                collectMenuParents(resultSet, menuMap, menu.getParentId(), processedIds);
+            }
+        }
+    }
+
+    /**
+     * 递归查找当前菜单的所有子菜单
+     *
+     * @param resultSet 结果
+     * @param menuMap   menuMap
+     * @param menuId    需要的菜单id
+     */
+    private void collectMenuChildren(Set<MenuPO> resultSet, Map<Long, MenuPO> menuMap, Long menuId) {
+        MenuPO menu = menuMap.get(menuId);
+        if (menu != null) {
+            resultSet.add(menu);
+
+            // 添加当前菜单的所有子菜单
+            for (MenuPO child : menuMap.values()) {
+                if (child.getParentId().equals(menu.getId())) {
+                    collectMenuChildren(resultSet, menuMap, child.getId());
+                }
+            }
+        }
+    }
 
     @Override
     public List<MenuSimpleTreeVO> getMenuSimpleTreeList() {
@@ -187,50 +335,19 @@ public class MenuServiceImpl implements MenuService {
     }
 
     private List<MenuSimpleTreeVO> getMenuSimpleTreeList(boolean withRoot) {
-        // 1、查询所有的菜单
-        List<MenuPO> menus = menuMapper.selectList();
+        List<MenuPO> all = menuMapper.selectList();
 
-        List<MenuSimpleTreeVO> allMenus = MenuConvert.INSTANCE.convert02(menus);
-
-        // 2、形成树形结合
-        List<MenuSimpleTreeVO> collect = allMenus.stream().filter((menu) ->
-                menu.getParentId().equals(ID_ROOT)
-        ).peek((menu) ->
-                menu.setChildren(getChildren02(menu.getId(), allMenus))
-        ).sorted(
-                Comparator.comparingInt(MenuSimpleTreeVO::getOrderNo)
-        ).collect(Collectors.toList());
+        List<MenuSimpleTreeVO> menuSimpleTreeList = buildMenuSimpleTree(all, false);
 
         if (withRoot) {
             MenuSimpleTreeVO result = new MenuSimpleTreeVO();
-            result.setId(ID_ROOT).setTitle("根目录").setChildren(collect);
+            result.setId(ID_ROOT).setTitle("根目录").setChildren(menuSimpleTreeList);
             return Collections.singletonList(result);
         }
 
         // 返回result
-        return collect;
+        return menuSimpleTreeList;
     }
-
-    private List<MenuTreeRespVO> getChildren01(Long parentId, List<MenuTreeRespVO> all) {
-        return all.stream().filter((menu ->
-                menu.getParentId().equals(parentId))
-        ).peek((menu ->
-                menu.setChildren(getChildren01(menu.getId(), all)))
-        ).sorted(
-                Comparator.comparingInt(MenuTreeRespVO::getOrderNo)
-        ).collect(Collectors.toList());
-    }
-
-    private List<MenuSimpleTreeVO> getChildren02(Long parentId, List<MenuSimpleTreeVO> all) {
-        return all.stream().filter((menu ->
-                menu.getParentId().equals(parentId))
-        ).peek((menu ->
-                menu.setChildren(getChildren02(menu.getId(), all)))
-        ).sorted(
-                Comparator.comparingInt(MenuSimpleTreeVO::getOrderNo)
-        ).collect(Collectors.toList());
-    }
-
 
     /**
      * 校验父菜单是否合法

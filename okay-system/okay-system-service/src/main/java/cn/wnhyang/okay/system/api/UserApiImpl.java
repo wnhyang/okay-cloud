@@ -65,8 +65,8 @@ public class UserApiImpl implements UserApi {
      * @return loginUser
      */
     @Override
-    public CommonResult<LoginUser> getUserInfo(String username, String mobile, String email) {
-        return success(userService.getUserInfo(username, mobile, email));
+    public CommonResult<LoginUser> getLoginUser(String username, String mobile, String email) {
+        return success(userService.getLoginUser(username, mobile, email));
     }
 
 }

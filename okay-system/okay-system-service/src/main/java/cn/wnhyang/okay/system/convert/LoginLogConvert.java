@@ -14,6 +14,7 @@ import org.mapstruct.factory.Mappers;
  **/
 @Mapper
 public interface LoginLogConvert {
+
     LoginLogConvert INSTANCE = Mappers.getMapper(LoginLogConvert.class);
 
     LoginLogPO convert(LoginLogCreateDTO reqDTO);

@@ -7,9 +7,7 @@ import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.log.core.annotation.OperateLog;
 import cn.wnhyang.okay.framework.satoken.core.util.LoginUtil;
-import cn.wnhyang.okay.system.convert.MenuConvert;
 import cn.wnhyang.okay.system.convert.UserConvert;
-import cn.wnhyang.okay.system.entity.MenuPO;
 import cn.wnhyang.okay.system.entity.RolePO;
 import cn.wnhyang.okay.system.entity.UserPO;
 import cn.wnhyang.okay.system.service.MenuService;
@@ -26,6 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static cn.wnhyang.okay.framework.common.exception.GlobalErrorCode.UNAUTHORIZED;
+import static cn.wnhyang.okay.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
 
 /**
@@ -128,7 +127,7 @@ public class UserController {
     @SaCheckPermission("system:user:query")
     public CommonResult<UserRespVO> getUser(@RequestParam("id") Long id) {
         UserPO user = userService.getUserById(id);
-        Set<Long> roleIds = permissionService.getUserRoleIdListByUserId(user.getId());
+        Set<Long> roleIds = permissionService.getRoleIdListByUserId(user.getId());
 
         List<RolePO> roleList = roleService.getRoleList(roleIds);
         UserRespVO respVO = UserConvert.INSTANCE.convert(user, roleList);
@@ -150,7 +149,7 @@ public class UserController {
         PageResult<UserPO> pageResult = userService.getUserPage(reqVO);
 
         List<UserRespVO> userRespVOList = pageResult.getList().stream().map(user -> {
-            Set<Long> roleIds = permissionService.getUserRoleIdListByUserId(user.getId());
+            Set<Long> roleIds = permissionService.getRoleIdListByUserId(user.getId());
             List<RolePO> roleList = roleService.getRoleList(roleIds);
             UserRespVO respVO = UserConvert.INSTANCE.convert(user, roleList);
             respVO.setRoleIds(roleIds);
@@ -161,7 +160,7 @@ public class UserController {
     }
 
     /**
-     * 查询用户信息
+     * 查询用户信息(登录成功后调用)
      *
      * @return 用户信息
      */
@@ -169,10 +168,11 @@ public class UserController {
     @OperateLog(module = "后台-用户", name = "查询用户信息")
     @SaCheckLogin
     public CommonResult<UserInfoVO> getUserInfo() {
+
         Login loginUser = LoginUtil.getLoginUser();
 
         if (loginUser == null) {
-            return CommonResult.error(UNAUTHORIZED);
+            throw exception(UNAUTHORIZED);
         }
         Long id = loginUser.getId();
 
@@ -183,14 +183,8 @@ public class UserController {
         respVO.setRoles(loginUser.getRoleValues());
         respVO.setPermissions(loginUser.getPermissions());
 
-        List<MenuPO> menus;
-        if (LoginUtil.isAdministrator(id)) {
-            menus = menuService.getMenuList();
-        } else {
-            Set<Long> menuIds = permissionService.getRoleMenuListByRoleId(loginUser.getRoleIds());
-            menus = menuService.getMenuList(menuIds);
-        }
-        respVO.setMenus(MenuConvert.INSTANCE.buildMenuTree(menus));
+        List<UserInfoVO.MenuVO> userMenuTreeList = menuService.getLoginUserMenuTreeList(true);
+        respVO.setMenus(userMenuTreeList);
         return success(respVO);
     }
 }

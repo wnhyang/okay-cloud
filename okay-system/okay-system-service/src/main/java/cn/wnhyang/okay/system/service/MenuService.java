@@ -3,6 +3,7 @@ package cn.wnhyang.okay.system.service;
 
 import cn.wnhyang.okay.system.entity.MenuPO;
 import cn.wnhyang.okay.system.vo.menu.*;
+import cn.wnhyang.okay.system.vo.user.UserInfoVO;
 
 import java.util.List;
 import java.util.Set;
@@ -77,6 +78,14 @@ public interface MenuService {
     List<MenuTreeRespVO> getMenuTreeList(MenuListVO reqVO);
 
     /**
+     * 获取登录用户的菜单列表
+     *
+     * @param removeButton
+     * @return 菜单列表
+     */
+    List<UserInfoVO.MenuVO> getLoginUserMenuTreeList(boolean removeButton);
+
+    /**
      * 获取简单树形菜单不带根节点
      *
      * @return 树形菜单
@@ -89,4 +98,6 @@ public interface MenuService {
      * @return 树形菜单
      */
     List<MenuSimpleTreeVO> getMenuSimpleTreeListA();
+
+
 }

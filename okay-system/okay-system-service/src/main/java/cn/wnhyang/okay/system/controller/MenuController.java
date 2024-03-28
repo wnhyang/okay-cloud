@@ -94,7 +94,7 @@ public class MenuController {
     @SaCheckPermission("system:menu:query")
     public CommonResult<MenuRespVO> getMenu(@RequestParam("id") Long id) {
         MenuPO menu = menuService.getMenu(id);
-        return success(MenuConvert.INSTANCE.convert(menu));
+        return success(MenuConvert.INSTANCE.convert2RespVO(menu));
     }
 
     /**

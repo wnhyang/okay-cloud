@@ -19,6 +19,10 @@ import java.util.List;
 @Mapper
 public interface UserRoleMapper extends BaseMapperX<UserRolePO> {
 
+    default List<UserRolePO> selectListByUserId(Collection<Long> userIds) {
+        return selectList(UserRolePO::getUserId, userIds);
+    }
+
     default void deleteByUserId(Long userId) {
         delete(Wrappers.lambdaUpdate(UserRolePO.class).eq(UserRolePO::getUserId, userId));
     }
@@ -31,10 +35,6 @@ public interface UserRoleMapper extends BaseMapperX<UserRolePO> {
         delete(new LambdaQueryWrapper<UserRolePO>()
                 .eq(UserRolePO::getUserId, userId)
                 .in(UserRolePO::getRoleId, roleIds));
-    }
-
-    default void deleteByRoleId(Long roleId) {
-        delete(new LambdaQueryWrapper<UserRolePO>().eq(UserRolePO::getRoleId, roleId));
     }
 
     default Long selectCountByRoleId(Long roleId) {

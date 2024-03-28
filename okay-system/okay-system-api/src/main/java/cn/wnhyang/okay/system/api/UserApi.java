@@ -55,6 +55,6 @@ public interface UserApi {
      * @param email    邮箱
      * @return loginUser
      */
-    @GetMapping(PREFIX + "/getUserInfo")
-    CommonResult<LoginUser> getUserInfo(@RequestParam("username") String username, @RequestParam("mobile") String mobile, @RequestParam("email") String email);
+    @GetMapping(PREFIX + "/getLoginUser")
+    CommonResult<LoginUser> getLoginUser(@RequestParam("username") String username, @RequestParam("mobile") String mobile, @RequestParam("email") String email);
 }

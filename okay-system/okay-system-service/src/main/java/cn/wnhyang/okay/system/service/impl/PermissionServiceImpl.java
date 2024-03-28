@@ -38,12 +38,15 @@ public class PermissionServiceImpl implements PermissionService {
     private final RoleMenuMapper roleMenuMapper;
 
     @Override
-    public Set<Long> getUserRoleIdListByUserId(Long userId) {
+    public Set<Long> getRoleIdListByUserId(Collection<Long> userId) {
+        if (CollUtil.isEmpty(userId)) {
+            return Collections.emptySet();
+        }
         return convertSet(userRoleMapper.selectListByUserId(userId), UserRolePO::getRoleId);
     }
 
     @Override
-    public Set<Long> getRoleMenuListByRoleId(Collection<Long> roleIds) {
+    public Set<Long> getMenuIdListByRoleId(Collection<Long> roleIds) {
         if (CollUtil.isEmpty(roleIds)) {
             return Collections.emptySet();
         }
@@ -65,7 +68,7 @@ public class PermissionServiceImpl implements PermissionService {
             return Collections.singleton("*:*:*");
         }
         // 如果是非管理员的情况下，获得拥有的菜单编号
-        Set<Long> menuIds = getRoleMenuListByRoleId(roleIds);
+        Set<Long> menuIds = getMenuIdListByRoleId(roleIds);
         return convertSet(menuMapper.selectBatchIds(menuIds), MenuPO::getPermission);
     }
 
@@ -74,12 +77,6 @@ public class PermissionServiceImpl implements PermissionService {
             return false;
         }
         return ids.stream().anyMatch(UserConstants.ADMINISTRATOR_ROLE_ID::equals);
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void deleteRoleById(Long roleId) {
-        roleMenuMapper.deleteByRoleId(roleId);
     }
 
     @Override

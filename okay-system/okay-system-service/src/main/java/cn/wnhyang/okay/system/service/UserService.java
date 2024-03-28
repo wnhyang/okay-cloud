@@ -95,7 +95,7 @@ public interface UserService {
      * @param email    邮箱
      * @return loginUser
      */
-    LoginUser getUserInfo(String username, String mobile, String email);
+    LoginUser getLoginUser(String username, String mobile, String email);
 
     /**
      * 查询用户信息

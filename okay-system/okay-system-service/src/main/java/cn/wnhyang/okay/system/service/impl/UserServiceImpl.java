@@ -16,10 +16,10 @@ import cn.wnhyang.okay.system.entity.RolePO;
 import cn.wnhyang.okay.system.entity.UserPO;
 import cn.wnhyang.okay.system.entity.UserRolePO;
 import cn.wnhyang.okay.system.login.LoginUser;
+import cn.wnhyang.okay.system.mapper.RoleMapper;
 import cn.wnhyang.okay.system.mapper.UserMapper;
 import cn.wnhyang.okay.system.mapper.UserRoleMapper;
 import cn.wnhyang.okay.system.service.PermissionService;
-import cn.wnhyang.okay.system.service.RoleService;
 import cn.wnhyang.okay.system.service.UserService;
 import cn.wnhyang.okay.system.vo.user.UserCreateVO;
 import cn.wnhyang.okay.system.vo.user.UserPageVO;
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRoleMapper userRoleMapper;
 
-    private final RoleService roleService;
+    private final RoleMapper roleMapper;
 
     @Override
     public UserPO getUserByUsername(String username) {
@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LoginUser getUserInfo(String username, String mobile, String email) {
+    public LoginUser getLoginUser(String username, String mobile, String email) {
         LambdaQueryWrapperX<UserPO> wrapperX = new LambdaQueryWrapperX<>();
         wrapperX.eqIfPresent(UserPO::getUsername, username);
         if (StrUtil.isNotEmpty(mobile)) {
@@ -206,8 +206,8 @@ public class UserServiceImpl implements UserService {
 
     private LoginUser buildLoginUser(UserPO user) {
         LoginUser loginUser = UserConvert.INSTANCE.convert(user);
-        Set<Long> roleIds = permissionService.getUserRoleIdListByUserId(loginUser.getId());
-        List<RolePO> roleList = roleService.getRoleList(roleIds);
+        Set<Long> roleIds = permissionService.getRoleIdListByUserId(loginUser.getId());
+        List<RolePO> roleList = roleMapper.selectBatchIds(roleIds);
         List<RoleSimpleVO> roleSimpleList = roleList.stream().map(item -> {
             RoleSimpleVO respVO = new RoleSimpleVO();
             respVO.setId(item.getId()).setName(item.getName()).setValue(item.getValue());
