@@ -1,11 +1,19 @@
 package cn.wnhyang.okay.framework.redis.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
 /**
@@ -14,6 +22,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  **/
 @EnableCaching
 @AutoConfiguration
+@EnableConfigurationProperties(CacheProperties.class)
 @Slf4j
 public class OkayRedisAutoConfiguration {
     /**
@@ -33,6 +42,56 @@ public class OkayRedisAutoConfiguration {
         template.setValueSerializer(RedisSerializer.json());
         template.setHashValueSerializer(RedisSerializer.json());
         return template;
+    }
+
+    /**
+     * 自定义 RedisCacheManager
+     * <p>
+     * 修改 Redis 序列化方式，默认 JdkSerializationRedisSerializer
+     *
+     * @param redisConnectionFactory {@link RedisConnectionFactory}
+     * @param cacheProperties        {@link CacheProperties}
+     * @return {@link RedisCacheManager}
+     */
+    @Bean
+    public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory, CacheProperties cacheProperties, ObjectMapper objectMapper) {
+        return RedisCacheManager.builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
+                .cacheDefaults(redisCacheConfiguration(cacheProperties, objectMapper))
+                .build();
+    }
+
+    /**
+     * 自定义 RedisCacheConfiguration
+     *
+     * @param cacheProperties {@link CacheProperties}
+     * @return {@link RedisCacheConfiguration}
+     */
+    @Bean
+    RedisCacheConfiguration redisCacheConfiguration(CacheProperties cacheProperties, ObjectMapper objectMapper) {
+
+        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
+
+        config = config.serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()));
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+
+
+        config = config.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer));
+
+
+        CacheProperties.Redis redisProperties = cacheProperties.getRedis();
+
+        if (redisProperties.getTimeToLive() != null) {
+            config = config.entryTtl(redisProperties.getTimeToLive());
+        }
+        if (!redisProperties.isCacheNullValues()) {
+            config = config.disableCachingNullValues();
+        }
+        if (!redisProperties.isUseKeyPrefix()) {
+            config = config.disableKeyPrefix();
+        }
+        // 覆盖默认key双冒号  CacheKeyPrefix#prefixed
+        // config = config.computePrefixWith(name -> name + ":");
+        return config;
     }
 
     @Bean
