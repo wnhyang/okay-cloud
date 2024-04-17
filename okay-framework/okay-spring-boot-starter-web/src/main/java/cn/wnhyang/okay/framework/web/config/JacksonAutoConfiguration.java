@@ -39,8 +39,7 @@ public class JacksonAutoConfiguration {
         return builder.build();
     }
 
-    @Bean
-    public JavaTimeModule javaTimeModule() {
+    public static JavaTimeModule buildJavaTimeModule() {
         JavaTimeModule javaTimeModule = new JavaTimeModule();
         javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DatePattern.NORM_TIME_FORMATTER));
         javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DatePattern.NORM_DATE_FORMATTER));
@@ -54,14 +53,14 @@ public class JacksonAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public Jackson2ObjectMapperBuilderCustomizer customizer(JavaTimeModule javaTimeModule) {
+    public Jackson2ObjectMapperBuilderCustomizer customizer() {
         log.info("[Jackson2ObjectMapperBuilderCustomizer][初始化customizer配置]");
         return builder -> {
             builder.locale(Locale.CHINA);
             builder.timeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
             builder.simpleDateFormat(DatePattern.NORM_DATETIME_PATTERN);
             builder.serializerByType(Long.class, ToStringSerializer.instance);
-            builder.modules(javaTimeModule);
+            builder.modules(buildJavaTimeModule());
         };
     }
 

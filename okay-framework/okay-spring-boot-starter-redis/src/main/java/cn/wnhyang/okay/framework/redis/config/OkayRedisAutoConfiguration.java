@@ -1,6 +1,8 @@
 package cn.wnhyang.okay.framework.redis.config;
 
+import cn.hutool.core.util.ReflectUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.CacheProperties;
@@ -12,7 +14,6 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.*;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
@@ -30,7 +31,6 @@ public class OkayRedisAutoConfiguration {
      */
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
-        log.info("[RedisTemplate][初始化redisTemplate配置]");
         // 创建 RedisTemplate 对象
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         // 设置 RedisConnection 工厂。😈 它就是实现多种 Java Redis 客户端接入的秘密工厂。感兴趣的胖友，可以自己去撸下。
@@ -39,9 +39,17 @@ public class OkayRedisAutoConfiguration {
         template.setKeySerializer(RedisSerializer.string());
         template.setHashKeySerializer(RedisSerializer.string());
         // 使用 JSON 序列化方式（库是 Jackson ），序列化 VALUE 。
-        template.setValueSerializer(RedisSerializer.json());
-        template.setHashValueSerializer(RedisSerializer.json());
+        template.setValueSerializer(buildRedisSerializer());
+        template.setHashValueSerializer(buildRedisSerializer());
         return template;
+    }
+
+    public static RedisSerializer<?> buildRedisSerializer() {
+        RedisSerializer<Object> json = RedisSerializer.json();
+        // 解决 LocalDateTime 的序列化
+        ObjectMapper objectMapper = (ObjectMapper) ReflectUtil.getFieldValue(json, "mapper");
+        objectMapper.registerModules(new JavaTimeModule());
+        return json;
     }
 
     /**
@@ -54,9 +62,9 @@ public class OkayRedisAutoConfiguration {
      * @return {@link RedisCacheManager}
      */
     @Bean
-    public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory, CacheProperties cacheProperties, ObjectMapper objectMapper) {
+    public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory, CacheProperties cacheProperties) {
         return RedisCacheManager.builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
-                .cacheDefaults(redisCacheConfiguration(cacheProperties, objectMapper))
+                .cacheDefaults(redisCacheConfiguration(cacheProperties))
                 .build();
     }
 
@@ -67,16 +75,12 @@ public class OkayRedisAutoConfiguration {
      * @return {@link RedisCacheConfiguration}
      */
     @Bean
-    RedisCacheConfiguration redisCacheConfiguration(CacheProperties cacheProperties, ObjectMapper objectMapper) {
+    RedisCacheConfiguration redisCacheConfiguration(CacheProperties cacheProperties) {
 
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
 
         config = config.serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()));
-        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
-
-
-        config = config.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer));
-
+        config = config.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(buildRedisSerializer()));
 
         CacheProperties.Redis redisProperties = cacheProperties.getRedis();
 
