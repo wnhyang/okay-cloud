@@ -5,6 +5,7 @@ import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.wnhyang.okay.framework.common.core.Login;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
+import cn.wnhyang.okay.framework.common.util.ExcelUtils;
 import cn.wnhyang.okay.framework.log.core.annotation.OperateLog;
 import cn.wnhyang.okay.framework.satoken.core.util.LoginUtil;
 import cn.wnhyang.okay.system.convert.UserConvert;
@@ -16,9 +17,13 @@ import cn.wnhyang.okay.system.service.RoleService;
 import cn.wnhyang.okay.system.service.UserService;
 import cn.wnhyang.okay.system.vo.user.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,6 +38,7 @@ import static cn.wnhyang.okay.framework.common.pojo.CommonResult.success;
  * @author wnhyang
  * @since 2023/05/14
  */
+@Slf4j
 @RestController
 @RequestMapping("/system/user")
 @RequiredArgsConstructor
@@ -146,17 +152,52 @@ public class UserController {
     @OperateLog(module = "后台-用户", name = "查询用户列表")
     @SaCheckPermission("system:user:list")
     public CommonResult<PageResult<UserRespVO>> getUserPage(@Valid UserPageVO reqVO) {
+        List<UserRespVO> userPageList = getUserPageList(reqVO);
+
+        return success(new PageResult<>(userPageList, (long) userPageList.size()));
+    }
+
+    private List<UserRespVO> getUserPageList(UserPageVO reqVO) {
         PageResult<UserPO> pageResult = userService.getUserPage(reqVO);
 
-        List<UserRespVO> userRespVOList = pageResult.getList().stream().map(user -> {
+        return pageResult.getList().stream().map(user -> {
             Set<Long> roleIds = permissionService.getRoleIdListByUserId(user.getId());
             List<RolePO> roleList = roleService.getRoleList(roleIds);
             UserRespVO respVO = UserConvert.INSTANCE.convert(user, roleList);
             respVO.setRoleIds(roleIds);
             return respVO;
         }).collect(Collectors.toList());
+    }
 
-        return success(new PageResult<>(userRespVOList, pageResult.getTotal()));
+    /**
+     * 导出用户信息
+     *
+     * @param exportReqVO 查询条件
+     * @param response    响应
+     * @throws IOException 响应异常
+     */
+    @GetMapping("/export")
+    @OperateLog(module = "后台-用户", name = "导出用户列表")
+    @SaCheckPermission("system:user:export")
+    public void exportExcel(@Valid UserPageVO exportReqVO, HttpServletResponse response) throws IOException {
+        List<UserRespVO> userPageList = getUserPageList(exportReqVO);
+        // 输出 Excel
+        ExcelUtils.write(response, "用户数据.xls", "数据", UserRespVO.class, userPageList);
+    }
+
+    /**
+     * 导入用户信息
+     *
+     * @param file 文件
+     * @return 结果
+     * @throws IOException 响应异常
+     */
+    @PostMapping("/import")
+    public CommonResult<Boolean> importExcel(@RequestParam("file") MultipartFile file) throws IOException {
+        List<UserPO> read = ExcelUtils.read(file, UserPO.class);
+        // do something
+        log.info("导入用户信息：{}", read);
+        return success(true);
     }
 
     /**

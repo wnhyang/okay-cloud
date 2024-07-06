@@ -1,5 +1,6 @@
 package cn.wnhyang.okay.system.vo.user;
 
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,6 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ExcelIgnoreUnannotated
 public class UserRespVO extends UserCreateVO {
 
     private Long id;

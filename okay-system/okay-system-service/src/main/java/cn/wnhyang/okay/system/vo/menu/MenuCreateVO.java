@@ -3,7 +3,6 @@ package cn.wnhyang.okay.system.vo.menu;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -17,7 +16,6 @@ public class MenuCreateVO {
     @NotNull(message = "菜单类型不能为空")
     private Integer type;
 
-    @NotEmpty
     private String name;
 
     @Size(max = 200, message = "路由地址不能超过200个字符")

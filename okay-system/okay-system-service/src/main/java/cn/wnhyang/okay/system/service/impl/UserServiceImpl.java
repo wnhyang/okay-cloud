@@ -96,6 +96,7 @@ public class UserServiceImpl implements UserService {
         validateUserForCreateOrUpdate(reqVO.getId(), reqVO.getUsername(), reqVO.getMobile(), reqVO.getEmail());
         UserPO user = UserConvert.INSTANCE.convert(reqVO);
         userRoleMapper.deleteByUserId(user.getId());
+        // TODO 不能分配超级管理员角色
         if (CollectionUtil.isNotEmpty(reqVO.getRoleIds())) {
             userRoleMapper.insertBatch(CollectionUtils.convertList(reqVO.getRoleIds(),
                     roleId -> new UserRolePO().setUserId(user.getId()).setRoleId(roleId)));

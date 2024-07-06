@@ -2,7 +2,6 @@ package cn.wnhyang.okay.framework.mybatis.core.handler;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.wnhyang.okay.framework.common.core.Login;
-import cn.wnhyang.okay.framework.mybatis.core.base.BasePO;
 import cn.wnhyang.okay.framework.satoken.core.util.LoginUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import lombok.Setter;
@@ -10,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * @author wnhyang
@@ -24,47 +22,23 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        if (Objects.nonNull(metaObject) && metaObject.getOriginalObject() instanceof BasePO) {
-            BasePO basePO = (BasePO) metaObject.getOriginalObject();
+        this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
+        this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
 
-            LocalDateTime current = LocalDateTime.now();
-            // 创建时间为空，则以当前时间为插入时间
-            if (Objects.isNull(basePO.getCreateTime())) {
-                basePO.setCreateTime(current);
-            }
-            // 更新时间为空，则以当前时间为更新时间
-            if (Objects.isNull(basePO.getUpdateTime())) {
-                basePO.setUpdateTime(current);
-            }
-            if (login) {
-                String username = getLoginUsername();
-                // 当前登录用户不为空，创建人为空，则当前登录用户为创建人
-                if (Objects.nonNull(username) && Objects.isNull(basePO.getCreator())) {
-                    basePO.setCreator(username);
-                }
-                // 当前登录用户不为空，更新人为空，则当前登录用户为更新人
-                if (Objects.nonNull(username) && Objects.isNull(basePO.getUpdater())) {
-                    basePO.setUpdater(username);
-                }
-            }
+        if (login) {
+            this.strictInsertFill(metaObject, "creator", String.class, getLoginUsername());
+            this.strictInsertFill(metaObject, "updater", String.class, getLoginUsername());
+
         }
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        // 更新时间为空，则以当前时间为更新时间
-        Object modifyTime = getFieldValByName("updateTime", metaObject);
-        if (Objects.isNull(modifyTime)) {
-            setFieldValByName("updateTime", LocalDateTime.now(), metaObject);
-        }
+        this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
 
         if (login) {
-            // 当前登录用户不为空，更新人为空，则当前登录用户为更新人
-            Object modifier = getFieldValByName("updater", metaObject);
-            String username = getLoginUsername();
-            if (Objects.nonNull(username) && Objects.isNull(modifier)) {
-                setFieldValByName("updater", username, metaObject);
-            }
+            this.strictInsertFill(metaObject, "updater", String.class, getLoginUsername());
+
         }
     }
 
