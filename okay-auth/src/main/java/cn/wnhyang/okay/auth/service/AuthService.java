@@ -11,7 +11,6 @@ import cn.wnhyang.okay.auth.vo.LoginRespVO;
 import cn.wnhyang.okay.auth.vo.LoginVO;
 import cn.wnhyang.okay.auth.vo.RegisterVO;
 import cn.wnhyang.okay.framework.common.core.Login;
-import cn.wnhyang.okay.framework.common.enums.CommonStatus;
 import cn.wnhyang.okay.framework.common.enums.DeviceType;
 import cn.wnhyang.okay.framework.common.enums.UserType;
 import cn.wnhyang.okay.framework.common.util.RegexUtils;
@@ -71,7 +70,7 @@ public class AuthService {
             throw exception(AUTH_LOGIN_BAD_CREDENTIALS);
         }
         // 校验是否禁用
-        if (ObjectUtil.notEqual(user.getStatus(), CommonStatus.ON)) {
+        if (ObjectUtil.notEqual(user.getStatus(), Boolean.TRUE)) {
             createLoginLog(user.getId(), account, loginType, LoginResult.USER_DISABLED);
             throw exception(AUTH_LOGIN_USER_DISABLED);
         }
@@ -103,7 +102,7 @@ public class AuthService {
             throw exception(AUTH_LOGIN_BAD_EMAIL_CODE);
         }
         // 校验是否禁用
-        if (ObjectUtil.notEqual(user.getStatus(), CommonStatus.ON)) {
+        if (ObjectUtil.notEqual(user.getStatus(), Boolean.TRUE)) {
             createLoginLog(user.getId(), email, loginType, LoginResult.USER_DISABLED);
             throw exception(AUTH_LOGIN_USER_DISABLED);
         }

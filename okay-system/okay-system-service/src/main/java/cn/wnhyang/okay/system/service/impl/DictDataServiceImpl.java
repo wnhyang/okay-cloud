@@ -1,6 +1,5 @@
 package cn.wnhyang.okay.system.service.impl;
 
-import cn.wnhyang.okay.framework.common.enums.CommonStatus;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.system.convert.DictDataConvert;
 import cn.wnhyang.okay.system.entity.DictDataPO;
@@ -141,7 +140,7 @@ public class DictDataServiceImpl implements DictDataService {
         if (dictType == null) {
             throw exception(DICT_TYPE_NOT_EXISTS);
         }
-        if (!CommonStatus.ON.equals(dictType.getStatus())) {
+        if (!Boolean.TRUE.equals(dictType.getStatus())) {
             throw exception(DICT_TYPE_NOT_ENABLE);
         }
     }

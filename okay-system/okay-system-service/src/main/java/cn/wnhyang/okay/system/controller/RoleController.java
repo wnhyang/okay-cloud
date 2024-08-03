@@ -2,7 +2,6 @@ package cn.wnhyang.okay.system.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.wnhyang.okay.framework.common.enums.CommonStatus;
 import cn.wnhyang.okay.framework.common.pojo.CommonResult;
 import cn.wnhyang.okay.framework.common.pojo.PageResult;
 import cn.wnhyang.okay.framework.log.core.annotation.OperateLog;
@@ -137,6 +136,6 @@ public class RoleController {
     @OperateLog(module = "后台-角色", name = "查询简单角色列表")
     @SaCheckLogin
     public CommonResult<List<RoleSimpleVO>> getSimpleRoleList() {
-        return success(RoleConvert.INSTANCE.convert02(roleService.getRoleList(CommonStatus.ON)));
+        return success(RoleConvert.INSTANCE.convert02(roleService.getRoleList(Boolean.TRUE)));
     }
 }
